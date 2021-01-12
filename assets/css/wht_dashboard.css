@@ -1,0 +1,122 @@
+.centered {
+    text-align: center;
+}
+
+.titled {
+    font-size: 30px !important;
+    color: #333 !important;
+    margin-bottom: 30px !important;
+}
+
+td {
+    text-align: right;
+}
+
+.wht-info-paragraph h4 {
+    margin: 20px 0 0 0 !important;
+}
+
+[data-style="wht-save"] {
+    background: #fff !important;
+    border: solid 1px #4772FF !important;
+    color: #4772FF !important;
+    padding: 8px 20px !important;
+    width: 100%;
+}
+
+[data-style="wht-refresh-token"] {
+    background: #E3ECFF !important;
+    border: solid 1px #4772FF !important;
+    color: #4772FF !important;
+    width: 100%;
+    padding: 8px 20px !important;
+}
+
+.wht-wrap table {
+    visibility: collapse;
+}
+
+.wht-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+.wht-buttons div {
+    width: 48%;
+}
+
+#wht-copy-info {
+    font-size: small;
+    color: #cccccc;
+    position: absolute;
+    bottom: 17px;
+    right: 8px;
+    background: transparent;
+    padding: 3px 6px;
+}
+
+#wht-copied {
+    color: #fff;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background: rgba(0, 0, 0, 0.63);
+    font-weight: bold;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    height: 100%;
+    display: none;
+    align-items: center;
+    justify-content: center;
+}
+
+.wrap {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.wht-wrap {
+    max-width: 700px;
+    background: #fff;
+    padding: 50px;
+}
+
+.watchtower_token_field {
+    margin-top: 40px;
+    width: 450px;
+    position: relative;
+    background: #FBFDFC !important;
+    border: solid 1px #cccccc;
+    -webkit-border-radius: 2px;
+    -moz-border-radius: 2px;
+    border-radius: 2px;
+    padding: 8px 14px 20px 14px !important;
+    cursor: pointer;
+    margin-left: 0px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.watchtower_token_field small {
+    color: #cccccc;
+    font-size: 12px;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.watchtower_token_area, .watchtower_token_field {
+    font-size: 20px;
+    padding: 10px;
+}
+
+.watchtower_token_area {
+    margin: auto;
+    float: left;
+    padding: 0px;
+}

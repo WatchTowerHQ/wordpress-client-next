@@ -1,0 +1,44 @@
+{
+  "name": "whatarmy/watchtowerhq",
+  "license": "GPL-3.0",
+  "type": "project",
+  "authors": [
+    {
+      "name": "WhatArmy",
+      "email": "c2p@whatarmydev.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "WhatArmy\\Watchtower\\": "src"
+    }
+  },
+  "config": {
+    "preferred-install": "dist"
+  },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/code2prog/mysqldump-php"
+    }
+  ],
+  "require": {
+    "claudiosanches/wp-autoloader": "^1.0",
+    "php": ">=7.2|^8",
+    "dg/mysql-dump": "1.5.0",
+    "shuber/curl": "dev-master",
+    "alchemy/zippy": "^0.4",
+    "ext-zip": "*",
+    "ext-mysqli": "*",
+    "ext-json": "*",
+    "woocommerce/action-scheduler": "^3.1.6",
+    "ext-fileinfo": "*",
+    "symfony/finder": "3.x",
+    "ifsnop/mysqldump-php": "dev-master",
+    "ext-zlib": "*",
+    "ext-iconv": "*",
+    "symfony/polyfill-iconv": "1.18.1",
+    "symfony/polyfill-mbstring": "1.18.1",
+    "symfony/polyfill-ctype": "1.18.1"
+  }
+}
