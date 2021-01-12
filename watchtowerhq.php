@@ -6,7 +6,7 @@ defined('ABSPATH') or die('No script kiddies please!');
  * Plugin URI: https://github.com/WhatArmy/WatchtowerWpClient
  * Description: The WatchTowerHQ plugin allows us to monitor, backup, upgrade, and manage your site!
  * Author: WhatArmy
- * Version: 3.3.6
+ * Version: 3.3.7
  * Author URI: https://watchtowerhq.co/
  * License: GPLv2 or later
  * Text Domain: watchtower
@@ -16,7 +16,7 @@ defined('ABSPATH') or die('No script kiddies please!');
  * Constants
  */
 
-define('WHTHQ_MIN_PHP', "7.2");
+define('WHTHQ_MIN_PHP', "7.1");
 define('WHTHQ_MAIN', __FILE__);
 define('WHTHQ_MAIN_URI', plugin_dir_url(__FILE__));
 define('WHTHQ_DB_VERSION', '1.0');

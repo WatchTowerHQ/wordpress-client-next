@@ -24,7 +24,7 @@
   ],
   "require": {
     "claudiosanches/wp-autoloader": "^1.0",
-    "php": ">=7.2|^8",
+    "php": ">= 7.1",
     "dg/mysql-dump": "1.5.0",
     "shuber/curl": "dev-master",
     "alchemy/zippy": "^0.4",
