@@ -1,12 +1,12 @@
 <?php return array (
   'root' => 
   array (
-    'pretty_version' => 'trunk',
-    'version' => 'dev-trunk',
+    'pretty_version' => 'dev-master',
+    'version' => 'dev-master',
     'aliases' => 
     array (
     ),
-    'reference' => NULL,
+    'reference' => '056e98650c63c08cc4adb010481c6245318eeaed',
     'name' => 'whatarmy/watchtowerhq',
   ),
   'versions' => 
@@ -123,12 +123,12 @@
     ),
     'whatarmy/watchtowerhq' => 
     array (
-      'pretty_version' => 'trunk',
-      'version' => 'dev-trunk',
+      'pretty_version' => 'dev-master',
+      'version' => 'dev-master',
       'aliases' => 
       array (
       ),
-      'reference' => NULL,
+      'reference' => '056e98650c63c08cc4adb010481c6245318eeaed',
     ),
     'woocommerce/action-scheduler' => 
     array (
