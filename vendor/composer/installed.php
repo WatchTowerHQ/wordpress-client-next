@@ -6,20 +6,11 @@
     'aliases' => 
     array (
     ),
-    'reference' => '056e98650c63c08cc4adb010481c6245318eeaed',
+    'reference' => '76e59c1b59ea11dcfb8156763aa1926d30c3229b',
     'name' => 'whatarmy/watchtowerhq',
   ),
   'versions' => 
   array (
-    'alchemy/zippy' => 
-    array (
-      'pretty_version' => '0.4.9',
-      'version' => '0.4.9.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '59fbeefb9a249122867ef25e53addfcce31850d7',
-    ),
     'claudiosanches/wp-autoloader' => 
     array (
       'pretty_version' => '1.0.0',
@@ -38,15 +29,6 @@
       ),
       'reference' => '6c9cf07092bcc4a140bef01c64d883ebfccfccfa',
     ),
-    'doctrine/collections' => 
-    array (
-      'pretty_version' => '1.6.7',
-      'version' => '1.6.7.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '55f8b799269a1a472457bd1a41b4f379d4cfba4a',
-    ),
     'ifsnop/mysqldump-php' => 
     array (
       'pretty_version' => 'dev-master',
@@ -57,6 +39,33 @@
       ),
       'reference' => '1e3934b17fb20e703e8a76583dc791e4ec06d84f',
     ),
+    'nelexa/zip' => 
+    array (
+      'pretty_version' => '3.3.3',
+      'version' => '3.3.3.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '501b52f6fc393a599b44ff348a42740e1eaac7c6',
+    ),
+    'paragonie/random_compat' => 
+    array (
+      'pretty_version' => 'v9.99.100',
+      'version' => '9.99.100.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
+    ),
+    'psr/http-message' => 
+    array (
+      'pretty_version' => '1.0.1',
+      'version' => '1.0.1.0',
+      'aliases' => 
+      array (
+      ),
+      'reference' => 'f6561bf28d520154e4b0ec72be95418abe6d9363',
+    ),
     'shuber/curl' => 
     array (
       'pretty_version' => 'dev-master',
@@ -66,15 +75,6 @@
         0 => '9999999-dev',
       ),
       'reference' => '6624992df201f9fd7262080117385dd09b0ecd2b',
-    ),
-    'symfony/filesystem' => 
-    array (
-      'pretty_version' => 'v4.4.18',
-      'version' => '4.4.18.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'd99fbef7e0f69bf162ae6131b31132fa3cc4bcbe',
     ),
     'symfony/finder' => 
     array (
@@ -112,15 +112,6 @@
       ),
       'reference' => 'a6977d63bf9a0ad4c65cd352709e230876f9904a',
     ),
-    'symfony/process' => 
-    array (
-      'pretty_version' => 'v4.4.18',
-      'version' => '4.4.18.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '075316ff72233ce3d04a9743414292e834f2cb4a',
-    ),
     'whatarmy/watchtowerhq' => 
     array (
       'pretty_version' => 'dev-master',
@@ -128,7 +119,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '056e98650c63c08cc4adb010481c6245318eeaed',
+      'reference' => '76e59c1b59ea11dcfb8156763aa1926d30c3229b',
     ),
     'woocommerce/action-scheduler' => 
     array (

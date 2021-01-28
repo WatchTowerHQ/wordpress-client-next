@@ -12,7 +12,7 @@ use SplFileObject;
 use Symfony\Component\Finder\Finder;
 use WhatArmy\Watchtower\Schedule;
 use WhatArmy\Watchtower\Utils;
-use ZipArchive;
+use WhatArmy\Watchtower\Zip;
 
 /**
  * Class Backup
@@ -44,21 +44,11 @@ class File_Backup
         if (defined('WPE_ISP')) {
             ini_set('memory_limit', '512M');
         }
-        $archive_location = WHTHQ_BACKUP_DIR . '/' . $job['zip'] . '.zip';
-        $zippy = new ZipArchive();
-        if (!file_exists($archive_location)) {
-            $zippy->open($archive_location, ZipArchive::CREATE);
-        } else {
-            $zippy->open($archive_location);
-        }
 
-        $fileList = json_decode(file_get_contents(WHTHQ_BACKUP_DIR . '/' . $job['data_file']));
 
-        foreach ($fileList as $file) {
-            $zippy->addFile(ABSPATH . $file, $file);
-        }
-        $zippy->close();
-
+        (new Zip($job['zip'] . '.zip'))
+            ->setFiles(json_decode(file_get_contents(WHTHQ_BACKUP_DIR . '/' . $job['data_file'])))
+            ->createOrUpdateArchive();
 
         $failed = Schedule::status('failed', $job['zip']);
         $pending = Schedule::status('pending', $job['zip']);

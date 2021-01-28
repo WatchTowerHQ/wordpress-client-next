@@ -27,7 +27,6 @@
     "php": ">= 7.1",
     "dg/mysql-dump": "1.5.0",
     "shuber/curl": "dev-master",
-    "alchemy/zippy": "^0.4",
     "ext-zip": "*",
     "ext-mysqli": "*",
     "ext-json": "*",
@@ -39,6 +38,7 @@
     "ext-iconv": "*",
     "symfony/polyfill-iconv": "1.18.1",
     "symfony/polyfill-mbstring": "1.18.1",
-    "symfony/polyfill-ctype": "1.18.1"
+    "symfony/polyfill-ctype": "1.18.1",
+    "nelexa/zip": "^3.3"
   }
 }
