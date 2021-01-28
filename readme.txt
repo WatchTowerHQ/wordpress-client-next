@@ -3,7 +3,7 @@ Tags: watchtower, client, tools, monitoring
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.1
-Stable tag: 3.4.0
+Stable tag: 3.4.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 The WatchTowerHQ WordPress plugin allows us to monitor, backup, upgrade, and manage your site!
@@ -53,7 +53,7 @@ To view our plans and get started with WatchTowerHQ check out our [website](http
 
 == Changelog ==
 
-= 3.4.1 =
+= 3.4.2 =
 * increase timeout
 
 = 3.4.0 =
