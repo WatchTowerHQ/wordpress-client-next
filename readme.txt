@@ -53,6 +53,9 @@ To view our plans and get started with WatchTowerHQ check out our [website](http
 
 == Changelog ==
 
+= 3.4.1 =
+* increase timeout
+
 = 3.4.0 =
 * added ZipArchive fallback
 
