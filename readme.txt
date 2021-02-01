@@ -1,55 +1,86 @@
 === WatchTowerHQ ===
-Tags: watchtower, client, tools, monitoring
+Tags: watchtower, client, tools, monitoring, Manage multiple sites, backup, site speed
 Requires at least: 5.1
 Tested up to: 5.6
 Requires PHP: 7.1
-Stable tag: 3.4.4
+Stable tag: 3.4.5
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 The WatchTowerHQ WordPress plugin allows us to monitor, backup, upgrade, and manage your site!
 
 == Description ==
 
-A robust site monitoring and management application built with a customizable dashboard for your convenience. Keep track of your site's performance, back up important data, automate your WordPress updates, receive security alerts to prevent malicious attacks, record daily screenshots of your site, and more!
+[WatchTowerHQ]("https://watchtowerhq.co") Website Monitoring: Done Right
+Fed up with using tools that get sold to GoDaddy, lose their founding team, and slowly die?
+Tired of half-assed customer service that takes 72-144 hours to get a response?
+Looking for one solution to cut the costs of many tools?
+Our founding team is intact and not only focused on a world-class customer service experience, we're focused on making WatchTowerHQ the best tool agencies and companies turn to when managing multiple websites.
 
-WordPress users have access to even more features including:
-* Automated plugin, theme, & WP Core updates
-* One-click access to your WP site and other environments (such as a development version of the site)
-* History of plugin/theme/core updates (including *who* performed or scheduled the update)
-* Abandoned plugin and theme alerts
-* Bug and vulnerability alerts for plugins and themes
+## Automated Updates
+Set it and forget it by scheduling WordPress theme and plugin updates in advance. Every Tuesday at 7am? Not a problem with WatchTowerHQ
+
+## Performance Insights
+Wondering why no one stays on your website? It's probably because it's slow...like Ford Fiesta slow. Figure out what you need to do to transform it into the Porsche it deserves to be.
+
+## Daily Backups
+Take them daily, store them for a year. Don't be at the mercy of the intern who accidentally deleted all of your blog posts from the last 6 years. Restore them quickly from one of your backups. Automate these as you would like, or take them manually.
+
+## Historical Data Tracking
+A snapshot in time is great for some. You're not some. Most are like you, they want to see how data looks over time. Screen shots from last May? Easy peasy. Site speed today relative to 2 months ago? One click.
+
+## Notifications?
+We've got you covered. You control who gets alerts, which alerts they get, and when. All for you to control within your account.
+
+## Domain and SSL Registration Monitoring
+The dreaded call from a client at 12:47am when they realize their domain has expired and a 12 year old North Korean is holding it hostage for 72 BTC. Don't let that happen to you or your clients. Always know when your domain or SSL certificate are about to expire so  you can proactively renew.
+
+## Real-time Uptime Monitoring
+Kiss false positives good-bye. Set your limits,  get updated when they're triggered.
+
+## One-Click Access
+Access your WordPress site or staging environment with one click right from the website dashboard.
+WatchTowerHQ is the most robust website monitoring and management tool. Increase operational efficiency by eliminating wasted time, improving your security, and taking preventive action.
+
+## Custom User Roles
+Select from one of WatchTowerHQ's user roles with granular permissions selection or create custom roles to fit your organizational needs.
 
 Please note that WatchTowerHQ tracks information about your site including:
-* Domain information (Registrar, DNS, SSL, Blacklist Status, Site & Proxy IP addresses)
-* WordPress plugins, themes, and core
-* Google Lighthouse & Google Analytics data
-* Screen captures
-* CSS & JavaScript code
+*   Domain information (Registrar, DNS, SSL, Blacklist Status, Site & Proxy IP addresses)
+*   WordPress plugins, themes, and core
+*   Google Lighthouse & Google Analytics data
+*   Screen captures
+*   CSS & JavaScript code
 
 == Installation ==
 
 After installing the WatchTowerHQ plugin you will need to do a few things to start monitoring your site.
-1. Install the WatchTowerHQ plugin from the WordPress plugin directory.
-2. Click "Activate" (found beneath plugin name in the Plugins section) to activate the WatchTowerHQ plugin.
-3. Once activated, go to Settings (found in the sidebar) and click on Watchtower Settings.
-4. Copy the access token found in the Watchtower Settings (you will need this in a future step).
-5. Go to [WatchTowerHQ](https://watchtowerhq.co) to sign up for an account.
-6. Fill in information about your website - including the access token that you'd copied earlier.
-7. Save the website's information once complete. Happy monitoring!
+1. Activate the WatchTowerHQ plugin.
+2. Copy the access token found in the WatchTowerHQ Settings (you will need this in a future step).
+3. Go to [WatchTowerHQ](https://watchtowerhq.co) to sign up for an account.
+4. Fill in information about your websites - including the access token that you'd copied earlier.
+5. Save the website's information once complete. Happy monitoring!
+
+If you've already signed up on [WatchTowerHQ](https://watchtowerhq.co), you can also follow the alternative installation:
+1. Download the WatchTowerHQ client from the Settings dropdown menu
+2. Go to the Plugins tab in WordPress and select "Add New Plugin".
+3. Click the "Upload Plugin" button and upload the zip file you downloaded from WatchTowerHQ.
+4. Click to activate the client and copy the access token from the WatchTowerHQ settings.
+5. Go to the "Add new website" form found on the Websites page of your WatchTowerHQ dashboard.
+6. Select WordPress as your CMS and paste the access token in the space.
 
 == Frequently Asked Questions ==
 
 = Can I have multiple environments on WatchTowerHQ? =
-
 Yes, you can include your development and other environments to your WatchTowerHQ account for convenient one-click access.
 
 = What does WatchTowerHQ do with my site's information? =
-
 The information tracked by WatchTowerHQ is used to provide real-time analytics and alerts on your site's status including vulnerabilities, site downtime, and performance. As well as to notify you about WordPress-specific issues such as abandoned plugins.
 
 = How much is WatchTowerHQ? =
+To view our plans and get started with WatchTowerHQ check out our [website](https://watchtowerhq.co/pricing).
 
-To view our plans and get started with WatchTowerHQ check out our [website](https://watchtowerhq.co).
+= Can I limit access to other users? =
+We have a number of standard roles, that many users requested, along with that we've created custom user roles. With custom user roles the options are endless to the access that you can give any one user. Custom User roles are included in all plans at no additional cost.
 
 == Changelog ==
 
