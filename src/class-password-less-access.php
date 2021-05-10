@@ -28,7 +28,6 @@ class Password_Less_Access
     {
         $vars[] = 'wht_login';
         $vars[] = 'access_token';
-
         return $vars;
     }
 
@@ -58,11 +57,10 @@ class Password_Less_Access
     {
         $ota_token = 'ota_'.md5(uniqid());
         update_option('watchtower_ota_token', $ota_token);
-
-        return array(
+        return [
             'ota_token' => $ota_token,
             'admin_url' => admin_url(),
-        );
+        ];
     }
 
 
@@ -71,8 +69,6 @@ class Password_Less_Access
 
         if ($access_token == get_option('watchtower_ota_token')) {
             $random_password = wp_generate_password(30);
-
-
             $admins_list = get_users('role=administrator&search='.WHTHQ_CLIENT_USER_EMAIL);
             if ($admins_list) {
                 reset($admins_list);
@@ -86,11 +82,9 @@ class Password_Less_Access
                     grant_super_admin($adm_id);
                 }
             }
-
             wp_clear_auth_cookie();
             wp_set_current_user($adm_id);
             wp_set_auth_cookie($adm_id);
-
             $redirect_to = user_admin_url();
             update_option('watchtower_ota_token', 'not_set');
             wp_safe_redirect($redirect_to);

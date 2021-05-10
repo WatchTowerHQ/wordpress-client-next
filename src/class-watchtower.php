@@ -48,7 +48,7 @@ class Watchtower
         register_activation_hook(WHTHQ_MAIN, [$this, 'check_db']);
         add_action('admin_notices', [$this, 'wht_activation_notice']);
 
-        add_filter('plugin_action_links_'.plugin_basename(WHTHQ_MAIN), array($this, 'plugin_action_links'));
+        add_filter('plugin_action_links_'.plugin_basename(WHTHQ_MAIN), [$this, 'plugin_action_links']);
 
     }
 
@@ -58,16 +58,16 @@ class Watchtower
             return;
         }
         wp_enqueue_style('whthq_admin_css', WHTHQ_MAIN_URI.'assets/css/wht_dashboard.css');
-        wp_enqueue_script('whthq_admin_script', WHTHQ_MAIN_URI.'assets/js/whthq_admin.js', array('jquery','clipboard'), '1.0',
+        wp_enqueue_script('whthq_admin_script', WHTHQ_MAIN_URI.'assets/js/whthq_admin.js', ['jquery','clipboard'], '1.0',
             true);
 
     }
 
     public static function plugin_action_links($links)
     {
-        $action_links = array(
+        $action_links = [
             'settings' => '<a href="'.admin_url('options-general.php?page=watchtower-setting-admin').'">Settings</a>',
-        );
+        ];
 
         return array_merge($action_links, $links);
     }
@@ -263,7 +263,7 @@ class Watchtower
                         </div>
                         <div>
                             <?php
-                            submit_button('Save', 'primary', 'submit-save', true, array('data-style' => 'wht-save'));
+                            submit_button('Save', 'primary', 'submit-save', true, ['data-style' => 'wht-save']);
                             ?>
                         </div>
                     </div>
@@ -319,7 +319,7 @@ class Watchtower
     public function sanitize($input)
     {
         $token = new Token;
-        $new_input = array();
+        $new_input = [];
         if (isset($input['access_token']) && $input['access_token'] == 'true') {
             $new_input['access_token'] = $token->generate();
         } else {

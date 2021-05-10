@@ -42,7 +42,7 @@ class Utils
      */
     public static function size_human_readable($size)
     {
-        $sizes = array('B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB');
+        $sizes = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $retstring = '%01.2f %s';
         if ($retstring === null) {
             $retstring = '%01.2f %s';
@@ -83,7 +83,7 @@ class Utils
     public static function strposa($haystack, $needle, $offset = 0)
     {
         if (!is_array($needle)) {
-            $needle = array($needle);
+            $needle = [$needle];
         }
         foreach ($needle as $query) {
             if (strpos($haystack, $query, $offset) !== false) {

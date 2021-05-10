@@ -29,7 +29,6 @@ class Core
     private function plugin_data()
     {
         $main_file = explode('/', plugin_basename(WHTHQ_MAIN))[1];
-
         return get_plugin_data(plugin_dir_path(WHTHQ_MAIN).$main_file);
     }
 
@@ -93,21 +92,18 @@ class Core
         global $wp_version;
         do_action("wp_version_check"); // force WP to check its core for updates
         $update_core = get_site_transient("update_core"); // get information of updates
-
         if ('upgrade' == $update_core->updates[0]->response) {
             require_once(ABSPATH.WPINC.'/version.php');
             $new_core_ver = $update_core->updates[0]->current; // The new WP core version
-
-            return array(
+            return [
                 'required' => true,
                 'new_version' => $new_core_ver,
-            );
+            ];
 
         } else {
-            return array(
+            return [
                 'required' => false,
-
-            );
+            ];
         }
     }
 
@@ -145,7 +141,6 @@ class Core
             $curl->options['CURLOPT_SSL_VERIFYHOST'] = false;
             $curl->options['CURLOPT_TIMEOUT_MS'] = 10000;
             $curl->options['CURLOPT_NOSIGNAL'] = 1;
-
             return json_decode($curl->get('https://api.ipify.org?format=json'))->ip;
         } catch (\Exception $e) {
             return null;
@@ -158,14 +153,10 @@ class Core
     public function db_size()
     {
         global $wpdb;
-
         $queryStr = 'SELECT  ROUND(SUM(((DATA_LENGTH + INDEX_LENGTH)/1024/1024)),2) AS "MB"
         FROM INFORMATION_SCHEMA.TABLES
 	WHERE TABLE_SCHEMA = "'.$wpdb->dbname.'";';
-
-
         $query = $wpdb->get_row($queryStr);
-
         return $query->MB;
     }
 
@@ -177,12 +168,11 @@ class Core
         $admins_list = get_users('role=administrator');
         $admins = [];
         foreach ($admins_list as $admin) {
-            array_push($admins, array(
+            array_push($admins, [
                 'login' => $admin->user_login,
                 'email' => $admin->user_email,
-            ));
+            ]);
         }
-
         return $admins;
     }
 
@@ -207,16 +197,15 @@ class Core
         if (!class_exists('Automatic_Upgrader_Skin')) {
             include_once ABSPATH.'wp-admin/includes/class-automatic-upgrader-skin.php';
         }
-
         $core = get_site_transient("update_core");
         $upgrader = new \Core_Upgrader(new Updater_Skin());
         $upgrader->init();
         $res = $upgrader->upgrade($core->updates[0]);
         if (is_wp_error($res)) {
-            return array(
+            return [
                 'error' => 1,
                 'message' => 'WordPress core upgrade failed.'
-            );
+            ];
         } else {
             return 'success';
         }

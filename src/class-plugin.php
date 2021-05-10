@@ -78,14 +78,14 @@ class Plugin
         do_action("wp_update_plugins");
         $list = get_site_transient('update_plugins');
         if (array_key_exists($pluginPath, $list->response)) {
-            return array(
+            return [
                 'required' => true,
                 'version'  => $list->response[$pluginPath]->new_version
-            );
+            ];
         } else {
-            return array(
+            return [
                 'required' => false,
-            );
+            ];
         }
     }
 
