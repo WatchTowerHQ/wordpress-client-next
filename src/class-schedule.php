@@ -23,7 +23,8 @@ class Schedule
         $headquarter = new Headquarter($callbackHeadquarterUrl);
         $headquarter->call('/backup', [
             'access_token' => get_option('watchtower')['access_token'],
-            'backup_name' => join('.', [$backup_name, $file_extension])
+            'backup_name' => join('.', [$backup_name, $file_extension]),
+            'backup_md5' => md5_file(WHTHQ_BACKUP_DIR . '/' .join('.', [$backup_name, $file_extension]))
         ]);
     }
 

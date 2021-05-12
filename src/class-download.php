@@ -65,25 +65,26 @@ class Download
     {
         global $wp;
         $hasAccess = $this->has_access($wp->query_vars['access_token']);
-        $file = WHTHQ_BACKUP_DIR.'/'.$wp->query_vars['backup_name'];
+        $file = WHTHQ_BACKUP_DIR . '/' . $wp->query_vars['backup_name'];
         if ($hasAccess == true && file_exists($file)) {
             $this->serveFile($file);
         } else {
             http_response_code(401);
             header('content-type: application/json; charset=utf-8');
             echo json_encode([
-                    'status'  => 401,
+                    'status' => 401,
                     'message' => 'File not exist or wrong token',
-                ])."\n";
+                ]) . "\n";
         }
         exit;
     }
 
     /**
      * @param $file
-     * @param  null  $name
+     * @param null $name
+     * @param $offset
      */
-    protected function sendHeaders($file, $name = null)
+    protected function sendHeaders($file, $name = null, $offset)
     {
         $mime = (strpos($file, '.zip') !== false) ? 'application/zip' : 'application/gzip';
         if ($name == null) {
@@ -94,9 +95,26 @@ class Download
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
         header('Content-Transfer-Encoding: binary');
-        header('Content-Disposition: attachment; filename="'.$name.'";');
-        header('Content-Type: '.$mime);
-        header('Content-Length: '.filesize($file));
+        header('Content-Disposition: attachment; filename="' . $name . '";');
+        header('Content-Type: ' . $mime);
+        header('Content-Length: ' . (filesize($file) - $offset));
+        header('Accept-Ranges: bytes');
+        if ($offset > 0) {
+            header('HTTP/1.1 206 Partial Content');
+            header('Content-Range: bytes ' . $offset . '-' . (filesize($file)-1) . '/' . filesize($file))-1;
+        }
+    }
+
+    protected function resumeTransferOffset($file)
+    {
+        if (isset($_SERVER['HTTP_RANGE'])) {
+            // if the HTTP_RANGE header is set we're dealing with partial content
+            preg_match('/bytes=(\d+)-(\d+)?/', $_SERVER['HTTP_RANGE'], $matches);
+            $offset = intval($matches[1]);
+        } else {
+            $offset = 0;
+        }
+        return $offset;
     }
 
     /**
@@ -104,9 +122,17 @@ class Download
      */
     public function serveFile($file)
     {
-        self::sendHeaders($file);
+
+        $offset = self::resumeTransferOffset($file);
+        self::sendHeaders($file, null, $offset);
         $download_rate = 600 * 10;
         $handle = fopen($file, 'r');
+
+        // seek to the requested offset, this is 0 if it's not a partial content request
+        if ($offset > 0) {
+            $test = fseek($handle, $offset);
+        }
+
         while (!feof($handle)) {
             $buffer = fread($handle, round($download_rate * 1024));
             echo $buffer;
@@ -117,7 +143,9 @@ class Download
             sleep(1);
         }
         fclose($handle);
-        unlink($file);
+        if (connection_status() == 0) {
+            unlink($file);
+        }
         exit;
     }
 
