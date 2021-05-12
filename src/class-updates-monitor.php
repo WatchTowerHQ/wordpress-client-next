@@ -17,11 +17,11 @@ class Updates_Monitor
      */
     public function __construct()
     {
-        add_action('_core_updated_successfully', array(&$this, 'core_updated_successfully'));
-        add_action('activated_plugin', array(&$this, 'hooks_activated_plugin'));
-        add_action('deactivated_plugin', array(&$this, 'hooks_deactivated_plugin'));
-        add_action('upgrader_process_complete', array(&$this, 'hooks_plugin_install_or_update'), 10, 2);
-        $this->isMultisite = (is_multisite()) ? true : false;
+        add_action('_core_updated_successfully', [&$this, 'core_updated_successfully']);
+        add_action('activated_plugin', [&$this, 'hooks_activated_plugin']);
+        add_action('deactivated_plugin', [&$this, 'hooks_deactivated_plugin']);
+        add_action('upgrader_process_complete', [&$this, 'hooks_plugin_install_or_update'], 10, 2);
+        $this->isMultisite = is_multisite();
     }
 
     /**
@@ -40,22 +40,22 @@ class Updates_Monitor
                 switch_to_blog($blog_id);
                 $wpdb->insert(
                     $wpdb->prefix.'watchtower_logs',
-                    array(
+                    [
                         'action'     => $data['action'],
                         'who'        => $data['who'],
                         'created_at' => date('Y-m-d H:i:s')
-                    )
+                    ]
                 );
             }
             switch_to_blog($old_blog);
         } else {
             $wpdb->insert(
                 $wpdb->prefix.'watchtower_logs',
-                array(
+                [
                     'action'     => $data['action'],
                     'who'        => $data['who'],
                     'created_at' => date('Y-m-d H:i:s')
-                )
+                ]
             );
         }
 
@@ -79,10 +79,10 @@ class Updates_Monitor
             $who = get_current_user_id();
         }
 
-        $this->insertLog(array(
+        $this->insertLog([
             'who'    => $who,
             'action' => $object_name,
-        ));
+        ]);
 
     }
 
@@ -101,10 +101,10 @@ class Updates_Monitor
             $plugin_name = $plugin_data['Name'];
         }
 
-        $this->insertLog(array(
+        $this->insertLog([
             'who'    => get_current_user_id(),
             'action' => $action.' '.$plugin_name,
-        ));
+        ]);
     }
 
     /**
@@ -141,10 +141,10 @@ class Updates_Monitor
 
             $data = get_plugin_data($upgrader->skin->result['local_destination'].'/'.$path, true, false);
 
-            $this->insertLog(array(
+            $this->insertLog([
                 'who'    => get_current_user_id(),
                 'action' => 'Installed Plugin: '.$data['Name'].' | Ver.'.$data['Version'],
-            ));
+            ]);
         }
 
         if ('update' === $extra['action']) {
@@ -155,16 +155,16 @@ class Updates_Monitor
                     return;
                 }
 
-                $slugs = array($upgrader->skin->plugin);
+                $slugs = [$upgrader->skin->plugin];
             }
 
             foreach ($slugs as $slug) {
                 $data = get_plugin_data(WP_PLUGIN_DIR.'/'.$slug, true, false);
 
-                $this->insertLog(array(
+                $this->insertLog([
                     'who'    => get_current_user_id(),
                     'action' => 'Updated Plugin: '.$data['Name'].' | Ver.'.$data['Version'],
-                ));
+                ]);
             }
         }
     }

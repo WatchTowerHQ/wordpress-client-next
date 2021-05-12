@@ -6,7 +6,7 @@
     'aliases' => 
     array (
     ),
-    'reference' => '76e59c1b59ea11dcfb8156763aa1926d30c3229b',
+    'reference' => '120b4134a7efd7d3fdcc393cddf76cfc3a0195e8',
     'name' => 'whatarmy/watchtowerhq',
   ),
   'versions' => 
@@ -119,7 +119,7 @@
       'aliases' => 
       array (
       ),
-      'reference' => '76e59c1b59ea11dcfb8156763aa1926d30c3229b',
+      'reference' => '120b4134a7efd7d3fdcc393cddf76cfc3a0195e8',
     ),
     'woocommerce/action-scheduler' => 
     array (

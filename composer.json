@@ -2,6 +2,7 @@
   "name": "whatarmy/watchtowerhq",
   "license": "GPL-3.0",
   "type": "project",
+  "description": "The WatchTowerHQ WordPress plugin allows us to monitor, backup, upgrade, and manage your site!",
   "authors": [
     {
       "name": "WhatArmy",

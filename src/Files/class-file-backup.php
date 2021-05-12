@@ -70,15 +70,15 @@ class File_Backup
      */
     private function exclusions($callbackHeadquarterUrl)
     {
-        $arrContextOptions = array(
-            "ssl" => array(
+        $arrContextOptions = [
+            "ssl" => [
                 "verify_peer" => false,
                 "verify_peer_name" => false,
-            ),
-        );
+            ],
+        ];
         $data = file_get_contents($callbackHeadquarterUrl . WHTHQ_BACKUP_EXCLUSIONS_ENDPOINT, false,
             stream_context_create($arrContextOptions));
-        $ret = array();
+        $ret = [];
 
         if (Utils::is_json($data)) {
             foreach (json_decode($data) as $d) {
