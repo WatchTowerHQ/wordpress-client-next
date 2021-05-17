@@ -101,7 +101,7 @@ class Download
         header('Accept-Ranges: bytes');
         if ($offset > 0) {
             header('HTTP/1.1 206 Partial Content');
-            header('Content-Range: bytes ' . $offset . '-' . (filesize($file)-1) . '/' . filesize($file))-1;
+            header('Content-Range: bytes ' . $offset . '-' . (filesize($file)-1) . '/' . (filesize($file)-1));
         }
     }
 
@@ -130,7 +130,7 @@ class Download
 
         // seek to the requested offset, this is 0 if it's not a partial content request
         if ($offset > 0) {
-            $test = fseek($handle, $offset);
+            fseek($handle, $offset);
         }
 
         while (!feof($handle)) {
@@ -140,7 +140,10 @@ class Download
                 @ob_end_flush();
             }
             flush();
-            sleep(1);
+            //use sleep for all non WPE hosting
+            if (!function_exists('is_wpe')) {
+                sleep(1);
+            }
         }
         fclose($handle);
         if (connection_status() == 0) {
