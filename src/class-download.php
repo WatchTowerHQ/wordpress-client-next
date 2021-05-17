@@ -27,6 +27,7 @@ class Download
     public function add_query_vars($vars)
     {
         $vars[] = 'wht_download';
+        $vars[] = 'wht_download_finished';
         $vars[] = 'access_token';
         $vars[] = 'backup_name';
 
@@ -38,7 +39,8 @@ class Download
     {
         add_rewrite_rule('^wht_download/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
             'index.php?wht_download=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
-
+        add_rewrite_rule('^wht_download_finished/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
+            'index.php?wht_download_finished=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
     }
 
     private function has_access($token)
@@ -56,7 +58,7 @@ class Download
     public function sniff_requests()
     {
         global $wp;
-        if (isset($wp->query_vars['wht_download'])) {
+        if (isset($wp->query_vars['wht_download']) || isset($wp->query_vars['wht_download_finished'])) {
             $this->handle_request();
         }
     }
@@ -67,7 +69,21 @@ class Download
         $hasAccess = $this->has_access($wp->query_vars['access_token']);
         $file = WHTHQ_BACKUP_DIR . '/' . $wp->query_vars['backup_name'];
         if ($hasAccess == true && file_exists($file)) {
-            $this->serveFile($file);
+            if(isset($wp->query_vars['wht_download_finished']))
+            {
+                unlink($file);
+                http_response_code(200);
+                header('content-type: application/json; charset=utf-8');
+                echo json_encode([
+                        'status' => 200,
+                        'message' => 'OK',
+                    ]) . "\n";
+            }
+            else
+            {
+                $this->serveFile($file);
+            }
+
         } else {
             http_response_code(401);
             header('content-type: application/json; charset=utf-8');
