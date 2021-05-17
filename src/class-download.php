@@ -162,9 +162,6 @@ class Download
             }
         }
         fclose($handle);
-        if (connection_status() == 0) {
-            unlink($file);
-        }
         exit;
     }
 
