@@ -25,12 +25,12 @@ class InstalledVersions
 private static $installed = array (
   'root' => 
   array (
-    'pretty_version' => 'dev-master',
-    'version' => 'dev-master',
+    'pretty_version' => 'dev-develop',
+    'version' => 'dev-develop',
     'aliases' => 
     array (
     ),
-    'reference' => '120b4134a7efd7d3fdcc393cddf76cfc3a0195e8',
+    'reference' => '1ff797f81430ddaea95458c14aab316834062190',
     'name' => 'whatarmy/watchtowerhq',
   ),
   'versions' => 
@@ -138,12 +138,12 @@ private static $installed = array (
     ),
     'whatarmy/watchtowerhq' => 
     array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
+      'pretty_version' => 'dev-develop',
+      'version' => 'dev-develop',
       'aliases' => 
       array (
       ),
-      'reference' => '120b4134a7efd7d3fdcc393cddf76cfc3a0195e8',
+      'reference' => '1ff797f81430ddaea95458c14aab316834062190',
     ),
     'woocommerce/action-scheduler' => 
     array (
