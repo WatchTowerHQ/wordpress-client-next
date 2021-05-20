@@ -84,6 +84,7 @@ class Core
             'system_info' => [
                 'system_command' => Utils::isFuncAvailable('system'),
                 'mysql_dump_location' => (Utils::isFuncAvailable('system')) ? Utils::detectMysqldumpLocation() : 'n/a',
+                'php_version' => Utils::php_version(),
             ],
         ];
     }

@@ -240,9 +240,4 @@ class Utils
         }
         return 'n/a';
     }
-
-    public static function flush_cache()
-    {
-        //wp_cache_flush();
-    }
 }

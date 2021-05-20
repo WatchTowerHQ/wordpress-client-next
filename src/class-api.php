@@ -91,7 +91,6 @@ class Api
     {
         $core = new Core();
         $res = $core->upgrade();
-        Utils::flush_cache();
         return $this->make_response($res);
     }
 
@@ -103,7 +102,6 @@ class Api
     {
         $plugin = new Theme();
         $res = $plugin->doUpdate($request->get_param('toUpdate'));
-        Utils::flush_cache();
         return $this->make_response($res);
     }
 
@@ -115,7 +113,6 @@ class Api
     {
         $plugin = new Plugin();
         $res = $plugin->doUpdate($request->get_param('toUpdate'));
-        Utils::flush_cache();
         return $this->make_response($res);
     }
 
@@ -202,7 +199,6 @@ class Api
      */
     public function get_all_action()
     {
-        Utils::flush_cache();
         $core = new Core;
         $plugins = new Plugin;
         $themes = new Theme;
