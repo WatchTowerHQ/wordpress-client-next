@@ -68,7 +68,7 @@ class Core
             'is_public' => get_option('blog_public'),
             'installation_size' => $this->installation_file_size(),
             'comments' => wp_count_comments(),
-            'comments_allowed' => (get_default_comment_status() == 'open') ? true : false,
+            'comments_allowed' => get_default_comment_status() == 'open',
             'site_ip' => $this->external_ip(),
             'db_size' => $this->db_size(),
             'timezone' => [
@@ -81,6 +81,10 @@ class Core
             'content_dir' => (defined('WP_CONTENT_DIR')) ? WP_CONTENT_DIR : false,
             'pwp_name' => (defined('PWP_NAME')) ? PWP_NAME : false,
             'wpe_auth' => (defined('WPE_APIKEY')) ? md5('wpe_auth_salty_dog|'.WPE_APIKEY) : false,
+            'system_info' => [
+                'system_command' => Utils::isFuncAvailable('system'),
+                'mysql_dump_location' => (Utils::isFuncAvailable('system')) ? Utils::detectMysqldumpLocation() : 'n/a',
+            ],
         ];
     }
 
