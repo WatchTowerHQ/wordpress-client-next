@@ -146,20 +146,15 @@ class Mysql_Backup
 
     /**
      * @param $callback_url
-     * @return string
+     * @param $dir
      */
-    public function run($callback_url)
+    private function runInQueue($callback_url, $dir)
     {
-        Utils::cleanup_old_backups(WHTHQ_BACKUP_DIR);
-        Utils::create_backup_dir();
-        $this->group = date('Y_m_d__H_i_s')."_".Utils::random_string();
-        $dir = WHTHQ_BACKUP_DIR.'/'.$this->group;
         $stats = $this->prepare_jobs();
         $this->dump_structure($stats, $dir);
         $ct = 1;
         foreach ($stats as $table) {
             if ($this->should_separate($table)) {
-
                 foreach ($this->split_to_parts($table) as $part) {
                     error_log($table['name'].'/'.$part['start'].'/'.$part['end']);
                     $this->dispatch_job([
@@ -181,6 +176,22 @@ class Mysql_Backup
             }
         }
         $this->add_finish_job($dir, $callback_url);
+    }
+
+    /**
+     * @param $callback_url
+     * @return string
+     */
+    public function run($callback_url)
+    {
+        Utils::cleanup_old_backups(WHTHQ_BACKUP_DIR);
+        Utils::create_backup_dir();
+        $this->group = date('Y_m_d__H_i_s')."_".Utils::random_string();
+        $dir = WHTHQ_BACKUP_DIR.'/'.$this->group;
+
+        //TODO: implement system mysqldump backup
+        $this->runInQueue($callback_url, $dir);
+
         return $this->group.'_dump.sql.gz';
     }
 
