@@ -32,6 +32,7 @@ class Download
     {
         $vars[] = 'wht_download';
         $vars[] = 'wht_download_finished';
+        $vars[] = 'wht_object_download';
         $vars[] = 'access_token';
         $vars[] = 'backup_name';
         return $vars;
@@ -44,6 +45,8 @@ class Download
             'index.php?wht_download=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
         add_rewrite_rule('^wht_download_finished/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
             'index.php?wht_download_finished=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
+        add_rewrite_rule('^wht_object_download/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
+            'index.php?wht_object_download=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
     }
 
     /**
@@ -65,7 +68,7 @@ class Download
     public function sniff_requests()
     {
         global $wp;
-        if (isset($wp->query_vars['wht_download']) || isset($wp->query_vars['wht_download_finished'])) {
+        if (isset($wp->query_vars['wht_download']) || isset($wp->query_vars['wht_download_finished']) || isset($wp->query_vars['wht_object_download'])) {
             $this->handle_request();
         }
     }
@@ -77,7 +80,13 @@ class Download
     {
         global $wp;
         $hasAccess = $this->has_access($wp->query_vars['access_token']);
-        $file = WHTHQ_BACKUP_DIR.'/'.$wp->query_vars['backup_name'];
+
+        if (isset($wp->query_vars['wht_object_download'])) {
+            $file = $wp->query_vars['backup_name'];
+        } else {
+            $file = WHTHQ_BACKUP_DIR . '/' . $wp->query_vars['backup_name'];
+        }
+
         if ($hasAccess == true && file_exists($file)) {
             if (isset($wp->query_vars['wht_download_finished'])) {
                 unlink($file);
@@ -86,7 +95,7 @@ class Download
                 echo json_encode([
                         'status' => 200,
                         'message' => 'OK',
-                    ])."\n";
+                    ]) . "\n";
             } else {
                 $this->serveFile($file);
             }
@@ -97,14 +106,14 @@ class Download
             echo json_encode([
                     'status' => 401,
                     'message' => 'File not exist or wrong token',
-                ])."\n";
+                ]) . "\n";
         }
         exit;
     }
 
     /**
      * @param $file
-     * @param  null  $name
+     * @param null $name
      * @param $offset
      */
     protected function sendHeaders($file, $offset, $name = null)
@@ -118,13 +127,13 @@ class Download
         header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
         header('Cache-Control: private', false);
         header('Content-Transfer-Encoding: binary');
-        header('Content-Disposition: attachment; filename="'.$name.'";');
-        header('Content-Type: '.$mime);
-        header('Content-Length: '.(filesize($file) - $offset));
+        header('Content-Disposition: attachment; filename="' . $name . '";');
+        header('Content-Type: ' . $mime);
+        header('Content-Length: ' . (filesize($file) - $offset));
         header('Accept-Ranges: bytes');
         if ($offset > 0) {
             header('HTTP/1.1 206 Partial Content');
-            header('Content-Range: bytes '.$offset.'-'.(filesize($file) - 1).'/'.(filesize($file) - 1));
+            header('Content-Range: bytes ' . $offset . '-' . (filesize($file) - 1) . '/' . (filesize($file) - 1));
         }
     }
 

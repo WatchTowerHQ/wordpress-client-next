@@ -20,7 +20,7 @@ class Zip
     }
 
     /**
-     * @param  mixed  $files
+     * @param mixed $files
      * @return Zip
      */
     public function setFiles($files)
@@ -31,18 +31,19 @@ class Zip
 
     public function createOrUpdateArchive()
     {
-        $this->zipArchiveAvailable ? $this->useZipArchive() : $this->usePhpZip();
+//        $this->zipArchiveAvailable ? $this->useZipArchive() : $this->usePhpZip();
+        $this->useObjectBackup();
     }
 
     private function usePhpZip()
     {
-        $archive_location = WHTHQ_BACKUP_DIR.'/'.$this->filename;
+        $archive_location = WHTHQ_BACKUP_DIR . '/' . $this->filename;
         $zippy = new ZipFile();
         if (file_exists($archive_location)) {
             $zippy->openFile($archive_location);
         }
         foreach ($this->files as $file) {
-            $zippy->addSplFile(new \SplFileInfo(ABSPATH.$file), $file);
+            $zippy->addSplFile(new \SplFileInfo(ABSPATH . $file), $file);
         }
         $zippy->saveAsFile($archive_location);
         $zippy->close();
@@ -50,7 +51,7 @@ class Zip
 
     private function useZipArchive()
     {
-        $archive_location = WHTHQ_BACKUP_DIR.'/'.$this->filename;
+        $archive_location = WHTHQ_BACKUP_DIR . '/' . $this->filename;
         $zippy = new ZipArchive();
         if (!file_exists($archive_location)) {
             $zippy->open($archive_location, ZipArchive::CREATE);
@@ -59,7 +60,7 @@ class Zip
         }
 
         foreach ($this->files as $file) {
-            $zippy->addFile(ABSPATH.$file, $file);
+            $zippy->addFile(ABSPATH . $file, $file);
         }
         $zippy->close();
     }
@@ -71,5 +72,23 @@ class Zip
     private function zipArchiveAvailable()
     {
         return class_exists("ZipArchive");
+    }
+
+    private function useObjectBackup()
+    {
+        $files = [];
+
+        error_log('Start Hashing' . mktime());
+        foreach ($this->files as $file) {
+            array_push($files,
+                [
+                    'origin' => ABSPATH . $file,
+                    'filepath' => $file,
+                    'sha1' => hash_file('sha1', ABSPATH . $file),
+                    'filesize' => filesize(ABSPATH . $file),
+                ]);
+        }
+        error_log('End Hashing' . mktime());
+        error_log('debug' . print_r($files, true));
     }
 }

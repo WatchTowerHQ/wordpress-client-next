@@ -24,8 +24,21 @@ class Schedule
         $headquarter->call('/backup', [
             'access_token' => get_option('watchtower')['access_token'],
             'backup_name' => join('.', [$backup_name, $file_extension]),
-            'backup_md5' => md5_file(WHTHQ_BACKUP_DIR . '/' .join('.', [$backup_name, $file_extension]))
+            'backup_md5' => md5_file(WHTHQ_BACKUP_DIR . '/' . join('.', [$backup_name, $file_extension]))
         ]);
+
+//        $files = [
+//            [   'origin' => '/Users/camil/code2prog/wordpress/wp-signup.php',
+//                'filepath' => 'wp-signup.php',
+//                'sha1' => '4330c75f26e43c1dc6a89715bdba57d33034e65f',
+//            ]
+//        ];
+//
+//        $headquarter = new Headquarter($callbackHeadquarterUrl);
+//        $headquarter->call('/backup_files_list', [
+//            'access_token' => get_option('watchtower')['access_token'],
+//            'backup_files_list' => $files
+//        ]);
     }
 
     /**
