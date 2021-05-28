@@ -107,13 +107,7 @@ class Download
     {
         global $wp;
         $hasAccess = $this->has_access($wp->query_vars['access_token']);
-
-        if (isset($wp->query_vars['wht_object_download'])) {
-            $file = $wp->query_vars['backup_name'];
-        } else {
-            $file = WHTHQ_BACKUP_DIR . '/' . $wp->query_vars['backup_name'];
-        }
-
+        $file = WHTHQ_BACKUP_DIR.'/'.$wp->query_vars['backup_name'];
         if ($hasAccess == true && file_exists($file)) {
             if (isset($wp->query_vars['wht_download_finished'])) {
                 unlink($file);
