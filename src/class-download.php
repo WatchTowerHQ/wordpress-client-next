@@ -53,7 +53,7 @@ class Download
      * @param $token
      * @return bool
      */
-    private function has_access($token)
+    private function has_access($token): bool
     {
         if ($token == get_option('watchtower')['access_token']) {
             return true;
