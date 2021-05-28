@@ -35,6 +35,7 @@ class Download
         $vars[] = 'wht_object_download';
         $vars[] = 'access_token';
         $vars[] = 'backup_name';
+        $vars[] = 'wht_object_origin';
         return $vars;
     }
 
@@ -46,7 +47,7 @@ class Download
         add_rewrite_rule('^wht_download_finished/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
             'index.php?wht_download_finished=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
         add_rewrite_rule('^wht_object_download/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
-            'index.php?wht_object_download=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
+            'index.php?wht_object_download=1&access_token=$matches[1]&wht_object_origin=$matches[2]', 'top');
     }
 
     /**
@@ -68,9 +69,35 @@ class Download
     public function sniff_requests()
     {
         global $wp;
-        if (isset($wp->query_vars['wht_download']) || isset($wp->query_vars['wht_download_finished']) || isset($wp->query_vars['wht_object_download'])) {
+        if (isset($wp->query_vars['wht_download']) || isset($wp->query_vars['wht_download_finished'])) {
             $this->handle_request();
+        } else if (isset($wp->query_vars['wht_object_download']) && isset($wp->query_vars['wht_object_origin'])) {
+            $this->handle_object_download_request();
         }
+    }
+
+    public function access_denied_response()
+    {
+        http_response_code(401);
+        header('content-type: application/json; charset=utf-8');
+        echo json_encode([
+                'status' => 401,
+                'message' => 'File not exist or wrong token',
+            ]) . "\n";
+    }
+
+    public function handle_object_download_request()
+    {
+        global $wp;
+        $hasAccess = $this->has_access($wp->query_vars['access_token']);
+        $file = $wp->query_vars['wht_object_origin'];
+
+        if ($hasAccess == true && file_exists($file)) {
+            $this->serveFile($file);
+        } else {
+            $this->access_denied_response();
+        }
+        exit;
     }
 
     /**
@@ -101,12 +128,7 @@ class Download
             }
 
         } else {
-            http_response_code(401);
-            header('content-type: application/json; charset=utf-8');
-            echo json_encode([
-                    'status' => 401,
-                    'message' => 'File not exist or wrong token',
-                ]) . "\n";
+            $this->access_denied_response();
         }
         exit;
     }
