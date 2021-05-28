@@ -218,7 +218,7 @@ class Utils
         return true;
     }
 
-    public static function allFilesList($excludes = ''): Finder
+    public static function allFilesList($excludes = []): Finder
     {
         $finder = new Finder();
         $finder->in(ABSPATH);
