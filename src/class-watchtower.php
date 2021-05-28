@@ -48,7 +48,7 @@ class Watchtower
         register_activation_hook(WHTHQ_MAIN, [$this, 'check_db']);
         add_action('admin_notices', [$this, 'wht_activation_notice']);
 
-        add_filter('plugin_action_links_'.plugin_basename(WHTHQ_MAIN), [$this, 'plugin_action_links']);
+        add_filter('plugin_action_links_' . plugin_basename(WHTHQ_MAIN), [$this, 'plugin_action_links']);
 
     }
 
@@ -57,8 +57,8 @@ class Watchtower
         if ('settings_page_watchtower-setting-admin' != $hook) {
             return;
         }
-        wp_enqueue_style('whthq_admin_css', WHTHQ_MAIN_URI.'assets/css/wht_dashboard.css');
-        wp_enqueue_script('whthq_admin_script', WHTHQ_MAIN_URI.'assets/js/whthq_admin.js', ['jquery','clipboard'], '1.0',
+        wp_enqueue_style('whthq_admin_css', WHTHQ_MAIN_URI . 'assets/css/wht_dashboard.css');
+        wp_enqueue_script('whthq_admin_script', WHTHQ_MAIN_URI . 'assets/js/whthq_admin.js', ['jquery', 'clipboard'], '1.0',
             true);
 
     }
@@ -66,7 +66,7 @@ class Watchtower
     public static function plugin_action_links($links)
     {
         $action_links = [
-            'settings' => '<a href="'.admin_url('options-general.php?page=watchtower-setting-admin').'">Settings</a>',
+            'settings' => '<a href="' . admin_url('options-general.php?page=watchtower-setting-admin') . '">Settings</a>',
         ];
 
         return array_merge($action_links, $links);
@@ -99,8 +99,8 @@ class Watchtower
             $blog_id = $blog->id;
         }
         switch_to_blog($blog_id);
-        $table_name = $wpdb->prefix.'watchtower_logs';
-        $wpdb->query("DROP TABLE IF EXISTS ".$table_name);
+        $table_name = $wpdb->prefix . 'watchtower_logs';
+        $wpdb->query("DROP TABLE IF EXISTS " . $table_name);
         restore_current_blog();
 
     }
@@ -151,13 +151,14 @@ class Watchtower
             <div class="updated notice is-dismissible"
                  style="padding-top:15px;padding-bottom:15px;display:flex;flex-direction:row">
                 <div>
-                    <img src="<?php echo WHTHQ_MAIN_URI.'assets/images/logo1x.png'; ?>"
+                    <img src="<?php echo WHTHQ_MAIN_URI . 'assets/images/logo1x.png'; ?>"
                          style="height:100px;padding-right:15px;" alt="">
                 </div>
                 <div>
                     <h2>Thank you for installing the WatchTower HQ Monitoring Agent!</h2>
                     <h4 style="margin-bottom:0;"><a
-                                href="<?php echo admin_url('options-general.php?page=watchtower-setting-admin'); ?>">Click here</a> to view your Access Token.</h4>
+                                href="<?php echo admin_url('options-general.php?page=watchtower-setting-admin'); ?>">Click
+                            here</a> to view your Access Token.</h4>
                 </div>
             </div>
             <?php
@@ -171,7 +172,7 @@ class Watchtower
     public function load_wp_plugin_class()
     {
         if (!function_exists('get_plugins')) {
-            require_once ABSPATH.'wp-admin/includes/plugin.php';
+            require_once ABSPATH . 'wp-admin/includes/plugin.php';
         }
     }
 
@@ -183,7 +184,7 @@ class Watchtower
         global $wpdb;
 
         $charset_collate = $wpdb->get_charset_collate();
-        $table_name = $wpdb->prefix.'watchtower_logs';
+        $table_name = $wpdb->prefix . 'watchtower_logs';
 
 
         $sql = "CREATE TABLE $table_name (
@@ -194,7 +195,7 @@ class Watchtower
 		UNIQUE KEY id (id)
 	) $charset_collate;";
 
-        require_once(ABSPATH.'wp-admin/includes/upgrade.php');
+        require_once(ABSPATH . 'wp-admin/includes/upgrade.php');
         dbDelta($sql);
 
         update_option('watchtower_db_version', $version);
@@ -231,9 +232,9 @@ class Watchtower
     {
         $this->options = get_option('watchtower');
         ?>
-        <div class="wrap">
+        <div class="wht-wrapper">
             <div class="wht-wrap">
-                <img src="<?php echo plugin_dir_url(__FILE__).'../assets/images/logo.png'; ?>" alt="">
+                <img src="<?php echo plugin_dir_url(__FILE__) . '../assets/images/logo.png'; ?>" alt="">
                 <form method="post" action="options.php" id="wht-form">
                     <?php
                     settings_fields('watchtower');
@@ -342,9 +343,9 @@ class Watchtower
     {
         print '
 <span class="watchtower_token_area">
-<span class="watchtower_token_field clip" data-clipboard-text="'.get_option('watchtower')['access_token'].'">
+<span class="watchtower_token_field clip" data-clipboard-text="' . get_option('watchtower')['access_token'] . '">
 <small>ACCESS TOKEN</small>
-'.get_option('watchtower')['access_token'].'
+' . get_option('watchtower')['access_token'] . '
 <span id="wht-copied">Copied!</span>
 <span id="wht-copy-info"><span class="dashicons dashicons-admin-page"></span></span>
 </span>
@@ -366,7 +367,7 @@ class Watchtower
     {
         $is_checked = (get_option('watchtower')['use_beta'] == 1) ? "checked" : "";
         printf(
-            '<input type="checkbox" value="true" name="watchtower[use_beta]" '.$is_checked.'/>',
+            '<input type="checkbox" value="true" name="watchtower[use_beta]" ' . $is_checked . '/>',
             isset($this->options['use_beta']) ? esc_attr($this->options['use_beta']) : ''
         );
     }

@@ -2,6 +2,15 @@
     text-align: center;
 }
 
+.wht-wrapper {
+    position: fixed;
+    height: calc(100% - 32px);
+    width: calc(100% - 160px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
 .titled {
     font-size: 30px !important;
     color: #333 !important;
