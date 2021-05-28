@@ -14,7 +14,6 @@ namespace WhatArmy\Watchtower;
 class Headquarter
 {
     public $headquarterUrl;
-    public $getRequest = true;
 
     /**
      * Headquarter constructor.
@@ -39,15 +38,7 @@ class Headquarter
             $curl->options['CURLOPT_TIMEOUT_MS'] = 10000;
             $curl->options['CURLOPT_NOSIGNAL'] = 1;
             $data['access_token'] = get_option('watchtower')['access_token'];
-            if($this->getRequest)
-            {
-                $curl->get($this->headquarterUrl.$endpoint, $data);
-            }
-            else
-            {
-                $curl->post($this->headquarterUrl.$endpoint, $data);
-            }
-
+            $curl->get($this->headquarterUrl.$endpoint, $data);
         } catch (\Exception $e) {
 
         }
