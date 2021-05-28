@@ -58,6 +58,8 @@ class Api
         /**
          * Backups
          */
+        register_rest_route($this->route_namespace(), 'backup/file/list',
+            $this->resolve_action('list_backup_file_action'));
         register_rest_route($this->route_namespace(), 'backup/file/run',
             $this->resolve_action('run_backup_file_action'));
         register_rest_route($this->route_namespace(), 'backup/file/run_queue',
@@ -171,6 +173,22 @@ class Api
         return $this->make_response(['filename' => $filename]);
     }
 
+    /**
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response
+     */
+    public function list_backup_file_action(WP_REST_Request $request)
+    {
+        $filesListRaw = Utils::allFilesList();
+        $files = [];
+        foreach ($filesListRaw as $file) {
+            if ($file->isDir()) {
+                continue;
+            }
+            array_push($files, ['origin'=>$file->getPathname(),'filesize'=>$file->getSize()]);
+        }
+        return $this->make_response(['file_objects' => $files]);
+    }
 
     /**
      * @param WP_REST_Request $request
