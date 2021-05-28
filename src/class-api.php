@@ -60,6 +60,8 @@ class Api
          */
         register_rest_route($this->route_namespace(), 'backup/file/list',
             $this->resolve_action('list_backup_file_action'));
+        register_rest_route($this->route_namespace(), 'backup/file/get',
+            $this->resolve_action('get_backup_file_action'));
         register_rest_route($this->route_namespace(), 'backup/file/run',
             $this->resolve_action('run_backup_file_action'));
         register_rest_route($this->route_namespace(), 'backup/file/run_queue',
@@ -171,6 +173,21 @@ class Api
         $filename = $backup->run($request->get_param('callbackUrl'));
 
         return $this->make_response(['filename' => $filename]);
+    }
+
+    /**
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response
+     */
+    public function get_backup_file_action(WP_REST_Request $request)
+    {
+        $object_files = [];
+        foreach ($request['wht_backup_origins'] as $object_origin) {
+            if (file_exists($object_origin)) {
+                array_push($object_files, ['sha1' => sha1_file($object_origin), 'file_content' => base64_encode(file_get_contents($object_origin))]);
+            }
+        }
+        return $this->make_response(['files' => $object_files]);
     }
 
     /**
