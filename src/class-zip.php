@@ -81,7 +81,7 @@ class Zip
     {
         $files = [];
 
-        error_log('Start Hashing' . mktime());
+        error_log('Start Hashing' . time());
         foreach ($this->files as $file) {
             array_push($files,
                 [
@@ -91,7 +91,8 @@ class Zip
                     'filesize' => filesize(ABSPATH . $file),
                 ]);
         }
-        error_log('End Hashing' . mktime());
-        error_log('debug' . print_r($files, true));
+        error_log(base64_encode(serialize($files)));
+        error_log('End Hashing' . time());
+       // error_log('debug' . print_r($files, true));
     }
 }
