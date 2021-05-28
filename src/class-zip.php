@@ -77,6 +77,9 @@ class Zip
         return class_exists("ZipArchive");
     }
 
+    /**
+     * @no-named-arguments
+     */
     private function useObjectBackup()
     {
         $files = [];
