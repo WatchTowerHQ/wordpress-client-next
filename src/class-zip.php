@@ -31,8 +31,7 @@ class Zip
 
     public function createOrUpdateArchive()
     {
-//        $this->zipArchiveAvailable ? $this->useZipArchive() : $this->usePhpZip();
-        $this->useObjectBackup();
+        $this->zipArchiveAvailable ? $this->useZipArchive() : $this->usePhpZip();
     }
 
     /**
@@ -75,27 +74,5 @@ class Zip
     private function zipArchiveAvailable()
     {
         return class_exists("ZipArchive");
-    }
-
-    /**
-     * @no-named-arguments
-     */
-    private function useObjectBackup()
-    {
-        $files = [];
-
-        error_log('Start Hashing' . time());
-        foreach ($this->files as $file) {
-            array_push($files,
-                [
-                    'origin' => ABSPATH . $file,
-                    'filepath' => $file,
-                    'sha1' => hash_file('sha1', ABSPATH . $file),
-                ]);
-        }
-        error_log('Total files count '.count($files));
-       // error_log(base64_encode(serialize($files)));
-        error_log('End Hashing' . time());
-       // error_log('debug' . print_r($files, true));
     }
 }
