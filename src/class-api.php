@@ -202,7 +202,10 @@ class Api
             if ($file->isDir()) {
                 continue;
             }
-            array_push($files, ['origin'=>$file->getPathname(),'filesize'=>$file->getSize()]);
+            array_push($files, [
+                'origin' => str_replace(ABSPATH, '', $file->getPathname()),
+                'filesize' => $file->getSize()
+            ]);
         }
         return $this->make_response(['files' => $files]);
     }
