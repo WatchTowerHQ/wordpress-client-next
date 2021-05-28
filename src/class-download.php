@@ -33,6 +33,7 @@ class Download
         $vars[] = 'wht_download';
         $vars[] = 'wht_download_finished';
         $vars[] = 'wht_object_download';
+        $vars[] = 'wht_object_backup';
         $vars[] = 'access_token';
         $vars[] = 'backup_name';
         $vars[] = 'wht_object_origin';
@@ -48,6 +49,8 @@ class Download
             'index.php?wht_download_finished=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
         add_rewrite_rule('^wht_object_download/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
             'index.php?wht_object_download=1&access_token=$matches[1]&wht_object_origin=$matches[2]', 'top');
+        add_rewrite_rule('^wht_object_download/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
+            'index.php?wht_object_backup=1&access_token=$matches[1]&wht_object_origin=$matches[2]', 'top');
     }
 
     /**
@@ -74,6 +77,9 @@ class Download
         } else if (isset($wp->query_vars['wht_object_download']) && isset($wp->query_vars['wht_object_origin'])) {
             $this->handle_object_download_request();
         }
+        else if (isset($wp->query_vars['wht_object_backup'])) {
+            $this->handle_object_backup_request();
+        }
     }
 
     public function access_denied_response()
@@ -84,6 +90,24 @@ class Download
                 'status' => 401,
                 'message' => 'File not exist or wrong token',
             ]) . "\n";
+    }
+
+    public function handle_object_backup_request()
+    {
+        global $wp;
+        $hasAccess = $this->has_access($wp->query_vars['access_token']);
+
+        if ($hasAccess == true) {
+            http_response_code(200);
+            header('content-type: application/json; charset=utf-8');
+            echo json_encode([
+                    'status' => 200,
+                    'Files' => 'Files',
+                ]) . "\n";
+        } else {
+            $this->access_denied_response();
+        }
+        exit;
     }
 
     public function handle_object_download_request()
