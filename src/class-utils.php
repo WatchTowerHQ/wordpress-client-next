@@ -8,6 +8,7 @@
 namespace WhatArmy\Watchtower;
 
 use http\Exception\RuntimeException;
+use Symfony\Component\Finder\Finder;
 
 /**
  * Class Utils
@@ -23,7 +24,7 @@ class Utils
     }
 
     /**
-     * @param  int  $length
+     * @param int $length
      * @return string
      */
     public static function random_string($length = 12)
@@ -76,7 +77,7 @@ class Utils
     /**
      * @param $haystack
      * @param $needle
-     * @param  int  $offset
+     * @param int $offset
      * @return bool
      */
     public static function strposa($haystack, $needle, $offset = 0)
@@ -121,12 +122,12 @@ class Utils
 
     /**
      * @param $path
-     * @param  float|int  $ms
+     * @param float|int $ms
      */
     public static function cleanup_old_backups($path, $ms = 60 * 60 * 12)
     {
         Schedule::clean_older_than_days(2);
-        foreach (glob($path.'/*') as $file) {
+        foreach (glob($path . '/*') as $file) {
             if (is_file($file)) {
                 if (time() - filemtime($file) >= $ms) {
                     unlink($file);
@@ -164,24 +165,24 @@ class Utils
         if (!file_exists(WHTHQ_BACKUP_DIR)) {
             mkdir(WHTHQ_BACKUP_DIR, 0777, true);
         }
-        if (!file_exists(WHTHQ_BACKUP_DIR.'/index.html')) {
-            @file_put_contents(WHTHQ_BACKUP_DIR.'/index.html',
-                file_get_contents(plugin_dir_path(WHTHQ_MAIN).'/stubs/index.html.stub'));
+        if (!file_exists(WHTHQ_BACKUP_DIR . '/index.html')) {
+            @file_put_contents(WHTHQ_BACKUP_DIR . '/index.html',
+                file_get_contents(plugin_dir_path(WHTHQ_MAIN) . '/stubs/index.html.stub'));
         }
-        if (!file_exists(WHTHQ_BACKUP_DIR.'/.htaccess')) {
-            @file_put_contents(WHTHQ_BACKUP_DIR.'/.htaccess',
-                file_get_contents(plugin_dir_path(WHTHQ_MAIN).'/stubs/htaccess.stub'));
+        if (!file_exists(WHTHQ_BACKUP_DIR . '/.htaccess')) {
+            @file_put_contents(WHTHQ_BACKUP_DIR . '/.htaccess',
+                file_get_contents(plugin_dir_path(WHTHQ_MAIN) . '/stubs/htaccess.stub'));
         }
-        if (!file_exists(WHTHQ_BACKUP_DIR.'/web.config')) {
-            @file_put_contents(WHTHQ_BACKUP_DIR.'/web.config',
-                file_get_contents(plugin_dir_path(WHTHQ_MAIN).'/stubs/web.config.stub'));
+        if (!file_exists(WHTHQ_BACKUP_DIR . '/web.config')) {
+            @file_put_contents(WHTHQ_BACKUP_DIR . '/web.config',
+                file_get_contents(plugin_dir_path(WHTHQ_MAIN) . '/stubs/web.config.stub'));
         }
     }
 
     public static function gzCompressFile($source, $level = 9)
     {
-        $dest = $source.'.gz';
-        $mode = 'wb'.$level;
+        $dest = $source . '.gz';
+        $mode = 'wb' . $level;
         $error = false;
         if ($fp_out = gzopen($dest, $mode)) {
             if ($fp_in = fopen($source, 'rb')) {
@@ -217,13 +218,31 @@ class Utils
         return true;
     }
 
+    public static function allFilesList($excludes = ''): Finder
+    {
+        $finder = new Finder();
+        $finder->in(ABSPATH);
+        $finder->followLinks(false);
+        $finder->ignoreDotFiles(false);
+        $finder->ignoreVCS(true);
+        $finder->ignoreUnreadableDirs(true);
+        return $finder->filter(
+            function (\SplFileInfo $file) use ($excludes) {
+                $path = $file->getPathname();
+                if (!$file->isReadable() || Utils::strposa($path, $excludes) || strpos($path, WHTHQ_BACKUP_DIR_NAME)) {
+                    return false;
+                }
+            }
+        );
+    }
+
     public static function detectMysqldumpLocation()
     {
         $mysqldump = `which mysqldump`;
         if (is_executable($mysqldump)) {
             return $mysqldump;
         }
-        $mysqldump = dirname(`which mysql`)."/mysqldump";
+        $mysqldump = dirname(`which mysql`) . "/mysqldump";
         if (is_executable($mysqldump)) {
             return $mysqldump;
         }

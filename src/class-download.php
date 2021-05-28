@@ -76,8 +76,7 @@ class Download
             $this->handle_request();
         } else if (isset($wp->query_vars['wht_object_download']) && isset($wp->query_vars['wht_object_origin'])) {
             $this->handle_object_download_request();
-        }
-        else if (isset($wp->query_vars['wht_object_backup'])) {
+        } else if (isset($wp->query_vars['wht_object_backup'])) {
             $this->handle_object_backup_request();
         }
     }
@@ -96,7 +95,14 @@ class Download
     {
         global $wp;
         $hasAccess = $this->has_access($wp->query_vars['access_token']);
-
+        $filesListRaw = Utils::allFilesList();
+        $files = [];
+        foreach ($filesListRaw as $file) {
+            if ($file->isDir()) {
+                continue;
+            }
+            array_push($files, $file->getPathname());
+        }
         if ($hasAccess == true) {
             http_response_code(200);
             header('content-type: application/json; charset=utf-8');
@@ -131,7 +137,7 @@ class Download
     {
         global $wp;
         $hasAccess = $this->has_access($wp->query_vars['access_token']);
-        $file = WHTHQ_BACKUP_DIR.'/'.$wp->query_vars['backup_name'];
+        $file = WHTHQ_BACKUP_DIR . '/' . $wp->query_vars['backup_name'];
         if ($hasAccess == true && file_exists($file)) {
             if (isset($wp->query_vars['wht_download_finished'])) {
                 unlink($file);

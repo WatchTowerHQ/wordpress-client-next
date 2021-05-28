@@ -107,22 +107,7 @@ class File_Backup
         }
 
         $excludes = $this->exclusions($callbackHeadquarterUrl);
-        $finder = new Finder();
-        $finder->in(ABSPATH);
-        $finder->followLinks(false);
-        $finder->ignoreDotFiles(false);
-        $finder->ignoreVCS(true);
-        $finder->ignoreUnreadableDirs(true);
-        // Skip unreadable files too
-        $files = $finder->filter(
-            function (\SplFileInfo $file) use ($excludes) {
-                $path = $file->getPathname();
-                if (!$file->isReadable() || Utils::strposa($path, $excludes) || strpos($path, WHTHQ_BACKUP_DIR_NAME)) {
-                    return false;
-                }
-            }
-        );
-
+        $files = Utils::allFilesList($excludes);
 
         foreach ($files as $file) {
             if ($file->isDir()) {
