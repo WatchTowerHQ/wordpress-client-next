@@ -218,6 +218,32 @@ class Utils
         return true;
     }
 
+    public static function getBackupExclusions($callbackHeadquarterUrl)
+    {
+        $arrContextOptions = [
+            "ssl" => [
+                "verify_peer" => false,
+                "verify_peer_name" => false,
+            ],
+        ];
+        $data = file_get_contents($callbackHeadquarterUrl . WHTHQ_BACKUP_EXCLUSIONS_ENDPOINT, false,
+            stream_context_create($arrContextOptions));
+        $ret = [];
+
+        if (Utils::is_json($data)) {
+            foreach (json_decode($data) as $d) {
+                if ($d->isContentDir == true) {
+                    $p = WP_CONTENT_DIR . '/' . $d->path;
+                } else {
+                    $p = ABSPATH . $d->path;
+                }
+                array_push($ret, $p);
+            }
+        }
+
+        return $ret;
+    }
+
     public static function allFilesList($excludes = []): Finder
     {
         $finder = new Finder();
