@@ -187,7 +187,7 @@ class Api
             }
             array_push($files, ['origin'=>$file->getPathname(),'filesize'=>$file->getSize()]);
         }
-        return $this->make_response(['backup_objects' => $files]);
+        return $this->make_response(['files' => $files]);
     }
 
     /**
