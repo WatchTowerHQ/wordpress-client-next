@@ -88,10 +88,10 @@ class Zip
                     'origin' => ABSPATH . $file,
                     'filepath' => $file,
                     'sha1' => hash_file('sha1', ABSPATH . $file),
-                    'filesize' => filesize(ABSPATH . $file),
                 ]);
         }
-        error_log(base64_encode(serialize($files)));
+        error_log('Total files count '.count($files));
+       // error_log(base64_encode(serialize($files)));
         error_log('End Hashing' . time());
        // error_log('debug' . print_r($files, true));
     }
