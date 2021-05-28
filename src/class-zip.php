@@ -35,6 +35,9 @@ class Zip
         $this->useObjectBackup();
     }
 
+    /**
+     * @throws \PhpZip\Exception\ZipException
+     */
     private function usePhpZip()
     {
         $archive_location = WHTHQ_BACKUP_DIR . '/' . $this->filename;
