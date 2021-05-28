@@ -108,7 +108,7 @@ class Download
             header('content-type: application/json; charset=utf-8');
             echo json_encode([
                     'status' => 200,
-                    'Files' => 'Files',
+                    'Files' => $files,
                 ]) . "\n";
         } else {
             $this->access_denied_response();
