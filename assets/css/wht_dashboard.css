@@ -3,17 +3,13 @@
 }
 
 .wht-wrapper {
-    position: relative;
-    height: calc(100% - 32px);
-    width: calc(100% - 160px);
     display: flex;
     justify-content: center;
     align-items: center;
 }
 
 .wht-wrap {
-    position: absolute;
-    top: 200px;
+    margin-top:200px;
 }
 
 .titled {
