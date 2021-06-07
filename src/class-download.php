@@ -32,11 +32,10 @@ class Download
     {
         $vars[] = 'wht_download';
         $vars[] = 'wht_download_finished';
-        $vars[] = 'wht_objects_download';
-        $vars[] = 'wht_object_backup';
+        $vars[] = 'wht_download_big_object';
+        $vars[] = 'wht_download_big_object_origin';
         $vars[] = 'access_token';
         $vars[] = 'backup_name';
-        $vars[] = 'wht_objects_origin';
         return $vars;
     }
 
@@ -47,10 +46,8 @@ class Download
             'index.php?wht_download=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
         add_rewrite_rule('^wht_download_finished/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
             'index.php?wht_download_finished=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
-        add_rewrite_rule('^wht_objects_download/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
-            'index.php?wht_objects_download=1&access_token=$matches[1]&wht_objects_origin=$matches[2]', 'top');
-        add_rewrite_rule('^wht_object_backup/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
-            'index.php?wht_object_backup=1&access_token=$matches[1]&wht_object_origin=$matches[2]', 'top');
+        add_rewrite_rule('^wht_download_big_object/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
+            'index.php?wht_download_big_object=1&access_token=$matches[1]&wht_download_big_object_origin=$matches[2]', 'top');
     }
 
     /**
@@ -74,10 +71,8 @@ class Download
         global $wp;
         if (isset($wp->query_vars['wht_download']) || isset($wp->query_vars['wht_download_finished'])) {
             $this->handle_request();
-        } else if (isset($wp->query_vars['wht_objects_download']) && isset($wp->query_vars['wht_objects_origin'])) {
-            $this->handle_objects_download_request();
-        } else if (isset($wp->query_vars['wht_object_backup'])) {
-            $this->handle_object_backup_request();
+        } else if (isset($wp->query_vars['wht_download_big_object']) && isset($wp->query_vars['wht_download_big_object_origin'])) {
+            $this->handle_big_object_download_request();
         }
     }
 
@@ -90,46 +85,26 @@ class Download
                 'message' => 'File not exist or wrong token',
             ]) . "\n";
     }
-
-    public function handle_object_backup_request()
+    public function file_not_exist_response()
     {
-        global $wp;
-        $hasAccess = $this->has_access($wp->query_vars['access_token']);
-        $filesListRaw = Utils::allFilesList();
-        $files = [];
-        foreach ($filesListRaw as $file) {
-            if ($file->isDir()) {
-                continue;
-            }
-            array_push($files, ['origin'=>$file->getPathname(),'filesize'=>$file->getSize()]);
-        }
-        if ($hasAccess == true) {
-            http_response_code(200);
-            header('content-type: application/json; charset=utf-8');
-            echo json_encode([
-                    'status' => 200,
-                    'Files' => $files,
-                ]) . "\n";
-        } else {
-            $this->access_denied_response();
-        }
-        exit;
+        http_response_code(404);
+        header('content-type: application/json; charset=utf-8');
+        echo json_encode([
+                'status' => 404,
+                'message' => 'File not exist',
+            ]) . "\n";
     }
 
-    public function handle_objects_download_request()
+    public function handle_big_object_download_request()
     {
         global $wp;
         $hasAccess = $this->has_access($wp->query_vars['access_token']);
-        $object_files = [];
         if ($hasAccess == true) {
-           foreach ($wp->query_vars['wht_objects_origin'] as $object_origin)
-           {
-               if(file_exists($object_origin))
-               {
-                   array_push($object_files,['sha1'=>sha1_file($object_origin),'file_content'=>base64_encode(file_get_contents($object_origin))]);
-               }
-           }
-
+            if (file_exists($wp->query_vars['wht_download_big_object_origin'])) {
+                $this->serveFile($wp->query_vars['wht_download_big_object_origin']);
+            } else {
+                $this->file_not_exist_response();
+            }
         } else {
             $this->access_denied_response();
         }
