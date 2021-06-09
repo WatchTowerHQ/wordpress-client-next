@@ -184,7 +184,7 @@ class Api
         $object_files = [];
         foreach ($request['wht_backup_origins'] as $object_origin) {
             if (file_exists($object_origin)) {
-                array_push($object_files, ['origin' => $object_origin, 'sha1' => sha1_file($object_origin), 'filesize' => filesize($object_origin),'file_content' => base64_encode(file_get_contents($object_origin))]);
+                array_push($object_files, ['origin' => $object_origin, 'sha1' => sha1_file($object_origin), 'filesize' => filesize($object_origin), 'file_content' => base64_encode(file_get_contents($object_origin))]);
             } else {
                 array_push($object_files, ['origin' => $object_origin, 'removed' => true]);
             }
@@ -207,7 +207,7 @@ class Api
             array_push($files, [
                 'origin' => str_replace(ABSPATH, '', $file->getPathname()),
                 'filesize' => $file->getSize(),
-                'sha1' =>sha1_file($file->getPathname())
+                'sha1' => sha1_file($file->getPathname())
             ]);
         }
         return $this->make_response(['files' => $files]);
