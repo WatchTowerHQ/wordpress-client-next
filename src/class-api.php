@@ -202,13 +202,20 @@ class Api
         $files = [];
         foreach ($filesListRaw as $file) {
             if ($file->isDir()) {
-                continue;
+                array_push($files, [
+                    'type' => 'dir',
+                    'origin' => str_replace(ABSPATH, '', $file->getPathname()),
+                ]);
             }
-            array_push($files, [
-                'origin' => str_replace(ABSPATH, '', $file->getPathname()),
-                'filesize' => $file->getSize(),
-                'sha1' => sha1_file($file->getPathname())
-            ]);
+            else
+            {
+                array_push($files, [
+                    'type' => 'file',
+                    'origin' => str_replace(ABSPATH, '', $file->getPathname()),
+                    'filesize' => $file->getSize(),
+                    'sha1' => sha1_file($file->getPathname())
+                ]);
+            }
         }
         return $this->make_response(['files' => $files]);
     }
