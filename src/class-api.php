@@ -198,7 +198,7 @@ class Api
      */
     public function list_backup_file_action(WP_REST_Request $request)
     {
-        $filesListRaw = Utils::allFilesList();
+        $filesListRaw = Utils::allFilesList(Utils::createLocalBackupExclusions($request->get_param('clientBackupExclusions')));
         $files = [];
         foreach ($filesListRaw as $file) {
             if ($file->isDir()) {
