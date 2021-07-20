@@ -213,7 +213,8 @@ class Api
                     'type' => 'file',
                     'origin' => str_replace(ABSPATH, '', $file->getPathname()),
                     'filesize' => $file->getSize(),
-                    'sha1' => sha1_file($file->getPathname())
+                    'sha1' => sha1_file($file->getPathname()),
+                    'create_timestamp' => $file->getCTime()
                 ]);
             }
         }
