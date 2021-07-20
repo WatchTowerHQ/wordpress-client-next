@@ -217,19 +217,21 @@ class Utils
         }
         return true;
     }
-public static function createLocalBackupExclusions($clientBackupExclusions)
-{
-    $ret = [];
-    foreach ($clientBackupExclusions as $d) {
-        if ($d['isContentDir'] == true) {
-            $p = WP_CONTENT_DIR . '/' . $d['path'];
-        } else {
-            $p = ABSPATH . $d['path'];
+
+    public static function createLocalBackupExclusions($clientBackupExclusions)
+    {
+        $ret = [];
+        foreach ($clientBackupExclusions as $d) {
+            if ($d['isContentDir'] == true) {
+                $p = WP_CONTENT_DIR . '/' . $d['path'];
+            } else {
+                $p = ABSPATH . $d['path'];
+            }
+            array_push($ret, $p);
         }
-        array_push($ret, $p);
+        return $ret;
     }
-    return $ret;
-}
+
     public static function getBackupExclusions($callbackHeadquarterUrl)
     {
         $arrContextOptions = [
