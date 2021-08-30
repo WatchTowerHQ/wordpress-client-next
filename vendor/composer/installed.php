@@ -1,134 +1,135 @@
-<?php return array (
-  'root' => 
-  array (
-    'pretty_version' => 'dev-develop',
-    'version' => 'dev-develop',
-    'aliases' => 
-    array (
+<?php return array(
+    'root' => array(
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'type' => 'project',
+        'install_path' => __DIR__ . '/../../',
+        'aliases' => array(),
+        'reference' => 'fdcba679bd9c763e6cce935df06e69c2f7daf264',
+        'name' => 'whatarmy/watchtowerhq',
+        'dev' => true,
     ),
-    'reference' => '1ff797f81430ddaea95458c14aab316834062190',
-    'name' => 'whatarmy/watchtowerhq',
-  ),
-  'versions' => 
-  array (
-    'claudiosanches/wp-autoloader' => 
-    array (
-      'pretty_version' => '1.0.0',
-      'version' => '1.0.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '59343146803ccf33bcd4b63a5c0a71e5eedcac8e',
+    'versions' => array(
+        'claudiosanches/wp-autoloader' => array(
+            'pretty_version' => '1.0.0',
+            'version' => '1.0.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../claudiosanches/wp-autoloader',
+            'aliases' => array(),
+            'reference' => '59343146803ccf33bcd4b63a5c0a71e5eedcac8e',
+            'dev_requirement' => false,
+        ),
+        'dg/mysql-dump' => array(
+            'pretty_version' => 'v1.5.0',
+            'version' => '1.5.0.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../dg/mysql-dump',
+            'aliases' => array(),
+            'reference' => '6c9cf07092bcc4a140bef01c64d883ebfccfccfa',
+            'dev_requirement' => false,
+        ),
+        'ifsnop/mysqldump-php' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../ifsnop/mysqldump-php',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'reference' => '1e3934b17fb20e703e8a76583dc791e4ec06d84f',
+            'dev_requirement' => false,
+        ),
+        'nelexa/zip' => array(
+            'pretty_version' => '3.3.3',
+            'version' => '3.3.3.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../nelexa/zip',
+            'aliases' => array(),
+            'reference' => '501b52f6fc393a599b44ff348a42740e1eaac7c6',
+            'dev_requirement' => false,
+        ),
+        'paragonie/random_compat' => array(
+            'pretty_version' => 'v9.99.100',
+            'version' => '9.99.100.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../paragonie/random_compat',
+            'aliases' => array(),
+            'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
+            'dev_requirement' => false,
+        ),
+        'psr/http-message' => array(
+            'pretty_version' => '1.0.1',
+            'version' => '1.0.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../psr/http-message',
+            'aliases' => array(),
+            'reference' => 'f6561bf28d520154e4b0ec72be95418abe6d9363',
+            'dev_requirement' => false,
+        ),
+        'shuber/curl' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../shuber/curl',
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
+            'reference' => '6624992df201f9fd7262080117385dd09b0ecd2b',
+            'dev_requirement' => false,
+        ),
+        'symfony/finder' => array(
+            'pretty_version' => 'v3.4.47',
+            'version' => '3.4.47.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/finder',
+            'aliases' => array(),
+            'reference' => 'b6b6ad3db3edb1b4b1c1896b1975fb684994de6e',
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-ctype' => array(
+            'pretty_version' => 'v1.18.1',
+            'version' => '1.18.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-ctype',
+            'aliases' => array(),
+            'reference' => '1c302646f6efc070cd46856e600e5e0684d6b454',
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-iconv' => array(
+            'pretty_version' => 'v1.18.1',
+            'version' => '1.18.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-iconv',
+            'aliases' => array(),
+            'reference' => '6c2f78eb8f5ab8eaea98f6d414a5915f2e0fce36',
+            'dev_requirement' => false,
+        ),
+        'symfony/polyfill-mbstring' => array(
+            'pretty_version' => 'v1.18.1',
+            'version' => '1.18.1.0',
+            'type' => 'library',
+            'install_path' => __DIR__ . '/../symfony/polyfill-mbstring',
+            'aliases' => array(),
+            'reference' => 'a6977d63bf9a0ad4c65cd352709e230876f9904a',
+            'dev_requirement' => false,
+        ),
+        'whatarmy/watchtowerhq' => array(
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'type' => 'project',
+            'install_path' => __DIR__ . '/../../',
+            'aliases' => array(),
+            'reference' => 'fdcba679bd9c763e6cce935df06e69c2f7daf264',
+            'dev_requirement' => false,
+        ),
+        'woocommerce/action-scheduler' => array(
+            'pretty_version' => '3.2.1',
+            'version' => '3.2.1.0',
+            'type' => 'wordpress-plugin',
+            'install_path' => __DIR__ . '/../woocommerce/action-scheduler',
+            'aliases' => array(),
+            'reference' => '3c24064f115cd55e972d73d5d48f14133ac60b0d',
+            'dev_requirement' => false,
+        ),
     ),
-    'dg/mysql-dump' => 
-    array (
-      'pretty_version' => 'v1.5.0',
-      'version' => '1.5.0.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '6c9cf07092bcc4a140bef01c64d883ebfccfccfa',
-    ),
-    'ifsnop/mysqldump-php' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-        0 => '9999999-dev',
-      ),
-      'reference' => '1e3934b17fb20e703e8a76583dc791e4ec06d84f',
-    ),
-    'nelexa/zip' => 
-    array (
-      'pretty_version' => '3.3.3',
-      'version' => '3.3.3.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '501b52f6fc393a599b44ff348a42740e1eaac7c6',
-    ),
-    'paragonie/random_compat' => 
-    array (
-      'pretty_version' => 'v9.99.100',
-      'version' => '9.99.100.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '996434e5492cb4c3edcb9168db6fbb1359ef965a',
-    ),
-    'psr/http-message' => 
-    array (
-      'pretty_version' => '1.0.1',
-      'version' => '1.0.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'f6561bf28d520154e4b0ec72be95418abe6d9363',
-    ),
-    'shuber/curl' => 
-    array (
-      'pretty_version' => 'dev-master',
-      'version' => 'dev-master',
-      'aliases' => 
-      array (
-        0 => '9999999-dev',
-      ),
-      'reference' => '6624992df201f9fd7262080117385dd09b0ecd2b',
-    ),
-    'symfony/finder' => 
-    array (
-      'pretty_version' => 'v3.4.47',
-      'version' => '3.4.47.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'b6b6ad3db3edb1b4b1c1896b1975fb684994de6e',
-    ),
-    'symfony/polyfill-ctype' => 
-    array (
-      'pretty_version' => 'v1.18.1',
-      'version' => '1.18.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '1c302646f6efc070cd46856e600e5e0684d6b454',
-    ),
-    'symfony/polyfill-iconv' => 
-    array (
-      'pretty_version' => 'v1.18.1',
-      'version' => '1.18.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '6c2f78eb8f5ab8eaea98f6d414a5915f2e0fce36',
-    ),
-    'symfony/polyfill-mbstring' => 
-    array (
-      'pretty_version' => 'v1.18.1',
-      'version' => '1.18.1.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => 'a6977d63bf9a0ad4c65cd352709e230876f9904a',
-    ),
-    'whatarmy/watchtowerhq' => 
-    array (
-      'pretty_version' => 'dev-develop',
-      'version' => 'dev-develop',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '1ff797f81430ddaea95458c14aab316834062190',
-    ),
-    'woocommerce/action-scheduler' => 
-    array (
-      'pretty_version' => '3.1.6',
-      'version' => '3.1.6.0',
-      'aliases' => 
-      array (
-      ),
-      'reference' => '275d0ba54b1c263dfc62688de2fa9a25a373edf8',
-    ),
-  ),
 );

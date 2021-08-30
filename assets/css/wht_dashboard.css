@@ -9,7 +9,7 @@
 }
 
 .wht-wrap {
-    margin-top:200px;
+    margin-top: 200px;
 }
 
 .titled {
@@ -123,10 +123,12 @@ td {
 .watchtower_token_area, .watchtower_token_field {
     font-size: 20px;
     padding: 10px;
+    width: 100%;
 }
 
 .watchtower_token_area {
     margin: auto;
     float: left;
-    padding: 0px;
+    padding: 0;
+    display: flex;
 }
