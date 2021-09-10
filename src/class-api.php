@@ -181,7 +181,7 @@ class Api
      */
     public function get_backup_file_action(WP_REST_Request $request)
     {
-        $without_file_content = (bool) $request->get_param('without_file_content');
+        $without_file_content = (bool)$request->get_param('without_file_content');
         $object_files = [];
         foreach ($request['wht_backup_origins'] as $object_origin) {
             if (file_exists($object_origin)) {
@@ -203,12 +203,12 @@ class Api
         $filesListRaw = Utils::allFilesList(Utils::createLocalBackupExclusions($request->get_param('clientBackupExclusions')));
         $files = [];
         foreach ($filesListRaw as $file) {
-                array_push($files, [
-                    'type' => $file->isDir() ? 'dir' : 'file',
-                    'origin' => str_replace(ABSPATH, '', $file->getPathname()),
-                ]);
+            array_push($files, [
+                'type' => $file->isDir() ? 'dir' : 'file',
+                'origin' => str_replace(ABSPATH, '', $file->getPathname()),
+            ]);
         }
-        return $this->make_response(['max_input_vars' =>ini_get('max_input_vars'), 'files' => $files]);
+        return $this->make_response(['max_input_vars' => ini_get('max_input_vars'), 'files' => $files]);
     }
 
     /**
