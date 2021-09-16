@@ -157,6 +157,7 @@ class Download
         header('Content-Disposition: attachment; filename="' . $name . '";');
         header('Content-Type: ' . $mime);
         header('Content-Length: ' . (filesize($file) - $offset));
+        header("Last-Modified: ".gmdate("D, d M Y H:i:s", filemtime($file))." GMT");
         header('Accept-Ranges: bytes');
         if ($offset > 0) {
             header('HTTP/1.1 206 Partial Content');
