@@ -182,10 +182,11 @@ class Api
     public function get_backup_file_action(WP_REST_Request $request)
     {
         $without_file_content = (bool)$request->get_param('without_file_content');
+        $without_file_timestamp = (bool)$request->get_param('without_file_timestamp');
         $object_files = [];
         foreach ($request['wht_backup_origins'] as $object_origin) {
             if (file_exists($object_origin)) {
-                array_push($object_files, ['origin' => $object_origin, 'created_timestamp' => filemtime($object_origin), 'type' => 'file', 'sha1' => sha1_file($object_origin), 'filesize' => filesize($object_origin), 'file_content' => $without_file_content ? NULL : base64_encode(file_get_contents($object_origin))]);
+                array_push($object_files, ['origin' => $object_origin, 'created_timestamp' => $without_file_timestamp ? NULL : filemtime($object_origin), 'type' => 'file', 'sha1' => sha1_file($object_origin), 'filesize' => filesize($object_origin), 'file_content' => $without_file_content ? NULL : base64_encode(file_get_contents($object_origin))]);
             } else {
                 array_push($object_files, ['origin' => $object_origin, 'removed' => true]);
             }
