@@ -83,6 +83,9 @@ To view our plans and get started with WatchTowerHQ check out our [website](http
 We have a number of standard roles, that many users requested, along with that we've created custom user roles. With custom user roles the options are endless to the access that you can give any one user. Custom User roles are included in all plans at no additional cost.
 
 == Changelog ==
+= 3.5.5 =
+* code improvements
+
 = 3.5.1 =
 * update action scheduler
 
@@ -90,7 +93,7 @@ We have a number of standard roles, that many users requested, along with that w
 * new backup system
 
 = 3.4.16 =
-* Wordpress 5.8 compatibility
+* WordPress 5.8 compatibility
 
 = 3.4.15 =
 * fix UI issue
