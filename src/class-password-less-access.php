@@ -52,7 +52,6 @@ class Password_Less_Access
 
     public function login($access_token)
     {
-
         if ($access_token == get_option('watchtower_ota_token')) {
             $random_password = wp_generate_password(30);
             $admins_list = get_users('role=administrator&search=' . WHTHQ_CLIENT_USER_EMAIL);
