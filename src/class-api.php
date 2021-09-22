@@ -228,7 +228,7 @@ class Api
                 'origin' => str_replace(ABSPATH, '', $file->getPathname()),
             ]);
         }
-        return $this->make_response(['max_input_vars' => ini_get('max_input_vars'), 'files' => $files]);
+        return $this->make_response(['memory_limit' => ini_get('memory_limit'), 'max_input_vars' => ini_get('max_input_vars'), 'files' => $files]);
     }
 
     /**
