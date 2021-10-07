@@ -144,7 +144,21 @@ class Download
         }
         exit;
     }
-
+    /**
+     * @param $file
+     * @param null $name
+     * @param $offset
+     */
+    protected function sendObjectHeaders($size,$timestamp)
+    {
+        header('Pragma: public');
+        header('Expires: 0');
+        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Cache-Control: private', false);
+        header('Content-Transfer-Encoding: binary');
+        header('Content-Length: ' . $size);
+        header('Created-Timestamp: ' . $timestamp);
+    }
     /**
      * @param $file
      * @param null $name
@@ -193,7 +207,9 @@ class Download
      */
     public function serveObjectFile($file,$offset,$length)
     {
-        exit(file_get_contents($file, FALSE, NULL, $offset, $length));
+        $buffer=file_get_contents($file, FALSE, NULL, $offset, $length);
+        self::sendObjectHeaders(strlen($buffer),filemtime($file));
+        exit($buffer);
     }
 
     /**
