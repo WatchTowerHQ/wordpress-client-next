@@ -34,6 +34,8 @@ class Download
         $vars[] = 'wht_download_finished';
         $vars[] = 'wht_download_big_object';
         $vars[] = 'wht_download_big_object_origin';
+        $vars[] = 'wht_download_big_object_offset';
+        $vars[] = 'wht_download_big_object_length';
         $vars[] = 'access_token';
         $vars[] = 'backup_name';
         return $vars;
@@ -47,7 +49,7 @@ class Download
         add_rewrite_rule('^wht_download_finished/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
             'index.php?wht_download_finished=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
         add_rewrite_rule('^wht_download_big_object/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
-            'index.php?wht_download_big_object=1&access_token=$matches[1]&wht_download_big_object_origin=$matches[2]', 'top');
+            'index.php?wht_download_big_object=1&access_token=$matches[1]&wht_download_big_object_origin=$matches[2]&wht_download_big_object_offset=$matches[3]&wht_download_big_object_length=$matches[4]', 'top');
     }
 
     /**
@@ -101,7 +103,12 @@ class Download
         $hasAccess = $this->has_access($wp->query_vars['access_token']);
         if ($hasAccess == true) {
             if (file_exists($wp->query_vars['wht_download_big_object_origin'])) {
-                $this->serveFile($wp->query_vars['wht_download_big_object_origin']);
+                if (isset($wp->query_vars['wht_download_big_object_length']) && isset($wp->query_vars['wht_download_big_object_offset'])) {
+                    $this->serveObjectFile($wp->query_vars['wht_download_big_object_origin'], $wp->query_vars['wht_download_big_object_offset'], $wp->query_vars['wht_download_big_object_length']);
+                } else {
+                    $this->serveFile($wp->query_vars['wht_download_big_object_origin']);
+                }
+
             } else {
                 $this->file_not_exist_response();
             }
@@ -179,6 +186,14 @@ class Download
             $offset = 0;
         }
         return $offset;
+    }
+
+    /**
+     * @param $file
+     */
+    public function serveObjectFile($file,$offset,$length)
+    {
+        exit(file_get_contents($file, FALSE, NULL, $offset, $length));
     }
 
     /**
