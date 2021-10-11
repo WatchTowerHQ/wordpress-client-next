@@ -87,6 +87,7 @@ class Download
                 'message' => 'File not exist or wrong token',
             ]) . "\n";
     }
+
     public function file_not_exist_response()
     {
         http_response_code(404);
@@ -144,12 +145,13 @@ class Download
         }
         exit;
     }
+
     /**
      * @param $file
      * @param null $name
      * @param $offset
      */
-    protected function sendObjectHeaders($size,$timestamp)
+    protected function sendObjectHeaders($size, $timestamp)
     {
         header('Pragma: public');
         header('Expires: 0');
@@ -159,6 +161,7 @@ class Download
         header('Content-Length: ' . $size);
         header('Created-Timestamp: ' . $timestamp);
     }
+
     /**
      * @param $file
      * @param null $name
@@ -178,7 +181,7 @@ class Download
         header('Content-Disposition: attachment; filename="' . $name . '";');
         header('Content-Type: ' . $mime);
         header('Content-Length: ' . (filesize($file) - $offset));
-        header("Last-Modified: ".gmdate("D, d M Y H:i:s", filemtime($file))." GMT");
+        header("Last-Modified: " . gmdate("D, d M Y H:i:s", filemtime($file)) . " GMT");
         header('Accept-Ranges: bytes');
         if ($offset > 0) {
             header('HTTP/1.1 206 Partial Content');
@@ -205,10 +208,10 @@ class Download
     /**
      * @param $file
      */
-    public function serveObjectFile($file,$offset,$length)
+    public function serveObjectFile($file, $offset, $length)
     {
-        $buffer=file_get_contents($file, FALSE, NULL, $offset, $length);
-        self::sendObjectHeaders(strlen($buffer),filemtime($file));
+        $buffer = file_get_contents($file, FALSE, NULL, $offset, $length);
+        self::sendObjectHeaders(strlen($buffer), filemtime($file));
         exit($buffer);
     }
 
