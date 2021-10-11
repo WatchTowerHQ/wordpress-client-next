@@ -147,9 +147,8 @@ class Download
     }
 
     /**
-     * @param $file
-     * @param null $name
-     * @param $offset
+     * @param $size
+     * @param $timestamp
      */
     protected function sendObjectHeaders($size, $timestamp)
     {
@@ -207,6 +206,8 @@ class Download
 
     /**
      * @param $file
+     * @param $offset
+     * @param $length
      */
     public function serveObjectFile($file, $offset, $length)
     {
