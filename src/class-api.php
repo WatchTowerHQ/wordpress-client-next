@@ -58,6 +58,12 @@ class Api
         /**
          * Backups
          */
+        register_rest_route($this->route_namespace(), 'backup/files/list',
+            $this->resolve_action('get_backup_files_list_action'));
+        register_rest_route($this->route_namespace(), 'backup/files/list/detailed',
+            $this->resolve_action('get_backup_files_list_detailed_action'));
+        register_rest_route($this->route_namespace(), 'backup/files/get',
+            $this->resolve_action('get_backup_files_content_action'));
         register_rest_route($this->route_namespace(), 'backup/file/run',
             $this->resolve_action('run_backup_file_action'));
         register_rest_route($this->route_namespace(), 'backup/file/run_queue',
@@ -171,6 +177,59 @@ class Api
         return $this->make_response(['filename' => $filename]);
     }
 
+    /**
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response
+     */
+    public function get_backup_files_content_action(WP_REST_Request $request)
+    {
+        set_time_limit(300);
+        $object_files = [];
+        foreach ($request['wht_backup_origins'] as $object_origin) {
+            if (file_exists($object_origin)) {
+                array_push($object_files, ['origin' => $object_origin, 'created_timestamp' => filemtime($object_origin), 'type' => 'file', 'sha1' => sha1_file($object_origin), 'filesize' => filesize($object_origin), 'file_content' => base64_encode(file_get_contents($object_origin))]);
+            } else {
+                array_push($object_files, ['origin' => $object_origin, 'removed' => true]);
+            }
+        }
+        return $this->make_response(['files' => $object_files]);
+    }
+
+    /**
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response
+     */
+    public function get_backup_files_list_detailed_action(WP_REST_Request $request)
+    {
+        set_time_limit(300);
+        $object_files = [];
+        foreach ($request['wht_backup_origins'] as $object_origin) {
+            if (file_exists($object_origin)) {
+                array_push($object_files, ['origin' => $object_origin, 'type' => 'file', 'sha1' => sha1_file($object_origin), 'filesize' => filesize($object_origin)]);
+            } else {
+                array_push($object_files, ['origin' => $object_origin, 'removed' => true]);
+            }
+        }
+        return $this->make_response(['files' => $object_files]);
+    }
+
+    /**
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response
+     */
+    public function get_backup_files_list_action(WP_REST_Request $request)
+    {
+        set_time_limit(300);
+        $filesListRaw = Utils::allFilesList(Utils::createLocalBackupExclusions($request->get_param('clientBackupExclusions')));
+        $files = [];
+        foreach ($filesListRaw as $file) {
+            array_push($files, [
+                'type' => $file->isDir() ? 'dir' : 'file',
+                'origin' => str_replace(ABSPATH, '', $file->getPathname()),
+            ]);
+        }
+        return $this->make_response(['memory_limit' => ini_get('memory_limit'), 'max_input_vars' => ini_get('max_input_vars'), 'files' => $files]);
+    }
 
     /**
      * @param WP_REST_Request $request

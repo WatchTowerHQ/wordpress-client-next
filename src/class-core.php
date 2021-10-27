@@ -29,7 +29,7 @@ class Core
     private function plugin_data()
     {
         $main_file = explode('/', plugin_basename(WHTHQ_MAIN))[1];
-        return get_plugin_data(plugin_dir_path(WHTHQ_MAIN).$main_file);
+        return get_plugin_data(plugin_dir_path(WHTHQ_MAIN) . $main_file);
     }
 
     /**
@@ -80,12 +80,17 @@ class Core
             'admin_url' => admin_url(),
             'content_dir' => (defined('WP_CONTENT_DIR')) ? WP_CONTENT_DIR : false,
             'pwp_name' => (defined('PWP_NAME')) ? PWP_NAME : false,
-            'wpe_auth' => (defined('WPE_APIKEY')) ? md5('wpe_auth_salty_dog|'.WPE_APIKEY) : false,
+            'wpe_auth' => (defined('WPE_APIKEY')) ? md5('wpe_auth_salty_dog|' . WPE_APIKEY) : false,
             'system_info' => [
                 'system_command' => Utils::isFuncAvailable('system'),
                 'mysql_dump_location' => (Utils::isFuncAvailable('system')) ? Utils::detectMysqldumpLocation() : 'n/a',
                 'php_version' => Utils::php_version(),
             ],
+            'debug' => [
+                'WP_DEBUG' => defined('WP_DEBUG') ? WP_DEBUG : false,
+                'WP_DEBUG_LOG' => defined('WP_DEBUG_LOG') ? WP_DEBUG_LOG : false,
+                'WP_DEBUG_DISPLAY' => defined('WP_DEBUG_DISPLAY') ? WP_DEBUG_DISPLAY : false,
+            ]
         ];
     }
 
@@ -98,7 +103,7 @@ class Core
         do_action("wp_version_check"); // force WP to check its core for updates
         $update_core = get_site_transient("update_core"); // get information of updates
         if ('upgrade' == $update_core->updates[0]->response) {
-            require_once(ABSPATH.WPINC.'/version.php');
+            require_once(ABSPATH . WPINC . '/version.php');
             $new_core_ver = $update_core->updates[0]->current; // The new WP core version
             return [
                 'required' => true,
@@ -113,8 +118,8 @@ class Core
     }
 
     /**
-     * @param  string  $path
-     * @param  bool  $humanReadable
+     * @param string $path
+     * @param bool $humanReadable
      * @return int|string
      */
     public function installation_file_size($path = ABSPATH, $humanReadable = true)
@@ -160,7 +165,7 @@ class Core
         global $wpdb;
         $queryStr = 'SELECT  ROUND(SUM(((DATA_LENGTH + INDEX_LENGTH)/1024/1024)),2) AS "MB"
         FROM INFORMATION_SCHEMA.TABLES
-	WHERE TABLE_SCHEMA = "'.$wpdb->dbname.'";';
+	WHERE TABLE_SCHEMA = "' . $wpdb->dbname . '";';
         $query = $wpdb->get_row($queryStr);
         return $query->MB;
     }
@@ -185,22 +190,22 @@ class Core
     public function upgrade()
     {
         if (!function_exists('show_message')) {
-            require_once ABSPATH.'wp-admin/includes/misc.php';
+            require_once ABSPATH . 'wp-admin/includes/misc.php';
         }
         if (!function_exists('request_filesystem_credentials')) {
-            require_once ABSPATH.'wp-admin/includes/file.php';
+            require_once ABSPATH . 'wp-admin/includes/file.php';
         }
         if (!function_exists('find_core_update')) {
-            require_once ABSPATH.'wp-admin/includes/update.php';
+            require_once ABSPATH . 'wp-admin/includes/update.php';
         }
         if (!class_exists('WP_Upgrader')) {
-            require_once ABSPATH.'wp-admin/includes/class-wp-upgrader.php';
+            require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
         }
         if (!class_exists('Core_Upgrader')) {
-            require_once ABSPATH.'wp-admin/includes/class-core-upgrader.php';
+            require_once ABSPATH . 'wp-admin/includes/class-core-upgrader.php';
         }
         if (!class_exists('Automatic_Upgrader_Skin')) {
-            include_once ABSPATH.'wp-admin/includes/class-automatic-upgrader-skin.php';
+            include_once ABSPATH . 'wp-admin/includes/class-automatic-upgrader-skin.php';
         }
         $core = get_site_transient("update_core");
         $upgrader = new \Core_Upgrader(new Updater_Skin());

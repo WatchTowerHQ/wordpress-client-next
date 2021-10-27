@@ -50,26 +50,11 @@ class Password_Less_Access
         }
     }
 
-    /**
-     * @return array
-     */
-    public function generate_ota()
-    {
-        $ota_token = 'ota_'.md5(uniqid());
-        update_option('watchtower_ota_token', $ota_token);
-        return [
-            'ota_token' => $ota_token,
-            'admin_url' => admin_url(),
-        ];
-    }
-
-
     public function login($access_token)
     {
-
         if ($access_token == get_option('watchtower_ota_token')) {
             $random_password = wp_generate_password(30);
-            $admins_list = get_users('role=administrator&search='.WHTHQ_CLIENT_USER_EMAIL);
+            $admins_list = get_users('role=administrator&search=' . WHTHQ_CLIENT_USER_EMAIL);
             if ($admins_list) {
                 reset($admins_list);
                 $adm_id = current($admins_list)->ID;
@@ -83,12 +68,25 @@ class Password_Less_Access
                 }
             }
             wp_clear_auth_cookie();
+            wp_set_auth_cookie($adm_id, true);
             wp_set_current_user($adm_id);
-            wp_set_auth_cookie($adm_id);
             $redirect_to = user_admin_url();
             update_option('watchtower_ota_token', 'not_set');
             wp_safe_redirect($redirect_to);
             exit();
         }
+    }
+
+    /**
+     * @return array
+     */
+    public function generate_ota()
+    {
+        $ota_token = 'ota_' . md5(uniqid());
+        update_option('watchtower_ota_token', $ota_token);
+        return [
+            'ota_token' => $ota_token,
+            'admin_url' => admin_url(),
+        ];
     }
 }
