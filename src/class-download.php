@@ -101,6 +101,7 @@ class Download
     public function handle_big_object_download_request()
     {
         global $wp;
+        $wp->query_vars['wht_download_big_object_origin'] = wp_unslash($wp->query_vars['wht_download_big_object_origin']);
         $hasAccess = $this->has_access($wp->query_vars['access_token']);
         if ($hasAccess == true) {
             if (file_exists($wp->query_vars['wht_download_big_object_origin'])) {
