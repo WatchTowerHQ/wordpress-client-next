@@ -222,6 +222,10 @@ class Utils
     {
         $ret = [];
         foreach ($clientBackupExclusions as $d) {
+            //Skip Entries That Are Only For WPE
+            if (!function_exists('is_wpe') && isset($d['onlyWPE']) && $d['onlyWPE'] == true) {
+            continue;
+            }
             if ($d['isContentDir'] == true) {
                 $p = WP_CONTENT_DIR . '/' . $d['path'];
             } else {
