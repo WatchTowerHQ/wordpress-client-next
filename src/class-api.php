@@ -70,6 +70,8 @@ class Api
             $this->resolve_action('run_backup_file_queue_action'));
         register_rest_route($this->route_namespace(), 'backup/mysql/run',
             $this->resolve_action('run_backup_db_action'));
+        register_rest_route($this->route_namespace(), 'backup/mysql/delete',
+            $this->resolve_action('delete_backup_db_action'));
         register_rest_route($this->route_namespace(), 'backup/cancel',
             $this->resolve_action('cancel_backup_action'));
 
@@ -175,6 +177,25 @@ class Api
         $filename = $backup->run($request->get_param('callbackUrl'));
 
         return $this->make_response(['filename' => $filename]);
+    }
+
+    /**
+     * @param WP_REST_Request $request
+     * @return WP_REST_Response
+     */
+    public function delete_backup_db_action(WP_REST_Request $request)
+    {
+        if (strlen($request->get_param('backup_filename')) > 0) {
+            $backup_filename = WHTHQ_BACKUP_DIR . '/' . $request->get_param('backup_filename');
+            $was_present = false;
+            if (file_exists($backup_filename)) {
+                $was_present = true;
+                unlink($backup_filename);
+            }
+            return $this->make_response(['existing' => file_exists($backup_filename), 'was_present' => $was_present]);
+        } else {
+            return $this->make_response(['error' => 'Missing Backup Filename']);
+        }
     }
 
     /**
