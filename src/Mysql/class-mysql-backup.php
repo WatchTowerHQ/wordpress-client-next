@@ -135,11 +135,12 @@ class Mysql_Backup
         if ($job['last'] == false) {
             $this->dump_data($job['table'], $job['dir'], $job['range']);
         } else {
-            Schedule::call_headquarter_status($job['callbackHeadquarter'], $job['queue'], $job['filename'] . ".gz");
             $this->backupName = $job['dir'] . '_dump.sql';
             Schedule::clean_queue($job['file'], 'add_to_dump');
             Utils::gzCompressFile($this->backupName);
             unlink($this->backupName);
+
+            Schedule::call_headquarter_status($job['callbackHeadquarter'], $job['queue'], $job['filename'] . ".gz");
             Schedule::call_headquarter($job['callbackHeadquarter'], $job['filename'], 'gz');
         }
     }
