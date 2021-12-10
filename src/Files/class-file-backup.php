@@ -122,7 +122,7 @@ class File_Backup
         while (!$file->eof()) {
             $f = str_replace(ABSPATH, "", $file->fgets());
             if ($f != '') {
-                array_push($arr, trim($f));
+                $arr[] = trim($f);
                 $ct++;
             }
 
