@@ -58,9 +58,9 @@ class Mysql_Backup
         }, $to_ret, array_keys($to_ret));
     }
 
-    private function dispatch_job($data, $group = '')
+    private function dispatch_job($data, $group = '', $additional_time = 0)
     {
-        as_schedule_single_action(time(), 'add_to_dump', $data, $group);
+        as_schedule_single_action(time() + $additional_time, 'add_to_dump', $data, $group);
     }
 
     private function should_separate($table_stat)
@@ -167,14 +167,14 @@ class Mysql_Backup
                             "callbackHeadquarter" => $callback_url,
                             "queue" => $ct . '/' . $ct,
                         ]
-                    ], Utils::slugify($this->group));
+                    ], Utils::slugify($this->group), $ct * 10);
                     $ct++;
                 }
             } else {
                 $this->dump_data($table['name'], $dir, null);
             }
         }
-        $this->add_finish_job($dir, $callback_url);
+        $this->add_finish_job($dir, $callback_url, ($ct * 10) + 10);
     }
 
     /**
@@ -197,8 +197,10 @@ class Mysql_Backup
     /**
      * @param $dir
      * @param $callback_url
+     * @param $additional_time
+     * @return void
      */
-    private function add_finish_job($dir, $callback_url)
+    private function add_finish_job($dir, $callback_url, $additional_time = 0)
     {
         $this->dispatch_job([
             'job' => [
@@ -209,6 +211,6 @@ class Mysql_Backup
                 "callbackHeadquarter" => $callback_url,
                 "queue" => '100/100'
             ]
-        ], Utils::slugify($this->group));
+        ], Utils::slugify($this->group), $additional_time);
     }
 }
