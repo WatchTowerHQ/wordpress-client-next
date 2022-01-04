@@ -283,11 +283,11 @@ class Utils
     public static function detectMysqldumpLocation()
     {
         $mysqldump = `which mysqldump`;
-        if (is_executable($mysqldump)) {
+        if (@is_executable($mysqldump)) {
             return $mysqldump;
         }
         $mysqldump = dirname(`which mysql`) . "/mysqldump";
-        if (is_executable($mysqldump)) {
+        if (@is_executable($mysqldump)) {
             return $mysqldump;
         }
         $available = array(
@@ -297,7 +297,7 @@ class Utils
             '/usr/mysql/bin/mysqldump' //Linux
         );
         foreach ($available as $apath) {
-            if (is_executable($apath)) {
+            if (@is_executable($apath)) {
                 return $apath;
             }
         }

@@ -34,13 +34,13 @@ class Mysql_Backup
         global $wpdb;
         $tables_stats = $this->db->get_results("SELECT table_name 'name', table_rows 'rows', round(((data_length + index_length)/1024/1024),2) 'size_mb' 
                                       FROM information_schema.TABLES 
-                                      WHERE table_schema = '".DB_NAME."';", ARRAY_N);
+                                      WHERE table_schema = '" . DB_NAME . "';", ARRAY_N);
         $to_ret = new \stdClass();
         $exclusion = [
-            $wpdb->prefix.'actionscheduler_actions',
-            $wpdb->prefix.'actionscheduler_claims',
-            $wpdb->prefix.'actionscheduler_groups',
-            $wpdb->prefix.'actionscheduler_logs',
+            $wpdb->prefix . 'actionscheduler_actions',
+            $wpdb->prefix . 'actionscheduler_claims',
+            $wpdb->prefix . 'actionscheduler_groups',
+            $wpdb->prefix . 'actionscheduler_logs',
         ];
         foreach ($tables_stats as $table) {
             if (!in_array($table[0], $exclusion)) {
@@ -58,9 +58,9 @@ class Mysql_Backup
         }, $to_ret, array_keys($to_ret));
     }
 
-    private function dispatch_job($data, $group = '')
+    private function dispatch_job($data, $group = '', $additional_time = 0)
     {
-        as_schedule_single_action(time(), 'add_to_dump', $data, $group);
+        as_schedule_single_action(time() + $additional_time, 'add_to_dump', $data, $group);
     }
 
     private function should_separate($table_stat)
@@ -79,15 +79,15 @@ class Mysql_Backup
             'include-tables' => [$table],
             'skip-comments' => true,
         ];
-        $dump = new Mysqldump("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD, $dumpSettings);
+        $dump = new Mysqldump("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD, $dumpSettings);
         if (is_array($range)) {
-            $range = ($range['start'] === 1) ? 'LIMIT 0,'.(int) WHTHQ_DB_RECORDS_MAX : 'LIMIT '.($range['start'] - 1).",".((int) WHTHQ_DB_RECORDS_MAX);
+            $range = ($range['start'] === 1) ? 'LIMIT 0,' . (int)WHTHQ_DB_RECORDS_MAX : 'LIMIT ' . ($range['start'] - 1) . "," . ((int)WHTHQ_DB_RECORDS_MAX);
             $dump->setTableWheres([
                 $table => $range,
             ]);
         }
-        $dump->start($dir.'_dump_tmp.sql');
-        $this->merge($dir.'_dump_tmp.sql', $dir.'_dump.sql');
+        $dump->start($dir . '_dump_tmp.sql');
+        $this->merge($dir . '_dump_tmp.sql', $dir . '_dump.sql');
     }
 
     /**
@@ -106,8 +106,8 @@ class Mysql_Backup
             'no-data' => true,
             'skip-comments' => true,
         ];
-        $dump = new Mysqldump("mysql:host=".DB_HOST.";dbname=".DB_NAME, DB_USER, DB_PASSWORD, $dumpSettings);
-        $dump->start($dir.'_dump.sql');
+        $dump = new Mysqldump("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD, $dumpSettings);
+        $dump->start($dir . '_dump.sql');
     }
 
     /**
@@ -135,11 +135,12 @@ class Mysql_Backup
         if ($job['last'] == false) {
             $this->dump_data($job['table'], $job['dir'], $job['range']);
         } else {
-            Schedule::call_headquarter_status($job['callbackHeadquarter'], $job['queue'], $job['filename'].".gz");
-            $this->backupName = $job['dir'].'_dump.sql';
+            $this->backupName = $job['dir'] . '_dump.sql';
             Schedule::clean_queue($job['file'], 'add_to_dump');
             Utils::gzCompressFile($this->backupName);
             unlink($this->backupName);
+
+            Schedule::call_headquarter_status($job['callbackHeadquarter'], $job['queue'], $job['filename'] . ".gz");
             Schedule::call_headquarter($job['callbackHeadquarter'], $job['filename'], 'gz');
         }
     }
@@ -156,26 +157,25 @@ class Mysql_Backup
         foreach ($stats as $table) {
             if ($this->should_separate($table)) {
                 foreach ($this->split_to_parts($table) as $part) {
-                    error_log($table['name'].'/'.$part['start'].'/'.$part['end']);
                     $this->dispatch_job([
                         'job' => [
                             "table" => $table['name'],
                             "range" => ['start' => $part['start'], 'end' => $part['end']],
                             "dir" => $dir,
                             "last" => false,
-                            "filename" => $this->group.'_dump.sql',
+                            "filename" => $this->group . '_dump.sql',
                             "file" => Utils::slugify($this->group),
                             "callbackHeadquarter" => $callback_url,
-                            "queue" => '1/1',
+                            "queue" => $ct . '/' . $ct,
                         ]
-                    ], Utils::slugify($this->group));
+                    ], Utils::slugify($this->group), $ct * 10);
                     $ct++;
                 }
             } else {
                 $this->dump_data($table['name'], $dir, null);
             }
         }
-        $this->add_finish_job($dir, $callback_url);
+        $this->add_finish_job($dir, $callback_url, ($ct * 10) + 10);
     }
 
     /**
@@ -186,30 +186,32 @@ class Mysql_Backup
     {
         Utils::cleanup_old_backups(WHTHQ_BACKUP_DIR);
         Utils::create_backup_dir();
-        $this->group = date('Y_m_d__H_i_s')."_".Utils::random_string();
-        $dir = WHTHQ_BACKUP_DIR.'/'.$this->group;
+        $this->group = date('Y_m_d__H_i_s') . "_" . Utils::random_string();
+        $dir = WHTHQ_BACKUP_DIR . '/' . $this->group;
 
         //TODO: implement system mysqldump backup
         $this->runInQueue($callback_url, $dir);
 
-        return $this->group.'_dump.sql.gz';
+        return $this->group . '_dump.sql.gz';
     }
 
     /**
      * @param $dir
      * @param $callback_url
+     * @param $additional_time
+     * @return void
      */
-    private function add_finish_job($dir, $callback_url)
+    private function add_finish_job($dir, $callback_url, $additional_time = 0)
     {
         $this->dispatch_job([
             'job' => [
                 "dir" => $dir,
                 "last" => true,
                 "file" => $this->group,
-                "filename" => $this->group.'_dump.sql',
+                "filename" => $this->group . '_dump.sql',
                 "callbackHeadquarter" => $callback_url,
                 "queue" => '100/100'
             ]
-        ], Utils::slugify($this->group));
+        ], Utils::slugify($this->group), $additional_time);
     }
 }
