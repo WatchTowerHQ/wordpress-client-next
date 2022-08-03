@@ -42,14 +42,14 @@ class Plugin
         $plugins = get_plugins();
         $plugins_list = [];
         foreach ($plugins as $name => $details) {
-            array_push($plugins_list, [
+            $plugins_list[] = [
                 'name' => $details['Name'],
-                'slug' => $this->get_plugin_slug($name, $details),
+                'slug' => rtrim($this->get_plugin_slug($name, $details), '-php'),
                 'basename' => $name,
                 'version' => $details['Version'],
                 'is_active' => $this->is_active($name),
                 'updates' => $this->check_updates($name),
-            ]);
+            ];
         }
 
         return $plugins_list;
