@@ -21,14 +21,14 @@ class Plugin
     public function __construct()
     {
         if (!function_exists('show_message')) {
-            require_once ABSPATH.'wp-admin/includes/misc.php';
+            require_once ABSPATH . 'wp-admin/includes/misc.php';
         }
         if (!function_exists('request_filesystem_credentials')) {
-            require_once ABSPATH.'wp-admin/includes/file.php';
+            require_once ABSPATH . 'wp-admin/includes/file.php';
         }
 
         if (!class_exists('\Plugin_Upgrader')) {
-            require_once ABSPATH.'wp-admin/includes/class-wp-upgrader.php';
+            require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
         }
 
         $this->upgrader = new \Plugin_Upgrader(new Updater_Skin());
@@ -41,18 +41,43 @@ class Plugin
     {
         $plugins = get_plugins();
         $plugins_list = [];
-        foreach ($plugins as $plugin_path => $plugin) {
+        foreach ($plugins as $name => $details) {
             array_push($plugins_list, [
-                'name'      => $plugin['Name'],
-                'slug'      => plugin_basename(plugin_dir_path($plugin_path)),
-                'basename'  => $plugin_path,
-                'version'   => $plugin['Version'],
-                'is_active' => $this->is_active($plugin_path),
-                'updates'   => $this->check_updates($plugin_path),
+                'name' => $details['Name'],
+                'slug' => $this->get_plugin_slug($name, $details),
+                'basename' => $name,
+                'version' => $details['Version'],
+                'is_active' => $this->is_active($name),
+                'updates' => $this->check_updates($name),
             ]);
         }
 
         return $plugins_list;
+    }
+
+    private function get_plugin_slug($name, $details)
+    {
+        $name = $this->get_name($name);
+        $name = $this->get_real_slug($name, $details['PluginURI']);
+
+        return sanitize_title($name);
+    }
+
+    private function get_name($name)
+    {
+        return strstr($name, '/') ? dirname($name) : $name;
+    }
+
+    private function get_real_slug($name, $url)
+    {
+        $slug = $name;
+        $match = preg_match('/https?:\/\/wordpress\.org\/(?:extend\/)?(?:plugins|themes)\/([^\/]+)\/?/', $url, $matches);
+
+        if (1 === $match) {
+            $slug = $matches[1];
+        }
+
+        return sanitize_title($slug);
     }
 
     /**
@@ -80,7 +105,7 @@ class Plugin
         if (array_key_exists($pluginPath, $list->response)) {
             return [
                 'required' => true,
-                'version'  => $list->response[$pluginPath]->new_version
+                'version' => $list->response[$pluginPath]->new_version
             ];
         } else {
             return [
