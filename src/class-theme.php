@@ -56,7 +56,8 @@ class Theme
     private function check_updates($theme, $current)
     {
         $list = get_site_transient('update_themes');
-        if (is_array($list->response)) {
+
+        if (!empty($list->response)) {
             if (array_key_exists($theme, $list->response)) {
                 if ($list->response[$theme]['new_version'] != $current) {
                     return [
