@@ -349,7 +349,7 @@ class Api
      */
     public function check_permission(WP_REST_Request $request)
     {
-        return $request->get_param('access_token') === $this->access_token && strlen($request->get_param('access_token')) === 32;
+        return $request->get_param('access_token') === $this->access_token;
     }
 
     /**
@@ -358,7 +358,7 @@ class Api
      */
     public function check_ota(WP_REST_Request $request)
     {
-        return $request->get_param('access_token') == get_option('watchtower_ota_token');
+        return $request->get_param('access_token') === get_option('watchtower_ota_token');
     }
 
     /**
