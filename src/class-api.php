@@ -349,7 +349,7 @@ class Api
      */
     public function check_permission(WP_REST_Request $request)
     {
-        return $request->get_param('access_token') == $this->access_token;
+        return $request->get_param('access_token') === $this->access_token && strlen($request->get_param('access_token')) === 32;
     }
 
     /**
