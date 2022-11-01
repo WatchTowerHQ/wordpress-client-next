@@ -51,23 +51,23 @@
         },
         {
             "name": "dg/mysql-dump",
-            "version": "v1.5.0",
-            "version_normalized": "1.5.0.0",
+            "version": "v1.5.1",
+            "version_normalized": "1.5.1.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/dg/MySQL-dump.git",
-                "reference": "6c9cf07092bcc4a140bef01c64d883ebfccfccfa"
+                "reference": "e0e287b715b43293773a8b0edf8514f606e01780"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/dg/MySQL-dump/zipball/6c9cf07092bcc4a140bef01c64d883ebfccfccfa",
-                "reference": "6c9cf07092bcc4a140bef01c64d883ebfccfccfa",
+                "url": "https://api.github.com/repos/dg/MySQL-dump/zipball/e0e287b715b43293773a8b0edf8514f606e01780",
+                "reference": "e0e287b715b43293773a8b0edf8514f606e01780",
                 "shasum": ""
             },
             "require": {
                 "php": ">=5.6"
             },
-            "time": "2018-10-31T00:31:09+00:00",
+            "time": "2019-09-10T21:36:25+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -91,45 +91,51 @@
                 "mysql"
             ],
             "support": {
-                "source": "https://github.com/dg/MySQL-dump/tree/v1.5.0"
+                "source": "https://github.com/dg/MySQL-dump/tree/master"
             },
             "install-path": "../dg/mysql-dump"
         },
         {
-            "name": "ifsnop/mysqldump-php",
-            "version": "dev-master",
-            "version_normalized": "dev-master",
+            "name": "druidfi/mysqldump-php",
+            "version": "1.0.1",
+            "version_normalized": "1.0.1.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/code2prog/mysqldump-php.git",
-                "reference": "1e3934b17fb20e703e8a76583dc791e4ec06d84f"
+                "url": "https://github.com/druidfi/mysqldump-php.git",
+                "reference": "9acf0537819e957fcb4a589371abfa7ec19259b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/code2prog/mysqldump-php/zipball/1e3934b17fb20e703e8a76583dc791e4ec06d84f",
-                "reference": "1e3934b17fb20e703e8a76583dc791e4ec06d84f",
+                "url": "https://api.github.com/repos/druidfi/mysqldump-php/zipball/9acf0537819e957fcb4a589371abfa7ec19259b5",
+                "reference": "9acf0537819e957fcb4a589371abfa7ec19259b5",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.0"
+                "composer-runtime-api": "^2",
+                "ext-pdo": "*",
+                "php": "^7.4 || ^8.0"
             },
             "require-dev": {
-                "phpunit/phpunit": "4.8.36",
-                "squizlabs/php_codesniffer": "1.*"
+                "phpunit/phpunit": "^8.5.15 || ^9",
+                "squizlabs/php_codesniffer": "3.*"
             },
-            "time": "2020-03-20T14:11:54+00:00",
-            "default-branch": true,
+            "time": "2022-08-24T11:17:32+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
                 "psr-4": {
-                    "Ifsnop\\": "src/Ifsnop/"
+                    "Druidfi\\Mysqldump\\": "src/"
                 }
             },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
             "authors": [
+                {
+                    "name": "Druid.fi",
+                    "email": "info@druid.fi"
+                },
                 {
                     "name": "Diego Torres",
                     "homepage": "https://github.com/ifsnop",
@@ -137,63 +143,67 @@
                 }
             ],
             "description": "PHP version of mysqldump cli that comes with MySQL",
-            "homepage": "https://github.com/ifsnop/mysqldump-php",
+            "homepage": "https://github.com/druidfi/mysqldump-php",
             "keywords": [
+                "PHP7",
                 "database",
-                "hhvm",
                 "mariadb",
                 "mysql",
                 "mysql-backup",
                 "mysqldump",
                 "pdo",
                 "php",
-                "php5",
-                "php7",
+                "php8",
                 "sql"
             ],
             "support": {
-                "source": "https://github.com/code2prog/mysqldump-php/tree/master"
+                "issues": "https://github.com/druidfi/mysqldump-php/issues",
+                "source": "https://github.com/druidfi/mysqldump-php/tree/1.0.1"
             },
-            "install-path": "../ifsnop/mysqldump-php"
+            "install-path": "../druidfi/mysqldump-php"
         },
         {
             "name": "nelexa/zip",
-            "version": "3.3.3",
-            "version_normalized": "3.3.3.0",
+            "version": "4.0.2",
+            "version_normalized": "4.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/Ne-Lexa/php-zip.git",
-                "reference": "501b52f6fc393a599b44ff348a42740e1eaac7c6"
+                "reference": "88a1b6549be813278ff2dd3b6b2ac188827634a7"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Ne-Lexa/php-zip/zipball/501b52f6fc393a599b44ff348a42740e1eaac7c6",
-                "reference": "501b52f6fc393a599b44ff348a42740e1eaac7c6",
+                "url": "https://api.github.com/repos/Ne-Lexa/php-zip/zipball/88a1b6549be813278ff2dd3b6b2ac188827634a7",
+                "reference": "88a1b6549be813278ff2dd3b6b2ac188827634a7",
                 "shasum": ""
             },
             "require": {
                 "ext-zlib": "*",
-                "paragonie/random_compat": "*",
-                "php": "^5.5.9 || ^7.0",
-                "psr/http-message": "^1.0",
-                "symfony/finder": "^3.0|^4.0|^5.0"
+                "php": "^7.4 || ^8.0",
+                "psr/http-message": "*",
+                "symfony/finder": "*"
             },
             "require-dev": {
                 "ext-bz2": "*",
+                "ext-dom": "*",
                 "ext-fileinfo": "*",
+                "ext-iconv": "*",
                 "ext-openssl": "*",
                 "ext-xml": "*",
+                "friendsofphp/php-cs-fixer": "^3.4.0",
                 "guzzlehttp/psr7": "^1.6",
-                "phpunit/phpunit": "^4.8|^5.7",
-                "symfony/var-dumper": "^3.0|^4.0|^5.0"
+                "phpunit/phpunit": "^9",
+                "symfony/http-foundation": "*",
+                "symfony/var-dumper": "*",
+                "vimeo/psalm": "^4.6"
             },
             "suggest": {
                 "ext-bz2": "Needed to support BZIP2 compression",
                 "ext-fileinfo": "Needed to get mime-type file",
-                "ext-mcrypt": "Needed to support encrypt zip entries or use ext-openssl",
+                "ext-iconv": "Needed to support convert zip entry name to requested character encoding",
                 "ext-openssl": "Needed to support encrypt zip entries or use ext-mcrypt"
             },
-            "time": "2020-07-11T21:01:42+00:00",
+            "time": "2022-06-17T11:17:46+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -212,7 +222,7 @@
                     "role": "Developer"
                 }
             ],
-            "description": "PhpZip is a php-library for extended work with ZIP-archives. Open, create, update, delete, extract and get info tool. Supports appending to existing ZIP files, WinZip AES encryption, Traditional PKWARE Encryption, ZipAlign tool, BZIP2 compression, external file attributes and ZIP64 extensions. Alternative ZipArchive. It does not require php-zip extension.",
+            "description": "PhpZip is a php-library for extended work with ZIP-archives. Open, create, update, delete, extract and get info tool. Supports appending to existing ZIP files, WinZip AES encryption, Traditional PKWARE Encryption, BZIP2 compression, external file attributes and ZIP64 extensions. Alternative ZipArchive. It does not require php-zip extension.",
             "homepage": "https://github.com/Ne-Lexa/php-zip",
             "keywords": [
                 "archive",
@@ -220,67 +230,13 @@
                 "unzip",
                 "winzip",
                 "zip",
-                "zipalign",
                 "ziparchive"
             ],
             "support": {
                 "issues": "https://github.com/Ne-Lexa/php-zip/issues",
-                "source": "https://github.com/Ne-Lexa/php-zip/tree/3.3.3"
+                "source": "https://github.com/Ne-Lexa/php-zip/tree/4.0.2"
             },
             "install-path": "../nelexa/zip"
-        },
-        {
-            "name": "paragonie/random_compat",
-            "version": "v9.99.100",
-            "version_normalized": "9.99.100.0",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/paragonie/random_compat.git",
-                "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/paragonie/random_compat/zipball/996434e5492cb4c3edcb9168db6fbb1359ef965a",
-                "reference": "996434e5492cb4c3edcb9168db6fbb1359ef965a",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">= 7"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "4.*|5.*",
-                "vimeo/psalm": "^1"
-            },
-            "suggest": {
-                "ext-libsodium": "Provides a modern crypto API that can be used to generate random bytes."
-            },
-            "time": "2020-10-15T08:29:30+00:00",
-            "type": "library",
-            "installation-source": "dist",
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "authors": [
-                {
-                    "name": "Paragon Initiative Enterprises",
-                    "email": "security@paragonie.com",
-                    "homepage": "https://paragonie.com"
-                }
-            ],
-            "description": "PHP 5.x polyfill for random_bytes() and random_int() from PHP 7",
-            "keywords": [
-                "csprng",
-                "polyfill",
-                "pseudorandom",
-                "random"
-            ],
-            "support": {
-                "email": "info@paragonie.com",
-                "issues": "https://github.com/paragonie/random_compat/issues",
-                "source": "https://github.com/paragonie/random_compat"
-            },
-            "install-path": "../paragonie/random_compat"
         },
         {
             "name": "psr/http-message",
@@ -379,24 +335,96 @@
             "install-path": "../shuber/curl"
         },
         {
-            "name": "symfony/finder",
-            "version": "v3.4.47",
-            "version_normalized": "3.4.47.0",
+            "name": "symfony/deprecation-contracts",
+            "version": "v3.0.2",
+            "version_normalized": "3.0.2.0",
             "source": {
                 "type": "git",
-                "url": "https://github.com/symfony/finder.git",
-                "reference": "b6b6ad3db3edb1b4b1c1896b1975fb684994de6e"
+                "url": "https://github.com/symfony/deprecation-contracts.git",
+                "reference": "26954b3d62a6c5fd0ea8a2a00c0353a14978d05c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/finder/zipball/b6b6ad3db3edb1b4b1c1896b1975fb684994de6e",
-                "reference": "b6b6ad3db3edb1b4b1c1896b1975fb684994de6e",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/26954b3d62a6c5fd0ea8a2a00c0353a14978d05c",
+                "reference": "26954b3d62a6c5fd0ea8a2a00c0353a14978d05c",
                 "shasum": ""
             },
             "require": {
-                "php": "^5.5.9|>=7.0.8"
+                "php": ">=8.0.2"
             },
-            "time": "2020-11-16T17:02:08+00:00",
+            "time": "2022-01-02T09:55:41+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "3.0-dev"
+                },
+                "thanks": {
+                    "name": "symfony/contracts",
+                    "url": "https://github.com/symfony/contracts"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "function.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "A generic function and convention to trigger deprecation notices",
+            "homepage": "https://symfony.com",
+            "support": {
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.0.2"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "install-path": "../symfony/deprecation-contracts"
+        },
+        {
+            "name": "symfony/finder",
+            "version": "v5.4.11",
+            "version_normalized": "5.4.11.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/finder.git",
+                "reference": "7872a66f57caffa2916a584db1aa7f12adc76f8c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/finder/zipball/7872a66f57caffa2916a584db1aa7f12adc76f8c",
+                "reference": "7872a66f57caffa2916a584db1aa7f12adc76f8c",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.2.5",
+                "symfony/deprecation-contracts": "^2.1|^3",
+                "symfony/polyfill-php80": "^1.16"
+            },
+            "time": "2022-07-29T07:37:50+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -421,10 +449,10 @@
                     "homepage": "https://symfony.com/contributors"
                 }
             ],
-            "description": "Symfony Finder Component",
+            "description": "Finds files and directories via an intuitive fluent interface",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/finder/tree/v3.4.47"
+                "source": "https://github.com/symfony/finder/tree/v5.4.11"
             },
             "funding": [
                 {
@@ -444,30 +472,33 @@
         },
         {
             "name": "symfony/polyfill-ctype",
-            "version": "v1.18.1",
-            "version_normalized": "1.18.1.0",
+            "version": "v1.26.0",
+            "version_normalized": "1.26.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-ctype.git",
-                "reference": "1c302646f6efc070cd46856e600e5e0684d6b454"
+                "reference": "6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/1c302646f6efc070cd46856e600e5e0684d6b454",
-                "reference": "1c302646f6efc070cd46856e600e5e0684d6b454",
+                "url": "https://api.github.com/repos/symfony/polyfill-ctype/zipball/6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4",
+                "reference": "6fd1b9a79f6e3cf65f9e679b23af304cd9e010d4",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=7.1"
+            },
+            "provide": {
+                "ext-ctype": "*"
             },
             "suggest": {
                 "ext-ctype": "For best performance"
             },
-            "time": "2020-07-14T12:35:20+00:00",
+            "time": "2022-05-24T11:49:31+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-main": "1.26-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -506,7 +537,7 @@
                 "portable"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.18.0"
+                "source": "https://github.com/symfony/polyfill-ctype/tree/v1.26.0"
             },
             "funding": [
                 {
@@ -526,30 +557,33 @@
         },
         {
             "name": "symfony/polyfill-iconv",
-            "version": "v1.18.1",
-            "version_normalized": "1.18.1.0",
+            "version": "v1.26.0",
+            "version_normalized": "1.26.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-iconv.git",
-                "reference": "6c2f78eb8f5ab8eaea98f6d414a5915f2e0fce36"
+                "reference": "143f1881e655bebca1312722af8068de235ae5dc"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-iconv/zipball/6c2f78eb8f5ab8eaea98f6d414a5915f2e0fce36",
-                "reference": "6c2f78eb8f5ab8eaea98f6d414a5915f2e0fce36",
+                "url": "https://api.github.com/repos/symfony/polyfill-iconv/zipball/143f1881e655bebca1312722af8068de235ae5dc",
+                "reference": "143f1881e655bebca1312722af8068de235ae5dc",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=7.1"
+            },
+            "provide": {
+                "ext-iconv": "*"
             },
             "suggest": {
                 "ext-iconv": "For best performance"
             },
-            "time": "2020-07-14T12:35:20+00:00",
+            "time": "2022-05-24T11:49:31+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-main": "1.26-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -589,7 +623,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-iconv/tree/master"
+                "source": "https://github.com/symfony/polyfill-iconv/tree/v1.26.0"
             },
             "funding": [
                 {
@@ -609,30 +643,33 @@
         },
         {
             "name": "symfony/polyfill-mbstring",
-            "version": "v1.18.1",
-            "version_normalized": "1.18.1.0",
+            "version": "v1.26.0",
+            "version_normalized": "1.26.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-mbstring.git",
-                "reference": "a6977d63bf9a0ad4c65cd352709e230876f9904a"
+                "reference": "9344f9cb97f3b19424af1a21a3b0e75b0a7d8d7e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/a6977d63bf9a0ad4c65cd352709e230876f9904a",
-                "reference": "a6977d63bf9a0ad4c65cd352709e230876f9904a",
+                "url": "https://api.github.com/repos/symfony/polyfill-mbstring/zipball/9344f9cb97f3b19424af1a21a3b0e75b0a7d8d7e",
+                "reference": "9344f9cb97f3b19424af1a21a3b0e75b0a7d8d7e",
                 "shasum": ""
             },
             "require": {
-                "php": ">=5.3.3"
+                "php": ">=7.1"
+            },
+            "provide": {
+                "ext-mbstring": "*"
             },
             "suggest": {
                 "ext-mbstring": "For best performance"
             },
-            "time": "2020-07-14T12:35:20+00:00",
+            "time": "2022-05-24T11:49:31+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "1.18-dev"
+                    "dev-main": "1.26-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -672,7 +709,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.18.1"
+                "source": "https://github.com/symfony/polyfill-mbstring/tree/v1.26.0"
             },
             "funding": [
                 {
@@ -689,6 +726,92 @@
                 }
             ],
             "install-path": "../symfony/polyfill-mbstring"
+        },
+        {
+            "name": "symfony/polyfill-php80",
+            "version": "v1.26.0",
+            "version_normalized": "1.26.0.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/symfony/polyfill-php80.git",
+                "reference": "cfa0ae98841b9e461207c13ab093d76b0fa7bace"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/cfa0ae98841b9e461207c13ab093d76b0fa7bace",
+                "reference": "cfa0ae98841b9e461207c13ab093d76b0fa7bace",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=7.1"
+            },
+            "time": "2022-05-10T07:21:04+00:00",
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-main": "1.26-dev"
+                },
+                "thanks": {
+                    "name": "symfony/polyfill",
+                    "url": "https://github.com/symfony/polyfill"
+                }
+            },
+            "installation-source": "dist",
+            "autoload": {
+                "files": [
+                    "bootstrap.php"
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Php80\\": ""
+                },
+                "classmap": [
+                    "Resources/stubs"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Ion Bazan",
+                    "email": "ion.bazan@gmail.com"
+                },
+                {
+                    "name": "Nicolas Grekas",
+                    "email": "p@tchwork.com"
+                },
+                {
+                    "name": "Symfony Community",
+                    "homepage": "https://symfony.com/contributors"
+                }
+            ],
+            "description": "Symfony polyfill backporting some PHP 8.0+ features to lower PHP versions",
+            "homepage": "https://symfony.com",
+            "keywords": [
+                "compatibility",
+                "polyfill",
+                "portable",
+                "shim"
+            ],
+            "support": {
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.26.0"
+            },
+            "funding": [
+                {
+                    "url": "https://symfony.com/sponsor",
+                    "type": "custom"
+                },
+                {
+                    "url": "https://github.com/fabpot",
+                    "type": "github"
+                },
+                {
+                    "url": "https://tidelift.com/funding/github/packagist/symfony/symfony",
+                    "type": "tidelift"
+                }
+            ],
+            "install-path": "../symfony/polyfill-php80"
         },
         {
             "name": "woocommerce/action-scheduler",

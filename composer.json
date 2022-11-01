@@ -17,29 +17,23 @@
   "config": {
     "preferred-install": "dist"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/code2prog/mysqldump-php"
-    }
-  ],
   "require": {
-    "claudiosanches/wp-autoloader": "^1.0",
-    "php": ">= 7.2",
-    "dg/mysql-dump": "1.5.0",
+    "claudiosanches/wp-autoloader": "1.0",
+    "php": ">= 7.4|8.0",
+    "dg/mysql-dump": "v1.5.1",
     "shuber/curl": "dev-master",
     "ext-zip": "*",
     "ext-mysqli": "*",
     "ext-json": "*",
-    "woocommerce/action-scheduler": "^3.4.0",
+    "woocommerce/action-scheduler": "3.5.2",
     "ext-fileinfo": "*",
-    "symfony/finder": "3.x",
-    "ifsnop/mysqldump-php": "dev-master",
+    "symfony/finder": "v5.4.11",
     "ext-zlib": "*",
     "ext-iconv": "*",
-    "symfony/polyfill-iconv": "1.18.1",
-    "symfony/polyfill-mbstring": "1.18.1",
-    "symfony/polyfill-ctype": "1.18.1",
-    "nelexa/zip": "^3.3"
+    "symfony/polyfill-iconv": "v1.26.0",
+    "symfony/polyfill-mbstring": "v1.26.0",
+    "symfony/polyfill-ctype": "v1.26.0",
+    "nelexa/zip": "4.0.2",
+    "druidfi/mysqldump-php": "^1.0"
   }
 }

@@ -2,7 +2,7 @@
 
 namespace WhatArmy\Watchtower\Mysql;
 
-use Ifsnop\Mysqldump\Mysqldump;
+use Druidfi\Mysqldump\Mysqldump;
 use WhatArmy\Watchtower\Schedule;
 use WhatArmy\Watchtower\Utils;
 
