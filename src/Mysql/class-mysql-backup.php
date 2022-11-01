@@ -32,7 +32,7 @@ class Mysql_Backup
     private function db_stats()
     {
         global $wpdb;
-        $tables_stats = $this->db->get_results("SELECT table_name 'name', table_rows 'rows', round(((data_length + index_length)/1024/1024),2) 'size_mb' 
+        $tables_stats = $this->db->get_results("SELECT table_name 'name', round(((data_length + index_length)/1024/1024),2) 'size_mb' 
                                       FROM information_schema.TABLES 
                                       WHERE table_schema = '" . DB_NAME . "';", ARRAY_N);
         $to_ret = new \stdClass();
@@ -45,13 +45,15 @@ class Mysql_Backup
         foreach ($tables_stats as $table) {
             if (!in_array($table[0], $exclusion)) {
                 $to_ret->{$table[0]} = [
-                    'count' => $table[1],
-                    'size' => $table[2],
+                    'count' => $this->db->get_var("SELECT COUNT(*) FROM $table[0]"),
+                    'size' => $table[1],
                 ];
             }
 
         }
+        error_log(json_encode($to_ret));
         $to_ret = json_decode(json_encode($to_ret), true);
+
         return array_map(function ($t, $k) {
             $t['name'] = $k;
             return $t;
@@ -120,10 +122,10 @@ class Mysql_Backup
         $start = 1;
         $end = WHTHQ_DB_RECORDS_MAX;
         foreach (range(1, ceil($table['count'] / WHTHQ_DB_RECORDS_MAX)) as $part) {
-            array_push($ranges, [
+            $ranges[] = [
                 'start' => $start,
                 'end' => $end - ($end === WHTHQ_DB_RECORDS_MAX ? 0 : 1),
-            ]);
+            ];
             $start = $start + WHTHQ_DB_RECORDS_MAX;
             $end = $start + WHTHQ_DB_RECORDS_MAX;
         }
