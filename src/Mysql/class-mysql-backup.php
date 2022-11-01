@@ -51,7 +51,7 @@ class Mysql_Backup
             }
 
         }
-        error_log(json_encode($to_ret));
+
         $to_ret = json_decode(json_encode($to_ret), true);
 
         return array_map(function ($t, $k) {
