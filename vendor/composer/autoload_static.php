@@ -4,7 +4,7 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit91666ab20fa90d6d5077ec8b7a048825
+class ComposerStaticInit38658c24433224ba35a28b7f458965b7
 {
     public static $files = array (
         'ef6802c8a38664a4b1e8712ed25377fb' => __DIR__ . '/..' . '/shuber/curl/curl.php',
@@ -88,9 +88,9 @@ class ComposerStaticInit91666ab20fa90d6d5077ec8b7a048825
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit91666ab20fa90d6d5077ec8b7a048825::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit91666ab20fa90d6d5077ec8b7a048825::$prefixDirsPsr4;
-            $loader->classMap = ComposerStaticInit91666ab20fa90d6d5077ec8b7a048825::$classMap;
+            $loader->prefixLengthsPsr4 = ComposerStaticInit38658c24433224ba35a28b7f458965b7::$prefixLengthsPsr4;
+            $loader->prefixDirsPsr4 = ComposerStaticInit38658c24433224ba35a28b7f458965b7::$prefixDirsPsr4;
+            $loader->classMap = ComposerStaticInit38658c24433224ba35a28b7f458965b7::$classMap;
 
         }, null, ClassLoader::class);
     }

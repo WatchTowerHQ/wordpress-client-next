@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "c3fafc03661b169518567a1518f3fd59",
+    "content-hash": "0ac1ff9a37e50c24b097f1276c4b58d0",
     "packages": [
         {
             "name": "claudiosanches/wp-autoloader",
@@ -455,12 +455,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Ctype\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Ctype\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -534,12 +534,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Iconv\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Iconv\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -614,12 +614,12 @@
                 }
             },
             "autoload": {
-                "psr-4": {
-                    "Symfony\\Polyfill\\Mbstring\\": ""
-                },
                 "files": [
                     "bootstrap.php"
-                ]
+                ],
+                "psr-4": {
+                    "Symfony\\Polyfill\\Mbstring\\": ""
+                }
             },
             "notification-url": "https://packagist.org/downloads/",
             "license": [
@@ -665,16 +665,16 @@
         },
         {
             "name": "woocommerce/action-scheduler",
-            "version": "3.4.0",
+            "version": "3.5.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/woocommerce/action-scheduler.git",
-                "reference": "3218a33ff14b968f8cb05de9656c2efa1eeb1330"
+                "reference": "519cfa20db89eb85511cad08301d3fa33522ed8b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/3218a33ff14b968f8cb05de9656c2efa1eeb1330",
-                "reference": "3218a33ff14b968f8cb05de9656c2efa1eeb1330",
+                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/519cfa20db89eb85511cad08301d3fa33522ed8b",
+                "reference": "519cfa20db89eb85511cad08301d3fa33522ed8b",
                 "shasum": ""
             },
             "require-dev": {
@@ -699,9 +699,9 @@
             "homepage": "https://actionscheduler.org/",
             "support": {
                 "issues": "https://github.com/woocommerce/action-scheduler/issues",
-                "source": "https://github.com/woocommerce/action-scheduler/tree/3.4.0"
+                "source": "https://github.com/woocommerce/action-scheduler/tree/3.5.2"
             },
-            "time": "2021-10-28T17:09:12+00:00"
+            "time": "2022-09-16T15:31:00+00:00"
         }
     ],
     "packages-dev": [],
@@ -714,7 +714,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">= 7.1",
+        "php": ">= 7.2",
         "ext-zip": "*",
         "ext-mysqli": "*",
         "ext-json": "*",
@@ -723,5 +723,5 @@
         "ext-iconv": "*"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.1.0"
+    "plugin-api-version": "2.3.0"
 }
