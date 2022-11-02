@@ -17,6 +17,12 @@
   "config": {
     "preferred-install": "dist"
   },
+  "repositories": [
+    {
+      "type": "vcs",
+      "url": "https://github.com/WatchTowerHQ/mysqldump-php"
+    }
+  ],
   "require": {
     "claudiosanches/wp-autoloader": "1.0",
     "php": ">= 7.4|8.0",
@@ -34,6 +40,6 @@
     "symfony/polyfill-mbstring": "v1.26.0",
     "symfony/polyfill-ctype": "v1.26.0",
     "nelexa/zip": "4.0.2",
-    "druidfi/mysqldump-php": "^1.0"
+    "druidfi/mysqldump-php": "dev-main"
   }
 }

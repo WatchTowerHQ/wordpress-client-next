@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'whatarmy/watchtowerhq',
-        'pretty_version' => 'dev-develop',
-        'version' => 'dev-develop',
-        'reference' => '2e8beb87a0dfa563407da3fd48f5c3754071402a',
+        'pretty_version' => 'dev-master',
+        'version' => 'dev-master',
+        'reference' => '70ab4e58a34e279d0b111c48d89a17415ec7fe67',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -29,12 +29,14 @@
             'dev_requirement' => false,
         ),
         'druidfi/mysqldump-php' => array(
-            'pretty_version' => '1.0.1',
-            'version' => '1.0.1.0',
-            'reference' => '9acf0537819e957fcb4a589371abfa7ec19259b5',
+            'pretty_version' => 'dev-main',
+            'version' => 'dev-main',
+            'reference' => '5a2d816b8a914966a405f6b067af998edc67e593',
             'type' => 'library',
             'install_path' => __DIR__ . '/../druidfi/mysqldump-php',
-            'aliases' => array(),
+            'aliases' => array(
+                0 => '9999999-dev',
+            ),
             'dev_requirement' => false,
         ),
         'nelexa/zip' => array(
@@ -121,9 +123,9 @@
             'dev_requirement' => false,
         ),
         'whatarmy/watchtowerhq' => array(
-            'pretty_version' => 'dev-develop',
-            'version' => 'dev-develop',
-            'reference' => '2e8beb87a0dfa563407da3fd48f5c3754071402a',
+            'pretty_version' => 'dev-master',
+            'version' => 'dev-master',
+            'reference' => '70ab4e58a34e279d0b111c48d89a17415ec7fe67',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

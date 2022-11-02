@@ -51,7 +51,7 @@ class Mysql_Backup
             }
 
         }
-        error_log(json_encode($to_ret));
+
         $to_ret = json_decode(json_encode($to_ret), true);
 
         return array_map(function ($t, $k) {
@@ -83,8 +83,9 @@ class Mysql_Backup
         ];
         $dump = new Mysqldump("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD, $dumpSettings);
         if (is_array($range)) {
-            $range = ($range['start'] === 1) ? 'LIMIT 0,' . (int)WHTHQ_DB_RECORDS_MAX : 'LIMIT ' . ($range['start'] - 1) . "," . ((int)WHTHQ_DB_RECORDS_MAX);
-            $dump->setTableWheres([
+            $range = $range['start'] === 1 ? [0, (int)WHTHQ_DB_RECORDS_MAX] : [($range['start'] - 1), (int)WHTHQ_DB_RECORDS_MAX];
+
+            $dump->setTableLimits([
                 $table => $range,
             ]);
         }

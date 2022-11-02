@@ -301,15 +301,6 @@ class Watchtower
             'access_token_section',
             []
         );
-
-        add_settings_field(
-            'use_beta',
-            'Use Beta Plugin',
-            [$this, 'use_beta_callback'],
-            'watchtower-settings',
-            'access_token_section',
-            []
-        );
     }
 
     /**
@@ -325,12 +316,6 @@ class Watchtower
             $new_input['access_token'] = $token->generate();
         } else {
             $new_input['access_token'] = get_option('watchtower')['access_token'];
-        }
-
-        if (isset($input['use_beta']) && $input['use_beta'] == 'true') {
-            $new_input['use_beta'] = true;
-        } else {
-            $new_input['use_beta'] = false;
         }
 
         return $new_input;
@@ -360,15 +345,6 @@ class Watchtower
         printf(
             '<input type="checkbox" value="true" name="watchtower[access_token]" />',
             isset($this->options['access_token']) ? esc_attr($this->options['access_token']) : ''
-        );
-    }
-
-    public function use_beta_callback()
-    {
-        $is_checked = (get_option('watchtower')['use_beta'] == 1) ? "checked" : "";
-        printf(
-            '<input type="checkbox" value="true" name="watchtower[use_beta]" ' . $is_checked . '/>',
-            isset($this->options['use_beta']) ? esc_attr($this->options['use_beta']) : ''
         );
     }
 }
