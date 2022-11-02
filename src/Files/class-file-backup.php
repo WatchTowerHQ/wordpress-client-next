@@ -20,7 +20,7 @@ use WhatArmy\Watchtower\Zip;
  */
 class File_Backup
 {
-    public $backupName;
+    public string $backupName;
 
     /**
      * Backup constructor.
@@ -66,9 +66,9 @@ class File_Backup
 
     /**
      * @param $callbackHeadquarterUrl
-     * @return $this
+     * @return void
      */
-    private function create_job_list($callbackHeadquarterUrl)
+    private function create_job_list($callbackHeadquarterUrl): void
     {
         $jobFile = WHTHQ_BACKUP_DIR . '/backup.job';
 
@@ -86,7 +86,6 @@ class File_Backup
             $path = $file->getPathname();
             file_put_contents($jobFile, $path . PHP_EOL, FILE_APPEND | LOCK_EX);
         }
-        return $this;
     }
 
     /**
@@ -107,7 +106,7 @@ class File_Backup
      * @param $callback_url
      * @return string
      */
-    public function run($callback_url)
+    public function run($callback_url): string
     {
         Utils::cleanup_old_backups(WHTHQ_BACKUP_DIR);
         Utils::create_backup_dir();
@@ -162,7 +161,7 @@ class File_Backup
     /**
      * @return int
      */
-    public function job_count()
+    public function job_count(): int
     {
         $file = new SplFileObject(WHTHQ_BACKUP_DIR . "/backup.job", 'r');
         $file->seek(PHP_INT_MAX);
