@@ -7,6 +7,7 @@ defined('ABSPATH') or die('No script kiddies please!');
  * Description: The WatchTowerHQ plugin allows us to monitor, backup, upgrade, and manage your site!
  * Author: WhatArmy
  * Version: 3.7.0
+ * Requires PHP: 7.4
  * Author URI: https://watchtowerhq.co/
  * License: GPLv2 or later
  * Text Domain: watchtower

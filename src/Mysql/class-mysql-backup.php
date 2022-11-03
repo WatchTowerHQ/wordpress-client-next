@@ -80,6 +80,9 @@ class Mysql_Backup
         return $result;
     }
 
+    /**
+     * @throws \Exception
+     */
     private function dump_data($table, $dir, $range = null): void
     {
         $dumpSettings = [
@@ -109,6 +112,9 @@ class Mysql_Backup
         unlink($file);
     }
 
+    /**
+     * @throws \Exception
+     */
     private function dump_structure($tables, $dir): void
     {
         $dumpSettings = [
@@ -167,6 +173,7 @@ class Mysql_Backup
     /**
      * @param $callback_url
      * @param $dir
+     * @throws \Exception
      */
     private function runInQueue($callback_url, $dir): void
     {
@@ -200,6 +207,7 @@ class Mysql_Backup
     /**
      * @param $callback_url
      * @return string
+     * @throws \Exception
      */
     public function run($callback_url): string
     {
