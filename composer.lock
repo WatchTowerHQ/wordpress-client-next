@@ -101,12 +101,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/WatchTowerHQ/mysqldump-php.git",
-                "reference": "5a2d816b8a914966a405f6b067af998edc67e593"
+                "reference": "0196b1bc986dc20dd26acb476de4ff47cdf9d8fd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WatchTowerHQ/mysqldump-php/zipball/5a2d816b8a914966a405f6b067af998edc67e593",
-                "reference": "5a2d816b8a914966a405f6b067af998edc67e593",
+                "url": "https://api.github.com/repos/WatchTowerHQ/mysqldump-php/zipball/0196b1bc986dc20dd26acb476de4ff47cdf9d8fd",
+                "reference": "0196b1bc986dc20dd26acb476de4ff47cdf9d8fd",
                 "shasum": ""
             },
             "require": {
@@ -161,7 +161,7 @@
             "support": {
                 "source": "https://github.com/WatchTowerHQ/mysqldump-php/tree/main"
             },
-            "time": "2022-11-02T08:31:33+00:00"
+            "time": "2022-11-07T09:55:46+00:00"
         },
         {
             "name": "nelexa/zip",

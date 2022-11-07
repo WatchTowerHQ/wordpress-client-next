@@ -3,7 +3,7 @@
         'name' => 'whatarmy/watchtowerhq',
         'pretty_version' => 'dev-master',
         'version' => 'dev-master',
-        'reference' => 'e217d1eff680fbaae13d58f8647da33e9341dde3',
+        'reference' => '7cda9fe9a149eb326e23446fb15bfa2edb4841ee',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -31,7 +31,7 @@
         'druidfi/mysqldump-php' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '5a2d816b8a914966a405f6b067af998edc67e593',
+            'reference' => '0196b1bc986dc20dd26acb476de4ff47cdf9d8fd',
             'type' => 'library',
             'install_path' => __DIR__ . '/../druidfi/mysqldump-php',
             'aliases' => array(
@@ -125,7 +125,7 @@
         'whatarmy/watchtowerhq' => array(
             'pretty_version' => 'dev-master',
             'version' => 'dev-master',
-            'reference' => 'e217d1eff680fbaae13d58f8647da33e9341dde3',
+            'reference' => '7cda9fe9a149eb326e23446fb15bfa2edb4841ee',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
