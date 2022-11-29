@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "b0eb2e506f817f65a5b8cd87c2dad064",
+    "content-hash": "f0e6514fceca29ee176d8192f7d16917",
     "packages": [
         {
             "name": "claudiosanches/wp-autoloader",
@@ -100,13 +100,13 @@
             "version": "dev-main",
             "source": {
                 "type": "git",
-                "url": "https://github.com/WatchTowerHQ/mysqldump-php.git",
-                "reference": "0196b1bc986dc20dd26acb476de4ff47cdf9d8fd"
+                "url": "https://github.com/druidfi/mysqldump-php.git",
+                "reference": "6842f6d8757595727bcade76b8ad382d473ecec3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/WatchTowerHQ/mysqldump-php/zipball/0196b1bc986dc20dd26acb476de4ff47cdf9d8fd",
-                "reference": "0196b1bc986dc20dd26acb476de4ff47cdf9d8fd",
+                "url": "https://api.github.com/repos/druidfi/mysqldump-php/zipball/6842f6d8757595727bcade76b8ad382d473ecec3",
+                "reference": "6842f6d8757595727bcade76b8ad382d473ecec3",
                 "shasum": ""
             },
             "require": {
@@ -125,11 +125,7 @@
                     "Druidfi\\Mysqldump\\": "src/"
                 }
             },
-            "autoload-dev": {
-                "psr-4": {
-                    "Druidfi\\Mysqldump\\Tests\\": "tests/"
-                }
-            },
+            "notification-url": "https://packagist.org/downloads/",
             "license": [
                 "GPL-3.0-or-later"
             ],
@@ -147,6 +143,7 @@
             "description": "PHP version of mysqldump cli that comes with MySQL",
             "homepage": "https://github.com/druidfi/mysqldump-php",
             "keywords": [
+                "PHP7",
                 "database",
                 "mariadb",
                 "mysql",
@@ -154,14 +151,14 @@
                 "mysqldump",
                 "pdo",
                 "php",
-                "php7",
                 "php8",
                 "sql"
             ],
             "support": {
-                "source": "https://github.com/WatchTowerHQ/mysqldump-php/tree/main"
+                "issues": "https://github.com/druidfi/mysqldump-php/issues",
+                "source": "https://github.com/druidfi/mysqldump-php/tree/main"
             },
-            "time": "2022-11-07T09:55:46+00:00"
+            "time": "2022-11-08T08:31:51+00:00"
         },
         {
             "name": "nelexa/zip",
@@ -706,16 +703,16 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.26.0",
+            "version": "v1.27.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "cfa0ae98841b9e461207c13ab093d76b0fa7bace"
+                "reference": "7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/cfa0ae98841b9e461207c13ab093d76b0fa7bace",
-                "reference": "cfa0ae98841b9e461207c13ab093d76b0fa7bace",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936",
+                "reference": "7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936",
                 "shasum": ""
             },
             "require": {
@@ -724,7 +721,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.26-dev"
+                    "dev-main": "1.27-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -769,7 +766,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.26.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.27.0"
             },
             "funding": [
                 {
@@ -785,20 +782,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-05-10T07:21:04+00:00"
+            "time": "2022-11-03T14:55:06+00:00"
         },
         {
             "name": "woocommerce/action-scheduler",
-            "version": "3.5.2",
+            "version": "3.5.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/woocommerce/action-scheduler.git",
-                "reference": "519cfa20db89eb85511cad08301d3fa33522ed8b"
+                "reference": "63ef5af013ca3a6efdd8ef8e9363ac70778713cb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/519cfa20db89eb85511cad08301d3fa33522ed8b",
-                "reference": "519cfa20db89eb85511cad08301d3fa33522ed8b",
+                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/63ef5af013ca3a6efdd8ef8e9363ac70778713cb",
+                "reference": "63ef5af013ca3a6efdd8ef8e9363ac70778713cb",
                 "shasum": ""
             },
             "require-dev": {
@@ -823,9 +820,9 @@
             "homepage": "https://actionscheduler.org/",
             "support": {
                 "issues": "https://github.com/woocommerce/action-scheduler/issues",
-                "source": "https://github.com/woocommerce/action-scheduler/tree/3.5.2"
+                "source": "https://github.com/woocommerce/action-scheduler/tree/3.5.3"
             },
-            "time": "2022-09-16T15:31:00+00:00"
+            "time": "2022-11-09T17:45:19+00:00"
         }
     ],
     "packages-dev": [],

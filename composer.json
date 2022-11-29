@@ -17,12 +17,6 @@
   "config": {
     "preferred-install": "dist"
   },
-  "repositories": [
-    {
-      "type": "vcs",
-      "url": "https://github.com/WatchTowerHQ/mysqldump-php"
-    }
-  ],
   "require": {
     "claudiosanches/wp-autoloader": "1.0",
     "php": ">= 7.4",
@@ -31,7 +25,7 @@
     "ext-zip": "*",
     "ext-mysqli": "*",
     "ext-json": "*",
-    "woocommerce/action-scheduler": "3.5.2",
+    "woocommerce/action-scheduler": "3.5.3",
     "ext-fileinfo": "*",
     "symfony/finder": "v5.4.11",
     "ext-zlib": "*",
