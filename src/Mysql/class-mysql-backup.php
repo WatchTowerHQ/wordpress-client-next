@@ -2,15 +2,15 @@
 
 namespace WhatArmy\Watchtower\Mysql;
 
-use Ifsnop\Mysqldump\Mysqldump;
+use Druidfi\Mysqldump\Mysqldump;
 use WhatArmy\Watchtower\Schedule;
 use WhatArmy\Watchtower\Utils;
 
 class Mysql_Backup
 {
     private $db;
-    public $group;
-    public $backupName;
+    public string $group;
+    public string $backupName;
 
     /**
      * Backup constructor.
@@ -20,16 +20,17 @@ class Mysql_Backup
         global $wpdb;
         $this->db = $wpdb;
         add_action('add_to_dump', [$this, 'add_to_dump']);
+        add_action('wht_cleanup', [$this, 'cleanup']);
 
     }
 
-    public function prepare_jobs()
+    public function prepare_jobs(): array
     {
         return $this->db_stats();
     }
 
 
-    private function db_stats()
+    private function db_stats(): array
     {
         global $wpdb;
         $tables_stats = $this->db->get_results("SELECT table_name 'name', round(((data_length + index_length)/1024/1024),2) 'size_mb' 
@@ -60,12 +61,17 @@ class Mysql_Backup
         }, $to_ret, array_keys($to_ret));
     }
 
-    private function dispatch_job($data, $group = '', $additional_time = 0)
+    private function dispatch_job($data, $group = '', $additional_time = 0): void
     {
         as_schedule_single_action(time() + $additional_time, 'add_to_dump', $data, $group);
     }
 
-    private function should_separate($table_stat)
+    private function dispatch_cleanup_job($data, $group = '', $additional_time = 0): void
+    {
+        as_schedule_single_action(time() + $additional_time, 'wht_cleanup', $data, $group);
+    }
+
+    private function should_separate($table_stat): bool
     {
         $result = false;
         if ($table_stat['count'] >= WHTHQ_DB_RECORDS_MAX) {
@@ -74,7 +80,10 @@ class Mysql_Backup
         return $result;
     }
 
-    private function dump_data($table, $dir, $range = null)
+    /**
+     * @throws \Exception
+     */
+    private function dump_data($table, $dir, $range = null): void
     {
         $dumpSettings = [
             'no-create-info' => true,
@@ -83,8 +92,9 @@ class Mysql_Backup
         ];
         $dump = new Mysqldump("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD, $dumpSettings);
         if (is_array($range)) {
-            $range = ($range['start'] === 1) ? 'LIMIT 0,' . (int)WHTHQ_DB_RECORDS_MAX : 'LIMIT ' . ($range['start'] - 1) . "," . ((int)WHTHQ_DB_RECORDS_MAX);
-            $dump->setTableWheres([
+            $range = $range['start'] === 1 ? [0, (int)WHTHQ_DB_RECORDS_MAX] : [($range['start'] - 1), (int)WHTHQ_DB_RECORDS_MAX];
+
+            $dump->setTableLimits([
                 $table => $range,
             ]);
         }
@@ -96,13 +106,16 @@ class Mysql_Backup
      * @param $file
      * @param $result
      */
-    private function merge($file, $result)
+    private function merge($file, $result): void
     {
         file_put_contents($result, file_get_contents($file), FILE_APPEND | LOCK_EX);
         unlink($file);
     }
 
-    private function dump_structure($tables, $dir)
+    /**
+     * @throws \Exception
+     */
+    private function dump_structure($tables, $dir): void
     {
         $dumpSettings = [
             'no-data' => true,
@@ -116,7 +129,7 @@ class Mysql_Backup
      * @param $table
      * @return array
      */
-    private function split_to_parts($table)
+    private function split_to_parts($table): array
     {
         $ranges = [];
         $start = 1;
@@ -132,13 +145,23 @@ class Mysql_Backup
         return $ranges;
     }
 
-    public function add_to_dump($job)
+    public function cleanup($job): void
+    {
+        Schedule::clean_queue($job['group'], 'add_to_dump');
+    }
+
+    public function add_to_dump($job): void
     {
         if ($job['last'] == false) {
             $this->dump_data($job['table'], $job['dir'], $job['range']);
         } else {
             $this->backupName = $job['dir'] . '_dump.sql';
-            Schedule::clean_queue($job['file'], 'add_to_dump');
+            $this->dispatch_cleanup_job([
+                'job' => [
+                    'group' => $job['file'],
+                ]
+            ]);
+
             Utils::gzCompressFile($this->backupName);
             unlink($this->backupName);
 
@@ -150,8 +173,9 @@ class Mysql_Backup
     /**
      * @param $callback_url
      * @param $dir
+     * @throws \Exception
      */
-    private function runInQueue($callback_url, $dir)
+    private function runInQueue($callback_url, $dir): void
     {
         $stats = $this->prepare_jobs();
         $this->dump_structure($stats, $dir);
@@ -183,8 +207,9 @@ class Mysql_Backup
     /**
      * @param $callback_url
      * @return string
+     * @throws \Exception
      */
-    public function run($callback_url)
+    public function run($callback_url): string
     {
         Utils::cleanup_old_backups(WHTHQ_BACKUP_DIR);
         Utils::create_backup_dir();
@@ -200,10 +225,10 @@ class Mysql_Backup
     /**
      * @param $dir
      * @param $callback_url
-     * @param $additional_time
+     * @param int $additional_time
      * @return void
      */
-    private function add_finish_job($dir, $callback_url, $additional_time = 0)
+    private function add_finish_job($dir, $callback_url, int $additional_time = 0): void
     {
         $this->dispatch_job([
             'job' => [

@@ -7,6 +7,8 @@ namespace Composer\Autoload;
 class ComposerStaticInit38658c24433224ba35a28b7f458965b7
 {
     public static $files = array (
+        '6e3fae29631ef280660b3cdad06f25a8' => __DIR__ . '/..' . '/symfony/deprecation-contracts/function.php',
+        'a4a119a56e50fbb293281d9a48007e0e' => __DIR__ . '/..' . '/symfony/polyfill-php80/bootstrap.php',
         'ef6802c8a38664a4b1e8712ed25377fb' => __DIR__ . '/..' . '/shuber/curl/curl.php',
         '320cde22f66dd4f5d3fd621d3e88b98f' => __DIR__ . '/..' . '/symfony/polyfill-ctype/bootstrap.php',
         'def43f6c87e4f8dfd0c9e1b1bab14fe8' => __DIR__ . '/..' . '/symfony/polyfill-iconv/bootstrap.php',
@@ -20,6 +22,7 @@ class ComposerStaticInit38658c24433224ba35a28b7f458965b7
         ),
         'S' => 
         array (
+            'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
             'Symfony\\Polyfill\\Iconv\\' => 23,
             'Symfony\\Polyfill\\Ctype\\' => 23,
@@ -30,9 +33,9 @@ class ComposerStaticInit38658c24433224ba35a28b7f458965b7
             'Psr\\Http\\Message\\' => 17,
             'PhpZip\\' => 7,
         ),
-        'I' => 
+        'D' => 
         array (
-            'Ifsnop\\' => 7,
+            'Druidfi\\Mysqldump\\' => 18,
         ),
         'C' => 
         array (
@@ -44,6 +47,10 @@ class ComposerStaticInit38658c24433224ba35a28b7f458965b7
         'WhatArmy\\Watchtower\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
+        ),
+        'Symfony\\Polyfill\\Php80\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
         'Symfony\\Polyfill\\Mbstring\\' => 
         array (
@@ -69,9 +76,9 @@ class ComposerStaticInit38658c24433224ba35a28b7f458965b7
         array (
             0 => __DIR__ . '/..' . '/nelexa/zip/src',
         ),
-        'Ifsnop\\' => 
+        'Druidfi\\Mysqldump\\' => 
         array (
-            0 => __DIR__ . '/..' . '/ifsnop/mysqldump-php/src/Ifsnop',
+            0 => __DIR__ . '/..' . '/druidfi/mysqldump-php/src',
         ),
         'ClaudioSanches\\WPAutoloader\\' => 
         array (
@@ -80,9 +87,14 @@ class ComposerStaticInit38658c24433224ba35a28b7f458965b7
     );
 
     public static $classMap = array (
+        'Attribute' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Attribute.php',
         'Composer\\InstalledVersions' => __DIR__ . '/..' . '/composer/InstalledVersions.php',
         'MySQLDump' => __DIR__ . '/..' . '/dg/mysql-dump/src/MySQLDump.php',
         'MySQLImport' => __DIR__ . '/..' . '/dg/mysql-dump/src/MySQLImport.php',
+        'PhpToken' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/PhpToken.php',
+        'Stringable' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/Stringable.php',
+        'UnhandledMatchError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/UnhandledMatchError.php',
+        'ValueError' => __DIR__ . '/..' . '/symfony/polyfill-php80/Resources/stubs/ValueError.php',
     );
 
     public static function getInitializer(ClassLoader $loader)

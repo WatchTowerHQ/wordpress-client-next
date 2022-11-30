@@ -78,7 +78,7 @@ class Schedule
      * @param null $group
      * @param string $hook
      */
-    public static function clean_queue($group = null, $hook = 'add_to_zip')
+    public static function clean_queue($group = null, string $hook = 'add_to_zip')
     {
         global $wpdb;
 

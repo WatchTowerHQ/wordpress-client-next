@@ -7,12 +7,13 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'WhatArmy\\Watchtower\\' => array($baseDir . '/src'),
+    'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
     'Symfony\\Polyfill\\Iconv\\' => array($vendorDir . '/symfony/polyfill-iconv'),
     'Symfony\\Polyfill\\Ctype\\' => array($vendorDir . '/symfony/polyfill-ctype'),
     'Symfony\\Component\\Finder\\' => array($vendorDir . '/symfony/finder'),
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'PhpZip\\' => array($vendorDir . '/nelexa/zip/src'),
-    'Ifsnop\\' => array($vendorDir . '/ifsnop/mysqldump-php/src/Ifsnop'),
+    'Druidfi\\Mysqldump\\' => array($vendorDir . '/druidfi/mysqldump-php/src'),
     'ClaudioSanches\\WPAutoloader\\' => array($vendorDir . '/claudiosanches/wp-autoloader/src'),
 );
