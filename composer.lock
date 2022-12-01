@@ -101,12 +101,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/druidfi/mysqldump-php.git",
-                "reference": "6842f6d8757595727bcade76b8ad382d473ecec3"
+                "reference": "58507251227802219a45c8b47e2aa75f7c10b9bf"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/druidfi/mysqldump-php/zipball/6842f6d8757595727bcade76b8ad382d473ecec3",
-                "reference": "6842f6d8757595727bcade76b8ad382d473ecec3",
+                "url": "https://api.github.com/repos/druidfi/mysqldump-php/zipball/58507251227802219a45c8b47e2aa75f7c10b9bf",
+                "reference": "58507251227802219a45c8b47e2aa75f7c10b9bf",
                 "shasum": ""
             },
             "require": {
@@ -158,7 +158,7 @@
                 "issues": "https://github.com/druidfi/mysqldump-php/issues",
                 "source": "https://github.com/druidfi/mysqldump-php/tree/main"
             },
-            "time": "2022-11-08T08:31:51+00:00"
+            "time": "2022-11-30T11:40:54+00:00"
         },
         {
             "name": "nelexa/zip",

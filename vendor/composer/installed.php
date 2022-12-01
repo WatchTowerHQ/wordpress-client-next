@@ -1,9 +1,9 @@
 <?php return array(
     'root' => array(
         'name' => 'whatarmy/watchtowerhq',
-        'pretty_version' => 'dev-master',
-        'version' => 'dev-master',
-        'reference' => '1a31b491c0b4aadeca398cb90a5905c202313d4c',
+        'pretty_version' => 'dev-develop',
+        'version' => 'dev-develop',
+        'reference' => '113cdce958a3d23d8496cfc39f9f5b18cc589d15',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -31,7 +31,7 @@
         'druidfi/mysqldump-php' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '6842f6d8757595727bcade76b8ad382d473ecec3',
+            'reference' => '58507251227802219a45c8b47e2aa75f7c10b9bf',
             'type' => 'library',
             'install_path' => __DIR__ . '/../druidfi/mysqldump-php',
             'aliases' => array(
@@ -123,9 +123,9 @@
             'dev_requirement' => false,
         ),
         'whatarmy/watchtowerhq' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '1a31b491c0b4aadeca398cb90a5905c202313d4c',
+            'pretty_version' => 'dev-develop',
+            'version' => 'dev-develop',
+            'reference' => '113cdce958a3d23d8496cfc39f9f5b18cc589d15',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
