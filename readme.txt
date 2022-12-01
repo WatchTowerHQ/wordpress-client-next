@@ -86,6 +86,12 @@ We have a number of standard roles, that many users requested, along with that w
 = 3.7.1 =
 * drop old php compatibility
 
+= 3.6.21 =
+* code hardening
+
+= 3.6.20 =
+* remove unused code
+
 = 3.6.19 =
 * db backup fix
 
