@@ -16,15 +16,19 @@ class Schedule
 
     /**
      * @param $callbackHeadquarterUrl
+     * @param $backup_name
      * @param string $file_extension
      */
     public static function call_headquarter($callbackHeadquarterUrl, $backup_name, $file_extension = 'zip')
     {
         $headquarter = new Headquarter($callbackHeadquarterUrl);
+        $backup_origin = WHTHQ_BACKUP_DIR . '/' . join('.', [$backup_name, $file_extension]);
         $headquarter->call('/backup', [
             'access_token' => get_option('watchtower')['access_token'],
             'backup_name' => join('.', [$backup_name, $file_extension]),
-            'backup_md5' => md5_file(WHTHQ_BACKUP_DIR . '/' .join('.', [$backup_name, $file_extension]))
+            'backup_md5' => md5_file($backup_origin),
+            'memory_limit' => ini_get('memory_limit'),
+            'mysql_backup' => ['origin' => str_replace(ABSPATH, '', $backup_origin), 'type' => 'file', 'sha1' => sha1_file($backup_origin), 'filesize' => filesize($backup_origin)]
         ]);
     }
 
