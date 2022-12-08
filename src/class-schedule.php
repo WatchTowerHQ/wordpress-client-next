@@ -1,6 +1,6 @@
 <?php
 /**
- * Author: Code2Prog
+ * Author: WhatArmy
  * Date: 2019-06-07
  * Time: 18:30
  */
