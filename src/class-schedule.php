@@ -16,6 +16,7 @@ class Schedule
 
     /**
      * @param $callbackHeadquarterUrl
+     * @param $backup_name
      * @param string $file_extension
      */
     public static function call_headquarter($callbackHeadquarterUrl, $backup_name, $file_extension = 'zip')
