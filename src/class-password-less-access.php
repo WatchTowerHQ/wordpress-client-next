@@ -28,6 +28,7 @@ class Password_Less_Access
     {
         $vars[] = 'wht_login';
         $vars[] = 'access_token';
+        $vars[] = 'redirect_to';
         return $vars;
     }
 
@@ -46,11 +47,11 @@ class Password_Less_Access
     {
         global $wp;
         if (isset($wp->query_vars['wht_login'])) {
-            $this->login($wp->query_vars['access_token']);
+            $this->login($wp->query_vars['access_token'], $wp->query_vars['redirect_to']);
         }
     }
 
-    public function login($access_token)
+    public function login($access_token, $redirect_to = '')
     {
         if ($access_token == get_option('watchtower_ota_token')) {
             $random_password = wp_generate_password(30);
@@ -70,9 +71,15 @@ class Password_Less_Access
             wp_clear_auth_cookie();
             wp_set_auth_cookie($adm_id, true);
             wp_set_current_user($adm_id);
-            $redirect_to = user_admin_url();
+
+            if ($redirect_to === 'updates') {
+                $redirect = 'update-core.php';
+            } else {
+                $redirect = '';
+            }
+
             update_option('watchtower_ota_token', 'not_set');
-            wp_safe_redirect($redirect_to);
+            wp_safe_redirect(admin_url($redirect));
             exit();
         }
     }
