@@ -77,6 +77,7 @@ class Core
                 'server_timezone' => date_default_timezone_get(),
             ],
             'admins_list' => $this->admins_list(),
+            'users' => count_users(),
             'admin_url' => admin_url(),
             'content_dir' => (defined('WP_CONTENT_DIR')) ? WP_CONTENT_DIR : false,
             'pwp_name' => (defined('PWP_NAME')) ? PWP_NAME : false,

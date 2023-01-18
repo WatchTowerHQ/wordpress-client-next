@@ -34,6 +34,6 @@
     "symfony/polyfill-mbstring": "v1.26.0",
     "symfony/polyfill-ctype": "v1.26.0",
     "nelexa/zip": "4.0.2",
-    "druidfi/mysqldump-php": "dev-main"
+    "druidfi/mysqldump-php": "1.0.2"
   }
 }

@@ -97,17 +97,17 @@
         },
         {
             "name": "druidfi/mysqldump-php",
-            "version": "dev-main",
-            "version_normalized": "dev-main",
+            "version": "1.0.2",
+            "version_normalized": "1.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/druidfi/mysqldump-php.git",
-                "reference": "58507251227802219a45c8b47e2aa75f7c10b9bf"
+                "reference": "15da1dd26e638674bc73fd963b33b26282c14c96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/druidfi/mysqldump-php/zipball/58507251227802219a45c8b47e2aa75f7c10b9bf",
-                "reference": "58507251227802219a45c8b47e2aa75f7c10b9bf",
+                "url": "https://api.github.com/repos/druidfi/mysqldump-php/zipball/15da1dd26e638674bc73fd963b33b26282c14c96",
+                "reference": "15da1dd26e638674bc73fd963b33b26282c14c96",
                 "shasum": ""
             },
             "require": {
@@ -119,8 +119,7 @@
                 "phpunit/phpunit": "^8.5.15 || ^9",
                 "squizlabs/php_codesniffer": "3.*"
             },
-            "time": "2022-11-30T11:40:54+00:00",
-            "default-branch": true,
+            "time": "2022-12-31T09:51:45+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -159,7 +158,7 @@
             ],
             "support": {
                 "issues": "https://github.com/druidfi/mysqldump-php/issues",
-                "source": "https://github.com/druidfi/mysqldump-php/tree/main"
+                "source": "https://github.com/druidfi/mysqldump-php/tree/1.0.2"
             },
             "install-path": "../druidfi/mysqldump-php"
         },
