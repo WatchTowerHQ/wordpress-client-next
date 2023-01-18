@@ -97,17 +97,17 @@
         },
         {
             "name": "druidfi/mysqldump-php",
-            "version": "dev-main",
-            "version_normalized": "dev-main",
+            "version": "1.0.2",
+            "version_normalized": "1.0.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/druidfi/mysqldump-php.git",
-                "reference": "58507251227802219a45c8b47e2aa75f7c10b9bf"
+                "reference": "15da1dd26e638674bc73fd963b33b26282c14c96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/druidfi/mysqldump-php/zipball/58507251227802219a45c8b47e2aa75f7c10b9bf",
-                "reference": "58507251227802219a45c8b47e2aa75f7c10b9bf",
+                "url": "https://api.github.com/repos/druidfi/mysqldump-php/zipball/15da1dd26e638674bc73fd963b33b26282c14c96",
+                "reference": "15da1dd26e638674bc73fd963b33b26282c14c96",
                 "shasum": ""
             },
             "require": {
@@ -119,8 +119,7 @@
                 "phpunit/phpunit": "^8.5.15 || ^9",
                 "squizlabs/php_codesniffer": "3.*"
             },
-            "time": "2022-11-30T11:40:54+00:00",
-            "default-branch": true,
+            "time": "2022-12-31T09:51:45+00:00",
             "type": "library",
             "installation-source": "dist",
             "autoload": {
@@ -159,7 +158,7 @@
             ],
             "support": {
                 "issues": "https://github.com/druidfi/mysqldump-php/issues",
-                "source": "https://github.com/druidfi/mysqldump-php/tree/main"
+                "source": "https://github.com/druidfi/mysqldump-php/tree/1.0.2"
             },
             "install-path": "../druidfi/mysqldump-php"
         },
@@ -337,27 +336,27 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v2.5.2",
-            "version_normalized": "2.5.2.0",
+            "version": "v3.2.0",
+            "version_normalized": "3.2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "e8b495ea28c1d97b5e0c121748d6f9b53d075c66"
+                "reference": "1ee04c65529dea5d8744774d474e7cbd2f1206d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/e8b495ea28c1d97b5e0c121748d6f9b53d075c66",
-                "reference": "e8b495ea28c1d97b5e0c121748d6f9b53d075c66",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/1ee04c65529dea5d8744774d474e7cbd2f1206d3",
+                "reference": "1ee04c65529dea5d8744774d474e7cbd2f1206d3",
                 "shasum": ""
             },
             "require": {
-                "php": ">=7.1"
+                "php": ">=8.1"
             },
-            "time": "2022-01-02T09:53:40+00:00",
+            "time": "2022-11-25T10:21:52+00:00",
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "2.5-dev"
+                    "dev-main": "3.3-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -387,7 +386,7 @@
             "description": "A generic function and convention to trigger deprecation notices",
             "homepage": "https://symfony.com",
             "support": {
-                "source": "https://github.com/symfony/deprecation-contracts/tree/v2.5.2"
+                "source": "https://github.com/symfony/deprecation-contracts/tree/v3.2.0"
             },
             "funding": [
                 {
