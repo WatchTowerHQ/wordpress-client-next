@@ -129,7 +129,7 @@ class Core
         $path = realpath($path);
         if ($path !== false && $path != '' && file_exists($path)) {
             foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path,
-                \FilesystemIterator::SKIP_DOTS)) as $object) {
+                \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::LEAVES_ONLY, \RecursiveIteratorIterator::CATCH_GET_CHILD) as $object) {
                 if (strpos($object->getPath(), WHTHQ_BACKUP_DIR_NAME) == false && $object->isFile()) {
                     $bytesTotal += $object->getSize();
                 }
