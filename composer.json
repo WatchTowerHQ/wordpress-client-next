@@ -15,7 +15,10 @@
     }
   },
   "config": {
-    "preferred-install": "dist"
+    "preferred-install": "dist",
+    "platform": {
+      "php": "7.4"
+    }
   },
   "require": {
     "claudiosanches/wp-autoloader": "1.0",
@@ -25,7 +28,7 @@
     "ext-zip": "*",
     "ext-mysqli": "*",
     "ext-json": "*",
-    "woocommerce/action-scheduler": "3.5.4",
+    "woocommerce/action-scheduler": "3.6.0",
     "ext-fileinfo": "*",
     "symfony/finder": "v5.4.21",
     "ext-zlib": "*",
