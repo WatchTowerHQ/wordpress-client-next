@@ -214,6 +214,7 @@ class Api
             $files[] = [
                 'type' => $file->isDir() ? 'dir' : 'file',
                 'origin' => str_replace(ABSPATH, '', $file->getPathname()),
+                'filesize' =>$file->getSize()
             ];
         }
         return $this->make_response(['memory_limit' => ini_get('memory_limit'), 'max_input_vars' => ini_get('max_input_vars'), 'files' => $files]);
