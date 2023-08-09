@@ -3,7 +3,7 @@
         'name' => 'whatarmy/watchtowerhq',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '52c5ccf964761e85c6eb46017ceecb321f68036f',
+        'reference' => 'd5323e10b616e0f5571ce8348493cd68177a6ad6',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -123,7 +123,7 @@
         'whatarmy/watchtowerhq' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '52c5ccf964761e85c6eb46017ceecb321f68036f',
+            'reference' => 'd5323e10b616e0f5571ce8348493cd68177a6ad6',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
