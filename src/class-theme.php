@@ -21,13 +21,13 @@ class Theme
     public function __construct()
     {
         if (!function_exists('show_message')) {
-            require_once ABSPATH.'wp-admin/includes/misc.php';
+            require_once ABSPATH . 'wp-admin/includes/misc.php';
         }
         if (!function_exists('request_filesystem_credentials')) {
-            require_once ABSPATH.'wp-admin/includes/file.php';
+            require_once ABSPATH . 'wp-admin/includes/file.php';
         }
         if (!class_exists('\Theme_Upgrader')) {
-            require_once ABSPATH.'wp-admin/includes/class-wp-upgrader.php';
+            require_once ABSPATH . 'wp-admin/includes/class-wp-upgrader.php';
         }
         $this->upgrader = new \Theme_Upgrader(new Updater_Skin());
     }
@@ -36,33 +36,33 @@ class Theme
     {
         do_action("wp_update_themes");
         $themes = wp_get_themes();
+        $update_list = get_site_transient('update_themes');
         $themes_list = [];
         foreach ($themes as $theme_short_name => $theme) {
-            array_push($themes_list, [
+            $themes_list[] = [
                 'name' => $theme['Name'],
                 'version' => $theme['Version'],
                 'theme' => $theme_short_name,
-                'updates' => $this->check_updates($theme_short_name, $theme['Version']),
-            ]);
+                'updates' => $this->check_updates($update_list->response, $theme_short_name, $theme['Version']),
+            ];
         }
         return $themes_list;
     }
 
     /**
+     * @param $updates_list
      * @param $theme
      * @param $current
      * @return array
      */
-    private function check_updates($theme, $current)
+    private function check_updates($updates_list, $theme, $current)
     {
-        $list = get_site_transient('update_themes');
-
-        if (!empty($list->response)) {
-            if (array_key_exists($theme, $list->response)) {
-                if ($list->response[$theme]['new_version'] != $current) {
+        if (!empty($updates_list)) {
+            if (isset($updates_list[$theme])) {
+                if ($updates_list[$theme]['new_version'] != $current) {
                     return [
                         'required' => true,
-                        'version' => $list->response[$theme]['new_version']
+                        'version' => $updates_list[$theme]['new_version']
                     ];
                 } else {
                     return [
