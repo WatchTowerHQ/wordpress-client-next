@@ -39,8 +39,10 @@ class Plugin
      */
     public function get()
     {
+        do_action("wp_update_plugins");
         $plugins = get_plugins();
         $plugins_list = [];
+        $updates_list = get_site_transient('update_plugins');
         foreach ($plugins as $name => $details) {
             $plugins_list[] = [
                 'name' => $details['Name'],
@@ -48,7 +50,7 @@ class Plugin
                 'basename' => $name,
                 'version' => $details['Version'],
                 'is_active' => $this->is_active($name),
-                'updates' => $this->check_updates($name),
+                'updates' => $this->check_updates($updates_list->response, $name),
             ];
         }
 
@@ -95,18 +97,17 @@ class Plugin
     }
 
     /**
+     * @param $updates_list
      * @param $pluginPath
      * @return array
      */
-    private function check_updates($pluginPath)
+    private function check_updates($updates_list, $pluginPath)
     {
-        do_action("wp_update_plugins");
-        $list = get_site_transient('update_plugins');
-        if (!empty($list->response)) {
-            if (array_key_exists($pluginPath, $list->response)) {
+        if (!empty($updates_list)) {
+            if (isset($updates_list[$pluginPath])) {
                 return [
                     'required' => true,
-                    'version' => $list->response[$pluginPath]->new_version
+                    'version' => $updates_list[$pluginPath]->new_version
                 ];
             } else {
                 return [
