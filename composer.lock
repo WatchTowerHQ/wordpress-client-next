@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "13ee9bc8033460fc36f3fe05a71b4ab0",
+    "content-hash": "1a0a8dbc7ecab37cc4d651bb9039e6e0",
     "packages": [
         {
             "name": "claudiosanches/wp-autoloader",
@@ -702,16 +702,16 @@
         },
         {
             "name": "symfony/polyfill-php80",
-            "version": "v1.27.0",
+            "version": "v1.28.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/polyfill-php80.git",
-                "reference": "7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936"
+                "reference": "6caa57379c4aec19c0a12a38b59b26487dcfe4b5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936",
-                "reference": "7a6ff3f1959bb01aefccb463a0f2cd3d3d2fd936",
+                "url": "https://api.github.com/repos/symfony/polyfill-php80/zipball/6caa57379c4aec19c0a12a38b59b26487dcfe4b5",
+                "reference": "6caa57379c4aec19c0a12a38b59b26487dcfe4b5",
                 "shasum": ""
             },
             "require": {
@@ -720,7 +720,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-main": "1.27-dev"
+                    "dev-main": "1.28-dev"
                 },
                 "thanks": {
                     "name": "symfony/polyfill",
@@ -765,7 +765,7 @@
                 "shim"
             ],
             "support": {
-                "source": "https://github.com/symfony/polyfill-php80/tree/v1.27.0"
+                "source": "https://github.com/symfony/polyfill-php80/tree/v1.28.0"
             },
             "funding": [
                 {
@@ -781,20 +781,20 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2022-11-03T14:55:06+00:00"
+            "time": "2023-01-26T09:26:14+00:00"
         },
         {
             "name": "woocommerce/action-scheduler",
-            "version": "3.6.0",
+            "version": "3.6.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/woocommerce/action-scheduler.git",
-                "reference": "1373570a9ee03a0be31c73df086d1e4343a27347"
+                "reference": "c33dd732e37c90f37c3f9662f7eed888c11dc60d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/1373570a9ee03a0be31c73df086d1e4343a27347",
-                "reference": "1373570a9ee03a0be31c73df086d1e4343a27347",
+                "url": "https://api.github.com/repos/woocommerce/action-scheduler/zipball/c33dd732e37c90f37c3f9662f7eed888c11dc60d",
+                "reference": "c33dd732e37c90f37c3f9662f7eed888c11dc60d",
                 "shasum": ""
             },
             "require-dev": {
@@ -819,9 +819,9 @@
             "homepage": "https://actionscheduler.org/",
             "support": {
                 "issues": "https://github.com/woocommerce/action-scheduler/issues",
-                "source": "https://github.com/woocommerce/action-scheduler/tree/3.6.0"
+                "source": "https://github.com/woocommerce/action-scheduler/tree/3.6.3"
             },
-            "time": "2023-05-10T19:25:40+00:00"
+            "time": "2023-09-13T13:40:20+00:00"
         }
     ],
     "packages-dev": [],
@@ -845,5 +845,5 @@
     "platform-overrides": {
         "php": "7.4"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
