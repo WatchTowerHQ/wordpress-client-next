@@ -28,7 +28,7 @@
     "ext-zip": "*",
     "ext-mysqli": "*",
     "ext-json": "*",
-    "woocommerce/action-scheduler": "3.6.0",
+    "woocommerce/action-scheduler": "3.6.3",
     "ext-fileinfo": "*",
     "symfony/finder": "v5.4.21",
     "ext-zlib": "*",

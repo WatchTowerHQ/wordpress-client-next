@@ -71,7 +71,7 @@ class Zip
     /**
      * @return bool
      */
-    private function zipArchiveAvailable()
+    private function zipArchiveAvailable(): bool
     {
         return class_exists("ZipArchive");
     }

@@ -76,7 +76,7 @@ class Watchtower
      * @param $concurrent_batches
      * @return int
      */
-    public function concurrent_batches($concurrent_batches)
+    public function concurrent_batches($concurrent_batches): int
     {
         return 1;
     }
@@ -85,7 +85,7 @@ class Watchtower
      * @param $batch_size
      * @return int
      */
-    public function batch_size($batch_size)
+    public function batch_size($batch_size): int
     {
         return 1;
     }

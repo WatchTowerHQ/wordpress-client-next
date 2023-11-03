@@ -39,10 +39,10 @@ class Updates_Monitor
             foreach ($blogs as $blog_id) {
                 switch_to_blog($blog_id);
                 $wpdb->insert(
-                    $wpdb->prefix.'watchtower_logs',
+                    $wpdb->prefix . 'watchtower_logs',
                     [
-                        'action'     => $data['action'],
-                        'who'        => $data['who'],
+                        'action' => $data['action'],
+                        'who' => $data['who'],
                         'created_at' => date('Y-m-d H:i:s')
                     ]
                 );
@@ -50,10 +50,10 @@ class Updates_Monitor
             switch_to_blog($old_blog);
         } else {
             $wpdb->insert(
-                $wpdb->prefix.'watchtower_logs',
+                $wpdb->prefix . 'watchtower_logs',
                 [
-                    'action'     => $data['action'],
-                    'who'        => $data['who'],
+                    'action' => $data['action'],
+                    'who' => $data['who'],
                     'created_at' => date('Y-m-d H:i:s')
                 ]
             );
@@ -72,15 +72,15 @@ class Updates_Monitor
 
         // Auto updated
         if ('update-core.php' !== $pagenow) {
-            $object_name = 'WordPress Auto Updated |'.$wp_version;
+            $object_name = 'WordPress Auto Updated |' . $wp_version;
             $who = 0;
         } else {
-            $object_name = 'WordPress Updated | '.$wp_version;
+            $object_name = 'WordPress Updated | ' . $wp_version;
             $who = get_current_user_id();
         }
 
         $this->insertLog([
-            'who'    => $who,
+            'who' => $who,
             'action' => $object_name,
         ]);
 
@@ -96,14 +96,14 @@ class Updates_Monitor
         // Get plugin name if is a path
         if (false !== strpos($plugin_name, '/')) {
             $plugin_dir = explode('/', $plugin_name);
-            $plugin_data = array_values(get_plugins('/'.$plugin_dir[0]));
+            $plugin_data = array_values(get_plugins('/' . $plugin_dir[0]));
             $plugin_data = array_shift($plugin_data);
             $plugin_name = $plugin_data['Name'];
         }
 
         $this->insertLog([
-            'who'    => get_current_user_id(),
-            'action' => $action.' '.$plugin_name,
+            'who' => get_current_user_id(),
+            'action' => $action . ' ' . $plugin_name,
         ]);
     }
 
@@ -139,11 +139,11 @@ class Updates_Monitor
                 return;
             }
 
-            $data = get_plugin_data($upgrader->skin->result['local_destination'].'/'.$path, true, false);
+            $data = get_plugin_data($upgrader->skin->result['local_destination'] . '/' . $path, true, false);
 
             $this->insertLog([
-                'who'    => get_current_user_id(),
-                'action' => 'Installed Plugin: '.$data['Name'].' | Ver.'.$data['Version'],
+                'who' => get_current_user_id(),
+                'action' => 'Installed Plugin: ' . $data['Name'] . ' | Ver.' . $data['Version'],
             ]);
         }
 
@@ -159,13 +159,18 @@ class Updates_Monitor
             }
 
             foreach ($slugs as $slug) {
-                $data = get_plugin_data(WP_PLUGIN_DIR.'/'.$slug, true, false);
+                $data = get_plugin_data(WP_PLUGIN_DIR . '/' . $slug, true, false);
 
                 $this->insertLog([
-                    'who'    => get_current_user_id(),
-                    'action' => 'Updated Plugin: '.$data['Name'].' | Ver.'.$data['Version'],
+                    'who' => get_current_user_id(),
+                    'action' => 'Updated Plugin: ' . $data['Name'] . ' | Ver.' . $data['Version'],
                 ]);
             }
         }
+    }
+
+    public function cleanup_old(int $months = 12)
+    {
+
     }
 }

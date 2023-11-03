@@ -13,12 +13,12 @@ namespace WhatArmy\Watchtower;
  */
 class Token
 {
-    public function generate()
+    public function generate(): string
     {
         return md5(uniqid());
     }
 
-    public function refresh()
+    public function refresh(): string
     {
         $my_options = get_option('watchtower');
         $my_options['access_token'] = 'dupaaaaaaaa';

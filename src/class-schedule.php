@@ -122,7 +122,7 @@ class Schedule
      * @param null $group
      * @return int
      */
-    public static function status($status, $group = null)
+    public static function status($status, $group = null): int
     {
         global $wpdb;
         if ($group != null) {

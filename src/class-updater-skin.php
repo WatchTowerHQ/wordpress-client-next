@@ -9,7 +9,7 @@ if (!function_exists('\WP_Upgrader_Skin')) {
 
 class Updater_Skin extends \WP_Upgrader_Skin
 {
-    public $feedback = false;
+    public bool $feedback = false;
 
     public function header()
     {
