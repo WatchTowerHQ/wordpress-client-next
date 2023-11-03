@@ -13,7 +13,7 @@ namespace WhatArmy\Watchtower;
  */
 class Core
 {
-    public $plugin_data;
+    public array $plugin_data;
 
     /**
      * Core constructor.
@@ -26,7 +26,7 @@ class Core
     /**
      * @return array
      */
-    private function plugin_data()
+    private function plugin_data(): array
     {
         $main_file = explode('/', plugin_basename(WHTHQ_MAIN))[1];
         return get_plugin_data(plugin_dir_path(WHTHQ_MAIN) . $main_file);
@@ -43,7 +43,7 @@ class Core
     /**
      * @return array
      */
-    public function test()
+    public function test(): array
     {
         return [
             'version' => $this->wht_plugin_version(),
@@ -53,7 +53,7 @@ class Core
     /**
      * @return array
      */
-    public function get()
+    public function get(): array
     {
         return [
             'site_name' => get_option('blogname'),
@@ -98,7 +98,7 @@ class Core
     /**
      * @return array
      */
-    private function check_updates()
+    private function check_updates(): array
     {
         global $wp_version;
         do_action("wp_version_check"); // force WP to check its core for updates
@@ -174,15 +174,15 @@ class Core
     /**
      * @return array
      */
-    public function admins_list()
+    public function admins_list(): array
     {
         $admins_list = get_users('role=administrator');
         $admins = [];
         foreach ($admins_list as $admin) {
-            array_push($admins, [
+            $admins[] = [
                 'login' => $admin->user_login,
                 'email' => $admin->user_email,
-            ]);
+            ];
         }
         return $admins;
     }

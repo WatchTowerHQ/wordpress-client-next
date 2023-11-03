@@ -25,11 +25,11 @@ class Headquarter
     }
 
     /**
-     * @param $endpoint
-     * @param  array  $data
+     * @param string $endpoint
+     * @param array $data
      * @return $this
      */
-    public function call($endpoint = '/', $data = [])
+    public function call(string $endpoint = '/', array $data = []): Headquarter
     {
         try {
             $curl = new \Curl();

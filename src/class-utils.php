@@ -17,7 +17,7 @@ use Symfony\Component\Finder\Finder;
 class Utils
 {
 
-    public static function php_version()
+    public static function php_version(): string
     {
         preg_match("#^\d+(\.\d+)*#", phpversion(), $match);
         return $match[0];
@@ -27,7 +27,7 @@ class Utils
      * @param int $length
      * @return string
      */
-    public static function random_string($length = 12)
+    public static function random_string(int $length = 12): string
     {
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         $charactersLength = strlen($characters);
@@ -42,13 +42,10 @@ class Utils
      * @param $size
      * @return string
      */
-    public static function size_human_readable($size)
+    public static function size_human_readable($size): string
     {
         $sizes = ['B', 'kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
         $retstring = '%01.2f %s';
-        if ($retstring === null) {
-            $retstring = '%01.2f %s';
-        }
         $lastsizestring = end($sizes);
         foreach ($sizes as $sizestring) {
             if ($size < 1024) {
@@ -68,7 +65,7 @@ class Utils
      * @param $string
      * @return bool
      */
-    public static function is_json($string)
+    public static function is_json($string): bool
     {
         json_decode($string);
         return (json_last_error() == JSON_ERROR_NONE);
@@ -80,7 +77,7 @@ class Utils
      * @param int $offset
      * @return bool
      */
-    public static function strposa($haystack, $needle, $offset = 0)
+    public static function strposa($haystack, $needle, $offset = 0): bool
     {
         if (!is_array($needle)) {
             $needle = [$needle];
@@ -97,7 +94,7 @@ class Utils
      * @param $filename
      * @return string
      */
-    public static function extract_group_from_filename($filename)
+    public static function extract_group_from_filename($filename): string
     {
         if (strpos($filename, '_dump.sql.gz') !== false) {
             return explode('_dump.sql.gz', $filename)[0];
@@ -138,7 +135,7 @@ class Utils
 
     /**
      * @param $text
-     * @return false|string|string[]|null
+     * @return string
      */
     public static function slugify($text)
     {
@@ -204,7 +201,7 @@ class Utils
         }
     }
 
-    public static function isFuncAvailable($func)
+    public static function isFuncAvailable($func): bool
     {
         if (ini_get('safe_mode')) {
             return false;
@@ -218,7 +215,7 @@ class Utils
         return true;
     }
 
-    public static function createLocalBackupExclusions($clientBackupExclusions)
+    public static function createLocalBackupExclusions($clientBackupExclusions): array
     {
         $ret = [];
         foreach ($clientBackupExclusions as $d) {
@@ -231,12 +228,12 @@ class Utils
             } else {
                 $p = ABSPATH . $d['path'];
             }
-            array_push($ret, $p);
+            $ret[] = $p;
         }
         return $ret;
     }
 
-    public static function getBackupExclusions($callbackHeadquarterUrl)
+    public static function getBackupExclusions($callbackHeadquarterUrl): array
     {
         $arrContextOptions = [
             "ssl" => [
@@ -255,7 +252,7 @@ class Utils
                 } else {
                     $p = ABSPATH . $d->path;
                 }
-                array_push($ret, $p);
+                $ret[] = $p;
             }
         }
 

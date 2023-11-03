@@ -13,7 +13,7 @@ namespace WhatArmy\Watchtower;
  */
 class Theme
 {
-    public $upgrader;
+    public \Theme_Upgrader $upgrader;
 
     /**
      * Plugin constructor.
@@ -32,7 +32,7 @@ class Theme
         $this->upgrader = new \Theme_Upgrader(new Updater_Skin());
     }
 
-    public function get()
+    public function get(): array
     {
         do_action("wp_update_themes");
         $themes = wp_get_themes();
@@ -55,7 +55,7 @@ class Theme
      * @param $current
      * @return array
      */
-    private function check_updates($updates_list, $theme, $current)
+    private function check_updates($updates_list, $theme, $current): array
     {
         if (!empty($updates_list)) {
             if (isset($updates_list[$theme])) {

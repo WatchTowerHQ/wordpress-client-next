@@ -13,7 +13,7 @@ namespace WhatArmy\Watchtower;
  */
 class Plugin
 {
-    public $upgrader;
+    public \Plugin_Upgrader $upgrader;
 
     /**
      * Plugin constructor.
@@ -37,7 +37,7 @@ class Plugin
     /**
      * @return array
      */
-    public function get()
+    public function get(): array
     {
         do_action("wp_update_plugins");
         $plugins = get_plugins();
@@ -86,7 +86,7 @@ class Plugin
      * @param $pluginPath
      * @return bool
      */
-    private function is_active($pluginPath)
+    private function is_active($pluginPath): bool
     {
         $is_active = false;
         if (is_plugin_active($pluginPath)) {
@@ -101,7 +101,7 @@ class Plugin
      * @param $pluginPath
      * @return array
      */
-    private function check_updates($updates_list, $pluginPath)
+    private function check_updates($updates_list, $pluginPath): array
     {
         if (!empty($updates_list)) {
             if (isset($updates_list[$pluginPath])) {
