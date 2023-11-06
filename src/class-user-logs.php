@@ -27,4 +27,25 @@ class User_Logs
 
         return $to_ret;
     }
+
+    public function insert($action = '', $who = ''): bool
+    {
+        global $wpdb;
+        $wpdb->insert(
+            $wpdb->prefix . 'watchtower_logs',
+            [
+                'action' => $action,
+                'who' => $who,
+                'created_at' => date('Y-m-d H:i:s')
+            ]
+        );
+        $this->cleanup_old();
+        return true;
+    }
+
+    public function cleanup_old()
+    {
+        global $wpdb;
+        $wpdb->get_results("DELETE FROM {$wpdb->prefix}watchtower_logs WHERE created_at < DATE_SUB(NOW(), INTERVAL 1 YEAR);");
+    }
 }
