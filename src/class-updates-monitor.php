@@ -38,25 +38,11 @@ class Updates_Monitor
             $blogs = $wpdb->get_col("SELECT blog_id FROM $wpdb->blogs");
             foreach ($blogs as $blog_id) {
                 switch_to_blog($blog_id);
-                $wpdb->insert(
-                    $wpdb->prefix . 'watchtower_logs',
-                    [
-                        'action' => $data['action'],
-                        'who' => $data['who'],
-                        'created_at' => date('Y-m-d H:i:s')
-                    ]
-                );
+                (new User_Logs())->insert($data['action'],$data['who']);
             }
             switch_to_blog($old_blog);
         } else {
-            $wpdb->insert(
-                $wpdb->prefix . 'watchtower_logs',
-                [
-                    'action' => $data['action'],
-                    'who' => $data['who'],
-                    'created_at' => date('Y-m-d H:i:s')
-                ]
-            );
+            (new User_Logs())->insert($data['action'],$data['who']);
         }
 
     }
