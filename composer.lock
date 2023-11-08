@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1a0a8dbc7ecab37cc4d651bb9039e6e0",
+    "content-hash": "cd846276f8ca85daa4434dde74f96ca4",
     "packages": [
         {
             "name": "claudiosanches/wp-autoloader",
@@ -53,60 +53,17 @@
             "time": "2017-01-17T04:16:59+00:00"
         },
         {
-            "name": "dg/mysql-dump",
-            "version": "v1.5.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/dg/MySQL-dump.git",
-                "reference": "e0e287b715b43293773a8b0edf8514f606e01780"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/dg/MySQL-dump/zipball/e0e287b715b43293773a8b0edf8514f606e01780",
-                "reference": "e0e287b715b43293773a8b0edf8514f606e01780",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.6"
-            },
-            "type": "library",
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "David Grudl",
-                    "homepage": "http://davidgrudl.com"
-                }
-            ],
-            "description": "MySQL database dump.",
-            "homepage": "https://github.com/dg/MySQL-dump",
-            "keywords": [
-                "mysql"
-            ],
-            "support": {
-                "source": "https://github.com/dg/MySQL-dump/tree/master"
-            },
-            "time": "2019-09-10T21:36:25+00:00"
-        },
-        {
             "name": "druidfi/mysqldump-php",
-            "version": "1.0.2",
+            "version": "1.0.3",
             "source": {
                 "type": "git",
                 "url": "https://github.com/druidfi/mysqldump-php.git",
-                "reference": "15da1dd26e638674bc73fd963b33b26282c14c96"
+                "reference": "f8d881a7ddb5f023c30a0da76d5178cf2e7066ee"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/druidfi/mysqldump-php/zipball/15da1dd26e638674bc73fd963b33b26282c14c96",
-                "reference": "15da1dd26e638674bc73fd963b33b26282c14c96",
+                "url": "https://api.github.com/repos/druidfi/mysqldump-php/zipball/f8d881a7ddb5f023c30a0da76d5178cf2e7066ee",
+                "reference": "f8d881a7ddb5f023c30a0da76d5178cf2e7066ee",
                 "shasum": ""
             },
             "require": {
@@ -131,7 +88,7 @@
             "authors": [
                 {
                     "name": "Druid.fi",
-                    "email": "info@druid.fi"
+                    "homepage": "https://github.com/druidfi"
                 },
                 {
                     "name": "Diego Torres",
@@ -155,9 +112,9 @@
             ],
             "support": {
                 "issues": "https://github.com/druidfi/mysqldump-php/issues",
-                "source": "https://github.com/druidfi/mysqldump-php/tree/1.0.2"
+                "source": "https://github.com/druidfi/mysqldump-php/tree/1.0.3"
             },
-            "time": "2022-12-31T09:51:45+00:00"
+            "time": "2023-05-20T06:09:59+00:00"
         },
         {
             "name": "nelexa/zip",

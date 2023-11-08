@@ -23,7 +23,6 @@
   "require": {
     "claudiosanches/wp-autoloader": "1.0",
     "php": ">= 7.4",
-    "dg/mysql-dump": "v1.5.1",
     "shuber/curl": "dev-master",
     "ext-zip": "*",
     "ext-mysqli": "*",
@@ -37,6 +36,6 @@
     "symfony/polyfill-mbstring": "v1.26.0",
     "symfony/polyfill-ctype": "v1.26.0",
     "nelexa/zip": "4.0.2",
-    "druidfi/mysqldump-php": "1.0.2"
+    "druidfi/mysqldump-php": "1.0.3"
   }
 }
