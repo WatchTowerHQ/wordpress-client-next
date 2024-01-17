@@ -7,6 +7,7 @@
 
 namespace WhatArmy\Watchtower;
 
+use Exception;
 use WhatArmy\Watchtower\Files\File_Backup;
 use WhatArmy\Watchtower\Mysql\Mysql_Backup;
 use WP_REST_Request as WP_REST_Request;
@@ -90,8 +91,27 @@ class Api
         register_rest_route($this->route_namespace(), 'utility/upgrade_core',
             $this->resolve_action([$this, 'run_upgrade_core_action']));
 
+        /**
+         * Branding
+         */
+        register_rest_route($this->route_namespace(), 'branding/set',
+            $this->resolve_action([$this, 'run_set_branding_action']));
     }
 
+    public function run_set_branding_action(WP_REST_Request $request): WP_REST_Response
+    {
+        //Make sure JSON file is valid before saving
+        try {
+            $jsonObj = json_decode($request->get_param('branding'), $associative = true, $depth = 512, JSON_THROW_ON_ERROR);
+        } catch (Exception $e) {
+            return $this->make_response(['status' => 'failed']);
+        }
+
+        file_put_contents(wp_upload_dir()['basedir'] . '/watchtower_branding.json', $request->get_param('branding'));
+        Utils::set_wht_branding();
+
+        return $this->make_response(['status' => 'done']);
+    }
 
     public function run_upgrade_core_action(): WP_REST_Response
     {

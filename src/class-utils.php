@@ -7,7 +7,7 @@
 
 namespace WhatArmy\Watchtower;
 
-use http\Exception\RuntimeException;
+use Exception;
 use Symfony\Component\Finder\Finder;
 
 /**
@@ -299,5 +299,71 @@ class Utils
             }
         }
         return 'n/a';
+    }
+
+    public static function get_wht_branding()
+    {
+        if (file_exists(wp_upload_dir()['basedir'] . '/watchtower_branding.json')) {
+            //Make sure JSON file is valid before saving
+            try {
+                $jsonObj = json_decode(file_get_contents(wp_upload_dir()['basedir'] . '/watchtower_branding.json'), $associative = true, $depth = 512, JSON_THROW_ON_ERROR);
+                if (!isset($jsonObj['name']) || !isset($jsonObj['description']) || !isset($jsonObj['Author']) || !isset($jsonObj['PluginURI']) || !isset($jsonObj['AuthorURI']) || !isset($jsonObj['logo']) || !isset($jsonObj['logo1x']) || !isset($jsonObj['logo2x'])) {
+                    return false;
+                }
+                return $jsonObj;
+            } catch (Exception $e) {
+                return false;
+            }
+        }
+        return false;
+    }
+
+    public static function set_wht_branding()
+    {
+        $wht_branding = self::get_wht_branding();
+        if ($wht_branding === false) {
+            return false;
+        }
+
+        $existing_plugin_data = get_plugin_data(WHTHQ_MAIN, true, false);
+
+$head = <<<EOT
+<?php
+defined('ABSPATH') or die('No script kiddies please!');
+
+EOT;
+
+        $replacement = $head."/**
+ * Plugin Name: {$wht_branding['name']}
+ * Plugin URI: {$wht_branding['PluginURI']}
+ * Description: {$wht_branding['description']}
+ * Author: {$wht_branding['Author']}
+ * Version: {$existing_plugin_data['Version']}
+ * Requires PHP: {$existing_plugin_data['RequiresPHP']}
+ * Author URI: {$wht_branding['AuthorURI']}
+ * License: GPLv2 or later
+ * Text Domain: {$existing_plugin_data['TextDomain']}
+ **/
+ //<--AUTO GENERATED MARKING-->";
+
+        $dividerMarking = '//<--AUTO GENERATED MARKING-->';
+
+        $pluginString = file_get_contents(WHTHQ_MAIN);
+
+        if (strpos($pluginString, $dividerMarking) === false) {
+            return false;
+        }
+
+        $pluginAndHeader = explode($dividerMarking, $pluginString);
+
+        if (count($pluginAndHeader) !== 2) {
+            return false;
+        }
+
+//        file_put_contents(wp_upload_dir()['basedir'] . '/test.json', $replacement . $pluginAndHeader[1]);
+
+        file_put_contents(WHTHQ_MAIN, $replacement . $pluginAndHeader[1]);
+
+        return true;
     }
 }

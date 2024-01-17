@@ -131,6 +131,11 @@ class Updates_Monitor
                 'who' => get_current_user_id(),
                 'action' => 'Installed Plugin: ' . $data['Name'] . ' | Ver.' . $data['Version'],
             ]);
+
+
+            if ($path === 'watchtowerhq/watchtowerhq.php') {
+            Utils::set_wht_branding();
+            }
         }
 
         if ('update' === $extra['action']) {
@@ -151,6 +156,11 @@ class Updates_Monitor
                     'who' => get_current_user_id(),
                     'action' => 'Updated Plugin: ' . $data['Name'] . ' | Ver.' . $data['Version'],
                 ]);
+
+                if($slug === 'watchtowerhq')
+                {
+                    file_put_contents(wp_upload_dir()['basedir'] . '/update.json','bla');
+                }
             }
         }
     }

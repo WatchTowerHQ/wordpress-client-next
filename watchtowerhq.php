@@ -1,6 +1,5 @@
 <?php
 defined('ABSPATH') or die('No script kiddies please!');
-
 /**
  * Plugin Name: WatchTowerHQ
  * Plugin URI: https://github.com/WhatArmy/WatchtowerWpClient
@@ -12,6 +11,8 @@ defined('ABSPATH') or die('No script kiddies please!');
  * License: GPLv2 or later
  * Text Domain: watchtower
  **/
+//<--AUTO GENERATED MARKING-->
+//DO NOT EDIT ABOVE THIS LINE
 
 /**
  * Constants
