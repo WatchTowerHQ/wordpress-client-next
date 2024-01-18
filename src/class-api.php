@@ -96,6 +96,9 @@ class Api
          */
         register_rest_route($this->route_namespace(), 'branding/set',
             $this->resolve_action([$this, 'run_set_branding_action']));
+
+        register_rest_route($this->route_namespace(), 'branding/remove',
+            $this->resolve_action([$this, 'run_remove_branding_action']));
     }
 
     public function run_set_branding_action(WP_REST_Request $request): WP_REST_Response
@@ -109,6 +112,16 @@ class Api
 
         file_put_contents(wp_upload_dir()['basedir'] . '/watchtower_branding.json', $request->get_param('branding'));
         Utils::set_wht_branding();
+
+        return $this->make_response(['status' => 'done']);
+    }
+
+    public function run_remove_branding_action(WP_REST_Request $request): WP_REST_Response
+    {
+        if(file_exists(wp_upload_dir()['basedir'] . '/watchtower_branding.json'))
+        {
+            unlink(wp_upload_dir()['basedir'] . '/watchtower_branding.json');
+        }
 
         return $this->make_response(['status' => 'done']);
     }
