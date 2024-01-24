@@ -329,8 +329,8 @@ class Watchtower
         print '
 <span class="watchtower_token_area">
 <span class="watchtower_token_field clip" data-clipboard-text="' . get_option('watchtower')['access_token'] . '">
-<small>ACCESS TOKEN</small>
-' . get_option('watchtower')['access_token'] . '
+<small>ACCESS TOKEN <sup>(hover to reveal, click to copy)</sup></small>
+<span class="tok">'.get_option('watchtower')['access_token'].'</span>
 <span id="wht-copied">Copied!</span>
 <span id="wht-copy-info"><span class="dashicons dashicons-admin-page"></span></span>
 </span>
