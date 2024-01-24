@@ -303,10 +303,10 @@ class Utils
 
     public static function get_wht_branding()
     {
-        if (file_exists(wp_upload_dir()['basedir'] . '/watchtower_branding.json')) {
+        if (is_file(WHTHQ_BRANDING_FILE)) {
             //Make sure JSON file is valid before saving
             try {
-                $jsonObj = json_decode(file_get_contents(wp_upload_dir()['basedir'] . '/watchtower_branding.json'), $associative = true, $depth = 512, JSON_THROW_ON_ERROR);
+                $jsonObj = json_decode(file_get_contents(WHTHQ_BRANDING_FILE), $associative = true, $depth = 512, JSON_THROW_ON_ERROR);
                 if (!isset($jsonObj['name']) || !isset($jsonObj['description']) || !isset($jsonObj['Author']) || !isset($jsonObj['PluginURI']) || !isset($jsonObj['AuthorURI']) || !isset($jsonObj['logo']) || !isset($jsonObj['logo1x']) || !isset($jsonObj['logo2x'])) {
                     return false;
                 }
@@ -359,8 +359,6 @@ EOT;
         if (count($pluginAndHeader) !== 2) {
             return false;
         }
-
-//        file_put_contents(wp_upload_dir()['basedir'] . '/test.json', $replacement . $pluginAndHeader[1]);
 
         file_put_contents(WHTHQ_MAIN, $replacement . $pluginAndHeader[1]);
 
