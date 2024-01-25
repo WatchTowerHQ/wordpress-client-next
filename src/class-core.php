@@ -87,6 +87,7 @@ class Core
                 'mysql_dump_location' => (Utils::isFuncAvailable('system')) ? Utils::detectMysqldumpLocation() : 'n/a',
                 'php_version' => Utils::php_version(),
             ],
+            'branding_revision' => $this->branding_revision(),
             'debug' => [
                 'WP_DEBUG' => defined('WP_DEBUG') ? WP_DEBUG : false,
                 'WP_DEBUG_LOG' => defined('WP_DEBUG_LOG') ? WP_DEBUG_LOG : false,
@@ -156,6 +157,18 @@ class Core
         } catch (\Exception $e) {
             return null;
         }
+    }
+
+    /**
+     * @return mixed
+     */
+    public function branding_revision()
+    {
+        $branding = Utils::get_wht_branding();
+        if ($branding && isset($branding['branding_revision'])) {
+            return $branding['branding_revision'];
+        }
+        return 'N/A';
     }
 
     /**
