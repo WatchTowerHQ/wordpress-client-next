@@ -307,7 +307,7 @@ class Utils
             //Make sure JSON file is valid before saving
             try {
                 $jsonObj = json_decode(file_get_contents(WHTHQ_BRANDING_FILE), $associative = true, $depth = 512, JSON_THROW_ON_ERROR);
-                if (!isset($jsonObj['name']) || !isset($jsonObj['description']) || !isset($jsonObj['Author']) || !isset($jsonObj['PluginURI']) || !isset($jsonObj['AuthorURI']) || !isset($jsonObj['logo']) || !isset($jsonObj['logo1x']) || !isset($jsonObj['logo2x'])) {
+                if (!isset($jsonObj['name']) || !isset($jsonObj['description']) || !isset($jsonObj['Author']) || !isset($jsonObj['PluginURI']) || !isset($jsonObj['AuthorURI']) || !isset($jsonObj['logo']) || !isset($jsonObj['logo1x'])) {
                     return false;
                 }
                 return $jsonObj;
