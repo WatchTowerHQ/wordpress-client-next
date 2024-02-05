@@ -303,7 +303,7 @@ class Utils
 
     public static function get_wht_branding()
     {
-        if (is_file(WHTHQ_BRANDING_FILE)) {
+        if (is_readable(WHTHQ_BRANDING_FILE)) {
             //Make sure JSON file is valid before saving
             try {
                 $jsonObj = json_decode(file_get_contents(WHTHQ_BRANDING_FILE), $associative = true, $depth = 512, JSON_THROW_ON_ERROR);
@@ -348,6 +348,12 @@ EOT;
 
         $dividerMarking = '//<--AUTO GENERATED MARKING-->';
 
+        //Check If Plugin File Is Readable
+        if(!is_readable(WHTHQ_MAIN))
+        {
+            return false;
+        }
+
         $pluginString = file_get_contents(WHTHQ_MAIN);
 
         if (strpos($pluginString, $dividerMarking) === false) {
@@ -357,6 +363,12 @@ EOT;
         $pluginAndHeader = explode($dividerMarking, $pluginString);
 
         if (count($pluginAndHeader) !== 2) {
+            return false;
+        }
+
+        //Check If Plugin File Is Writeable
+        if(!is_writeable(WHTHQ_MAIN))
+        {
             return false;
         }
 
