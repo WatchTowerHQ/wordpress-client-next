@@ -142,17 +142,12 @@ class Core
     }
 
     /**
-     * @return mixed
+     * @return false|string|null
      */
     public function external_ip()
     {
         try {
-            $curl = new \Curl();
-            $curl->options['CURLOPT_SSL_VERIFYPEER'] = false;
-            $curl->options['CURLOPT_SSL_VERIFYHOST'] = false;
-            $curl->options['CURLOPT_TIMEOUT_MS'] = 10000;
-            $curl->options['CURLOPT_NOSIGNAL'] = 1;
-            return json_decode($curl->get('https://api.ipify.org?format=json'))->ip;
+            return file_get_contents("https://api.ipify.org", 0, stream_context_create(["http" => ["timeout" => 10]]));
         } catch (\Exception $e) {
             return null;
         }
