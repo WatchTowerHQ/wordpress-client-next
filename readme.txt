@@ -83,11 +83,11 @@ To view our plans and get started with WatchTowerHQ check out our [website](http
 We have a number of standard roles, that many users requested, along with that we've created custom user roles. With custom user roles the options are endless to the access that you can give any one user. Custom User roles are included in all plans at no additional cost.
 
 == Changelog ==
-= 3.7.20 =
-* WordPress 6.5 compatibility declaration
-
 = 3.8.0 =
 * custom branding support
+
+= 3.7.20 =
+* WordPress 6.5 compatibility declaration
 
 = 3.7.19 =
 * fix server ip detection
