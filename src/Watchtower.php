@@ -7,7 +7,6 @@
 
 namespace WhatArmy\Watchtower;
 
-
 use WhatArmy\Watchtower\Files\File_Backup;
 use WhatArmy\Watchtower\Mysql\Mysql_Backup;
 

@@ -6,6 +6,8 @@ $vendorDir = dirname(__DIR__);
 $baseDir = dirname($vendorDir);
 
 return array(
+    'WhatArmy\\Watchtower\\Mysql\\' => array($baseDir . '/src/Mysql'),
+    'WhatArmy\\Watchtower\\Files\\' => array($baseDir . '/src/Files'),
     'WhatArmy\\Watchtower\\' => array($baseDir . '/src'),
     'Symfony\\Polyfill\\Php80\\' => array($vendorDir . '/symfony/polyfill-php80'),
     'Symfony\\Polyfill\\Mbstring\\' => array($vendorDir . '/symfony/polyfill-mbstring'),
@@ -15,5 +17,4 @@ return array(
     'Psr\\Http\\Message\\' => array($vendorDir . '/psr/http-message/src'),
     'PhpZip\\' => array($vendorDir . '/nelexa/zip/src'),
     'Druidfi\\Mysqldump\\' => array($vendorDir . '/druidfi/mysqldump-php/src'),
-    'ClaudioSanches\\WPAutoloader\\' => array($vendorDir . '/claudiosanches/wp-autoloader/src'),
 );
