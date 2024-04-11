@@ -1,6 +1,6 @@
 {
   "name": "whatarmy/watchtowerhq",
-  "license": "GPL-3.0",
+  "license": "MIT",
   "type": "project",
   "description": "The WatchTowerHQ WordPress plugin allows us to monitor, backup, upgrade, and manage your site!",
   "authors": [
@@ -11,7 +11,9 @@
   ],
   "autoload": {
     "psr-4": {
-      "WhatArmy\\Watchtower\\": "src"
+      "WhatArmy\\Watchtower\\": "src/",
+      "WhatArmy\\Watchtower\\Files\\": "src/Files/",
+      "WhatArmy\\Watchtower\\Mysql\\": "src/Mysql/"
     }
   },
   "config": {
@@ -21,13 +23,12 @@
     }
   },
   "require": {
-    "claudiosanches/wp-autoloader": "1.0",
     "php": ">= 7.4",
     "shuber/curl": "dev-master",
     "ext-zip": "*",
     "ext-mysqli": "*",
     "ext-json": "*",
-    "woocommerce/action-scheduler": "3.6.3",
+    "woocommerce/action-scheduler": "3.7.4",
     "ext-fileinfo": "*",
     "symfony/finder": "v5.4.21",
     "ext-zlib": "*",
