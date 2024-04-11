@@ -18,6 +18,8 @@ class ComposerStaticInit38658c24433224ba35a28b7f458965b7
     public static $prefixLengthsPsr4 = array (
         'W' => 
         array (
+            'WhatArmy\\Watchtower\\Mysql\\' => 26,
+            'WhatArmy\\Watchtower\\Files\\' => 26,
             'WhatArmy\\Watchtower\\' => 20,
         ),
         'S' => 
@@ -37,13 +39,17 @@ class ComposerStaticInit38658c24433224ba35a28b7f458965b7
         array (
             'Druidfi\\Mysqldump\\' => 18,
         ),
-        'C' => 
-        array (
-            'ClaudioSanches\\WPAutoloader\\' => 28,
-        ),
     );
 
     public static $prefixDirsPsr4 = array (
+        'WhatArmy\\Watchtower\\Mysql\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/Mysql',
+        ),
+        'WhatArmy\\Watchtower\\Files\\' => 
+        array (
+            0 => __DIR__ . '/../..' . '/src/Files',
+        ),
         'WhatArmy\\Watchtower\\' => 
         array (
             0 => __DIR__ . '/../..' . '/src',
@@ -79,10 +85,6 @@ class ComposerStaticInit38658c24433224ba35a28b7f458965b7
         'Druidfi\\Mysqldump\\' => 
         array (
             0 => __DIR__ . '/..' . '/druidfi/mysqldump-php/src',
-        ),
-        'ClaudioSanches\\WPAutoloader\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/claudiosanches/wp-autoloader/src',
         ),
     );
 
