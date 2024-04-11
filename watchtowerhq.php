@@ -1,7 +1,4 @@
 <?php
-
-use WhatArmy\Watchtower\Watchtower;
-
 defined('ABSPATH') or die('No script kiddies please!');
 
 /**
@@ -9,7 +6,7 @@ defined('ABSPATH') or die('No script kiddies please!');
  * Plugin URI: https://github.com/WhatArmy/WatchtowerWpClient
  * Description: The WatchTowerHQ plugin allows us to monitor, backup, upgrade, and manage your site!
  * Author: WhatArmy
- * Version: 3.8.1
+ * Version: 3.9.0
  * Requires PHP: 7.4
  * Author URI: https://watchtowerhq.co/
  * License: GPLv2 or later
@@ -36,6 +33,7 @@ define('WHTHQ_BACKUP_DIR', wp_upload_dir()['basedir'].'/'.WHTHQ_BACKUP_DIR_NAME)
 define('WHTHQ_BACKUP_FILES_PER_QUEUE', class_exists("ZipArchive") ? 450 : 200);
 define('WHTHQ_DB_RECORDS_MAX', 6000);
 
+use WhatArmy\Watchtower\Watchtower;
 
 if (version_compare(PHP_VERSION, WHTHQ_MIN_PHP) >= 0) {
     /**
