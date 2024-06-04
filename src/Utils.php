@@ -279,25 +279,21 @@ class Utils
 
     public static function detectMysqldumpLocation()
     {
-        $mysqldump = `which mysqldump`;
-        if (@is_executable($mysqldump)) {
-            return $mysqldump;
-        }
-        $mysqldump = dirname(`which mysql`) . "/mysqldump";
-        if (@is_executable($mysqldump)) {
-            return $mysqldump;
-        }
-        $available = array(
-            '/usr/bin/mysqldump', // Linux
-            '/usr/local/mysql/bin/mysqldump', //Mac OS X
-            '/usr/local/bin/mysqldump', //Linux
-            '/usr/mysql/bin/mysqldump' //Linux
-        );
-        foreach ($available as $apath) {
-            if (@is_executable($apath)) {
-                return $apath;
+        $possiblePaths = [
+            "/usr/bin/mysqldump",
+            "/bin/mysqldump",
+            "/usr/local/bin/mysqldump",
+            "/usr/sfw/bin/mysqldump",
+            "/usr/xdg4/bin/mysqldump",
+            "/opt/bin/mysqldump",
+            "/opt/homebrew/bin/mysqldump",
+            "/opt/bitnami/mariadb/bin/mysqldump",
+        ];
+        foreach ($possiblePaths as $path) {
+            if (@is_executable($path)) {
+                return $path;
             }
         }
-        return 'n/a';
+        return false;
     }
 }

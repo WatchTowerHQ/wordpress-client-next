@@ -150,6 +150,9 @@ class Api
     }
 
 
+    /**
+     * @throws \Exception
+     */
     public function run_backup_db_action(WP_REST_Request $request): WP_REST_Response
     {
         $backup = new Mysql_Backup();

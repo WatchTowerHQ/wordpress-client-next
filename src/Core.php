@@ -84,7 +84,7 @@ class Core
             'wpe_auth' => (defined('WPE_APIKEY')) ? md5('wpe_auth_salty_dog|' . WPE_APIKEY) : false,
             'system_info' => [
                 'system_command' => Utils::isFuncAvailable('system'),
-                'mysql_dump_location' => (Utils::isFuncAvailable('system')) ? Utils::detectMysqldumpLocation() : 'n/a',
+                'mysql_dump_location' => Utils::detectMysqldumpLocation() ? Utils::detectMysqldumpLocation() : 'n/a',
                 'php_version' => Utils::php_version(),
             ],
             'debug' => [
