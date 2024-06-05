@@ -207,8 +207,14 @@ class Api
 
     public function get_backup_files_list_action(WP_REST_Request $request): WP_REST_Response
     {
+        $localBackupExclusions = [
+            [
+                'isContentDir' => 1,
+                'path' => 'plugins/watchtowerhq/stubs/web.config.stub',
+            ]];
+
         set_time_limit(300);
-        $filesListRaw = Utils::allFilesList(Utils::createLocalBackupExclusions($request->get_param('clientBackupExclusions')));
+        $filesListRaw = Utils::allFilesList(Utils::createLocalBackupExclusions(array_merge($localBackupExclusions,$request->get_param('clientBackupExclusions'))));
         $files = [];
         foreach ($filesListRaw as $file) {
             $files[] = [
