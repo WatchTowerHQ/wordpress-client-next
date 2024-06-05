@@ -83,9 +83,11 @@ To view our plans and get started with WatchTowerHQ check out our [website](http
 We have a number of standard roles, that many users requested, along with that we've created custom user roles. With custom user roles the options are endless to the access that you can give any one user. Custom User roles are included in all plans at no additional cost.
 
 == Changelog ==
-
 = 3.9.0 =
 * mysqldump native support
+
+= 3.8.4 =
+* Fix CloudFlare issue
 
 = 3.8.1 =
 * Drop third party autoloader
