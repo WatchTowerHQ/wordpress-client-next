@@ -70,7 +70,7 @@ class Core
             'comments' => wp_count_comments(),
             'comments_allowed' => get_default_comment_status() == 'open',
             'site_ip' => $this->external_ip(),
-            'db_size' => $this->db_size(),
+            'db_size' => Utils::db_size(),
             'timezone' => [
                 'gmt_offset' => get_option('gmt_offset'),
                 'string' => get_option('timezone_string'),
@@ -152,20 +152,13 @@ class Core
             return null;
         }
     }
-
-    /**
-     * @return mixed
-     */
-    public function db_size()
-    {
-        global $wpdb;
-        $queryStr = 'SELECT  ROUND(SUM(((DATA_LENGTH + INDEX_LENGTH)/1024/1024)),2) AS "MB"
-        FROM INFORMATION_SCHEMA.TABLES
-	WHERE TABLE_SCHEMA = "' . $wpdb->dbname . '";';
-        $query = $wpdb->get_row($queryStr);
-        return $query->MB;
+    private function get_last_login($user_id) {
+        $last_login = get_user_meta($user_id, 'wht_user_last_login', true);
+        if ($last_login) {
+            return $last_login;
+        }
+        return null;
     }
-
     /**
      * @return array
      */
@@ -177,6 +170,9 @@ class Core
             $admins[] = [
                 'login' => $admin->user_login,
                 'email' => $admin->user_email,
+                'display_name' => $admin->display_name,
+                'registered_at' => $admin->user_registered,
+                'last_seen_at' => $this->get_last_login($admin->ID),
             ];
         }
         return $admins;

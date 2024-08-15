@@ -38,7 +38,7 @@ class Mysql_Backup
 
         $mysqldumpDetected = Utils::detectMysqldumpLocation();
 
-        if ($mysqldumpDetected !== false) {
+        if ($mysqldumpDetected !== false && Utils::db_size() < 60) {
             $this->runMysqlDump($callback_url, $dir, $mysqldumpDetected);
         } else {
             $this->runInQueue($callback_url, $dir);
