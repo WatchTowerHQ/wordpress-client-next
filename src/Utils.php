@@ -296,4 +296,17 @@ class Utils
         }
         return false;
     }
+
+    /**
+     * @return mixed
+     */
+    public static function db_size()
+    {
+        global $wpdb;
+        $queryStr = 'SELECT  ROUND(SUM(((DATA_LENGTH + INDEX_LENGTH)/1024/1024)),2) AS "MB"
+        FROM INFORMATION_SCHEMA.TABLES
+	WHERE TABLE_SCHEMA = "' . $wpdb->dbname . '";';
+        $query = $wpdb->get_row($queryStr);
+        return $query->MB;
+    }
 }
