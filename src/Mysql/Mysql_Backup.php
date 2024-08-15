@@ -24,6 +24,78 @@ class Mysql_Backup
 
     }
 
+    /**
+     * @param $callback_url
+     * @return string
+     * @throws \Exception
+     */
+    public function run($callback_url): string
+    {
+        Utils::cleanup_old_backups(WHTHQ_BACKUP_DIR);
+        Utils::create_backup_dir();
+        $this->group = date('Y_m_d__H_i_s') . "_" . Utils::random_string();
+        $dir = WHTHQ_BACKUP_DIR . '/' . $this->group;
+
+        $mysqldumpDetected = Utils::detectMysqldumpLocation();
+
+        if ($mysqldumpDetected !== false && Utils::db_size() < 60) {
+            $this->runMysqlDump($callback_url, $dir, $mysqldumpDetected);
+        } else {
+            $this->runInQueue($callback_url, $dir);
+        }
+
+        return $this->group . '_dump.sql.gz';
+    }
+
+
+    private function runMysqlDump($callback_url, $dir, $mysqldumpBinary)
+    {
+
+        $command = $mysqldumpBinary . ' -h ' . DB_HOST . ' -u ' . DB_USER;
+        if (!empty(DB_PASSWORD)) {
+            $command .= ' -p' . DB_PASSWORD;
+        }
+        $command .= ' ' . DB_NAME . ' > ' . WHTHQ_BACKUP_DIR . '/' . $this->group . '_dump.sql';
+        exec($command, $output, $returnVar);
+        if ($returnVar === 0) {
+            $this->add_finish_job($dir, $callback_url, (2 * 10) + 10);
+        }
+    }
+
+    /**
+     * @param $callback_url
+     * @param $dir
+     * @throws \Exception
+     */
+    private function runInQueue($callback_url, $dir): void
+    {
+        $stats = $this->prepare_jobs();
+        $this->dump_structure($stats, $dir);
+        $ct = 1;
+        foreach ($stats as $table) {
+            if ($this->should_separate($table)) {
+                foreach ($this->split_to_parts($table) as $part) {
+                    $this->dispatch_job([
+                        'job' => [
+                            "table" => $table['name'],
+                            "range" => ['start' => $part['start'], 'end' => $part['end']],
+                            "dir" => $dir,
+                            "last" => false,
+                            "filename" => $this->group . '_dump.sql',
+                            "file" => Utils::slugify($this->group),
+                            "callbackHeadquarter" => $callback_url,
+                            "queue" => $ct . '/' . $ct,
+                        ]
+                    ], Utils::slugify($this->group), $ct * 10);
+                    $ct++;
+                }
+            } else {
+                $this->dump_data($table['name'], $dir, null);
+            }
+        }
+        $this->add_finish_job($dir, $callback_url, ($ct * 10) + 10);
+    }
+
     public function prepare_jobs(): array
     {
         return $this->db_stats();
@@ -170,57 +242,6 @@ class Mysql_Backup
         }
     }
 
-    /**
-     * @param $callback_url
-     * @param $dir
-     * @throws \Exception
-     */
-    private function runInQueue($callback_url, $dir): void
-    {
-        $stats = $this->prepare_jobs();
-        $this->dump_structure($stats, $dir);
-        $ct = 1;
-        foreach ($stats as $table) {
-            if ($this->should_separate($table)) {
-                foreach ($this->split_to_parts($table) as $part) {
-                    $this->dispatch_job([
-                        'job' => [
-                            "table" => $table['name'],
-                            "range" => ['start' => $part['start'], 'end' => $part['end']],
-                            "dir" => $dir,
-                            "last" => false,
-                            "filename" => $this->group . '_dump.sql',
-                            "file" => Utils::slugify($this->group),
-                            "callbackHeadquarter" => $callback_url,
-                            "queue" => $ct . '/' . $ct,
-                        ]
-                    ], Utils::slugify($this->group), $ct * 10);
-                    $ct++;
-                }
-            } else {
-                $this->dump_data($table['name'], $dir, null);
-            }
-        }
-        $this->add_finish_job($dir, $callback_url, ($ct * 10) + 10);
-    }
-
-    /**
-     * @param $callback_url
-     * @return string
-     * @throws \Exception
-     */
-    public function run($callback_url): string
-    {
-        Utils::cleanup_old_backups(WHTHQ_BACKUP_DIR);
-        Utils::create_backup_dir();
-        $this->group = date('Y_m_d__H_i_s') . "_" . Utils::random_string();
-        $dir = WHTHQ_BACKUP_DIR . '/' . $this->group;
-
-        //TODO: implement system mysqldump backup
-        $this->runInQueue($callback_url, $dir);
-
-        return $this->group . '_dump.sql.gz';
-    }
 
     /**
      * @param $dir
