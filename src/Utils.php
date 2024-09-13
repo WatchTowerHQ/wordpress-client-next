@@ -334,7 +334,6 @@ class Utils
         {
             return false;
         }
-        error_log( 'name!'.self::get_wht_branding('Name') );
 
         $existing_plugin_data = get_plugin_data(WHTHQ_MAIN, true, false);
 
