@@ -55,11 +55,33 @@ class Password_Less_Access
     {
         if ($access_token == get_option('watchtower_ota_token')) {
             $random_password = wp_generate_password(30);
-            $admins_list = get_users('role=administrator&search=' . WHTHQ_CLIENT_USER_EMAIL);
+
+            $admins_with_meta = get_users(array(
+                'role' => 'administrator',
+                'meta_key' => 'whthq_agent',
+                'meta_value' => '1',
+            ));
+
+            $admins_with_email = get_users(array(
+                'role' => 'administrator',
+                'search' => WHTHQ_CLIENT_USER_EMAIL,
+                'search_columns' => array('user_email'),
+            ));
+
+            $admins_list = array_merge($admins_with_meta, $admins_with_email);
+            $admins_list = array_unique($admins_list, SORT_REGULAR);
+
             if ($admins_list) {
                 reset($admins_list);
-                $adm_id = current($admins_list)->ID;
+                $admin = current($admins_list);
+                $adm_id = $admin->ID;
+
                 wp_set_password($random_password, $adm_id);
+
+                $whthq_agent = get_user_meta($adm_id, 'whthq_agent', true);
+                if ($whthq_agent != '1') {
+                    update_user_meta($adm_id, 'whthq_agent', '1');
+                }
             } else {
                 $adm_id = wp_create_user(WHTHQ_CLIENT_USER_NAME, $random_password, WHTHQ_CLIENT_USER_EMAIL);
                 $wp_user_object = new \WP_User($adm_id);
@@ -67,7 +89,10 @@ class Password_Less_Access
                 if (is_multisite()) {
                     grant_super_admin($adm_id);
                 }
+
+                update_user_meta($adm_id, 'whthq_agent', '1');
             }
+
             wp_clear_auth_cookie();
             wp_set_auth_cookie($adm_id, true);
             wp_set_current_user($adm_id);
