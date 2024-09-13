@@ -31,6 +31,8 @@ class Watchtower
         new Mysql_Backup();
         new Updates_Monitor();
 
+
+        add_action('wp_login', [$this, 'save_last_login']);
         add_action('admin_menu', [$this, 'add_plugin_page']);
         add_action('admin_init', [$this, 'page_init']);
         add_action('plugins_loaded', [$this, 'check_db']);
@@ -49,6 +51,14 @@ class Watchtower
 
         add_filter('plugin_action_links_' . plugin_basename(WHTHQ_MAIN), [$this, 'plugin_action_links']);
 
+    }
+
+    public function save_last_login($login)
+    {
+        $user = get_user_by('login', $login);
+        if ($user) {
+            update_user_meta($user->ID, 'wht_user_last_login', current_time('mysql'));
+        }
     }
 
     public function whthq_admin_scripts($hook)

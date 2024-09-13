@@ -70,7 +70,7 @@ class Core
             'comments' => wp_count_comments(),
             'comments_allowed' => get_default_comment_status() == 'open',
             'site_ip' => $this->external_ip(),
-            'db_size' => $this->db_size(),
+            'db_size' => Utils::db_size(),
             'timezone' => [
                 'gmt_offset' => get_option('gmt_offset'),
                 'string' => get_option('timezone_string'),
@@ -84,7 +84,7 @@ class Core
             'wpe_auth' => (defined('WPE_APIKEY')) ? md5('wpe_auth_salty_dog|' . WPE_APIKEY) : false,
             'system_info' => [
                 'system_command' => Utils::isFuncAvailable('system'),
-                'mysql_dump_location' => (Utils::isFuncAvailable('system')) ? Utils::detectMysqldumpLocation() : 'n/a',
+                'mysql_dump_location' => Utils::detectMysqldumpLocation() ? Utils::detectMysqldumpLocation() : 'n/a',
                 'php_version' => Utils::php_version(),
             ],
             'branding_revision' => $this->branding_revision(),
@@ -153,7 +153,6 @@ class Core
             return null;
         }
     }
-
     /**
      * @return mixed
      */
@@ -164,6 +163,14 @@ class Core
             return $branding['branding_revision'];
         }
         return 'N/A';
+    }
+
+    private function get_last_login($user_id) {
+        $last_login = get_user_meta($user_id, 'wht_user_last_login', true);
+        if ($last_login) {
+            return $last_login;
+        }
+        return null;
     }
 
     /**
@@ -190,6 +197,9 @@ class Core
             $admins[] = [
                 'login' => $admin->user_login,
                 'email' => $admin->user_email,
+                'display_name' => $admin->display_name,
+                'registered_at' => $admin->user_registered,
+                'last_seen_at' => $this->get_last_login($admin->ID),
             ];
         }
         return $admins;
