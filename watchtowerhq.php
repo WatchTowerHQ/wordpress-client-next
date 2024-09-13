@@ -32,6 +32,7 @@ define('WHTHQ_BACKUP_EXCLUSIONS_ENDPOINT', '/backupExclusions');
 define('WHTHQ_BACKUP_DIR', wp_upload_dir()['basedir'].'/'.WHTHQ_BACKUP_DIR_NAME);
 define('WHTHQ_BACKUP_FILES_PER_QUEUE', class_exists("ZipArchive") ? 450 : 200);
 define('WHTHQ_DB_RECORDS_MAX', 6000);
+define('WHTHQ_BRANDING_FILE',wp_upload_dir()['basedir'].'/'.'WatchTowerClientCustomBranding.json');
 
 use WhatArmy\Watchtower\Watchtower;
 
