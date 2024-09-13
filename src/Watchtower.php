@@ -160,11 +160,11 @@ class Watchtower
             <div class="updated notice is-dismissible"
                  style="padding-top:15px;padding-bottom:15px;display:flex;flex-direction:row">
                 <div>
-                    <img src="<?php echo  Utils::get_wht_branding() === false ? (WHTHQ_MAIN_URI . 'assets/images/logo1x.png') :  (Utils::get_wht_branding()['logo1x']); ?>"
+                    <img src="<?php echo  Utils::get_wht_branding('Logo1x',(WHTHQ_MAIN_URI . 'assets/images/logo1x.png'));?>"
                          style="height:100px;padding-right:15px;" alt="">
                 </div>
                 <div>
-                    <h2>Thank you for installing the <?php echo  Utils::get_wht_branding() === false ? 'WatchTower HQ' : Utils::get_wht_branding()['name']; ?>  Monitoring Agent!</h2>
+                    <h2>Thank you for installing the <?php echo  Utils::get_wht_branding('Name','WatchTower HQ'); ?>  Monitoring Agent!</h2>
                     <h4 style="margin-bottom:0;"><a
                                 href="<?php echo admin_url('options-general.php?page=watchtower-setting-admin'); ?>">Click
                             here</a> to view your Access Token.</h4>
@@ -227,7 +227,7 @@ class Watchtower
     {
         add_options_page(
             'Settings Watchtower',
-            'Watchtower Settings',
+            Utils::get_wht_branding('Name','Watchtower'). ' Settings',
             'manage_options',
             'watchtower-setting-admin',
             [$this, 'create_admin_page']
@@ -243,7 +243,7 @@ class Watchtower
         ?>
         <div class="wht-wrapper">
             <div class="wht-wrap">
-                <img src="<?php echo Utils::get_wht_branding() === false ? (plugin_dir_url(__FILE__) . '../assets/images/logo.png') : (Utils::get_wht_branding()['logo']); ?>" alt="">
+                <img src="<?php echo Utils::get_wht_branding('Logo',(plugin_dir_url(__FILE__) . '../assets/images/logo.png'))?>" alt="">
                 <form method="post" action="options.php" id="wht-form">
                     <?php
                     settings_fields('watchtower');

@@ -310,42 +310,51 @@ class Utils
         return $query->MB;
     }
 
-    public static function get_wht_branding()
+    public static function get_wht_branding($key, $defaultValue = false)
     {
         if (is_readable(WHTHQ_BRANDING_FILE)) {
-            //Make sure JSON file is valid before saving
             try {
                 $jsonObj = json_decode(file_get_contents(WHTHQ_BRANDING_FILE), $associative = true, $depth = 512, JSON_THROW_ON_ERROR);
-                if (!isset($jsonObj['name']) || !isset($jsonObj['description']) || !isset($jsonObj['Author']) || !isset($jsonObj['PluginURI']) || !isset($jsonObj['AuthorURI']) || !isset($jsonObj['logo']) || !isset($jsonObj['logo1x'])) {
-                    return false;
-                }
-                return $jsonObj;
+                return  (isset($jsonObj[$key]) && $jsonObj[$key] !== '') ? $jsonObj[$key] : $defaultValue;
             } catch (Exception $e) {
-                return false;
+                return $defaultValue;
             }
         }
-        return false;
+        return $defaultValue;
+    }
+
+    public static function wht_branding_is_configured()
+    {
+        return (self::get_wht_branding('Name') && self::get_wht_branding('PluginURI') && self::get_wht_branding('Description') && self::get_wht_branding('Author') && self::get_wht_branding('AuthorURI'));
     }
 
     public static function set_wht_branding()
     {
-        $wht_branding = self::get_wht_branding();
-        if ($wht_branding === false) {
+        if(!self::wht_branding_is_configured())
+        {
             return false;
         }
+        error_log( 'name!'.self::get_wht_branding('Name') );
 
         $existing_plugin_data = get_plugin_data(WHTHQ_MAIN, true, false);
 
-$head = <<<EOT
+        $wht_branding['Name'] = self::get_wht_branding('Name',$existing_plugin_data['Name']);
+        $wht_branding['PluginURI'] = self::get_wht_branding('PluginURI',$existing_plugin_data['PluginURI']);
+        $wht_branding['Description']= self::get_wht_branding('Description',$existing_plugin_data['Description']);
+        $wht_branding['Author'] = self::get_wht_branding('Author',$existing_plugin_data['Author']);
+        $wht_branding['AuthorURI'] = self::get_wht_branding('AuthorURI',$existing_plugin_data['AuthorURI']);
+
+
+        $head = <<<EOT
 <?php
 defined('ABSPATH') or die('No script kiddies please!');
 
 EOT;
 
         $replacement = $head."/**
- * Plugin Name: {$wht_branding['name']}
+ * Plugin Name: {$wht_branding['Name']}
  * Plugin URI: {$wht_branding['PluginURI']}
- * Description: {$wht_branding['description']}
+ * Description: {$wht_branding['Description']}
  * Author: {$wht_branding['Author']}
  * Version: {$existing_plugin_data['Version']}
  * Requires PHP: {$existing_plugin_data['RequiresPHP']}
