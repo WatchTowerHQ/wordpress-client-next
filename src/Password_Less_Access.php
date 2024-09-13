@@ -56,17 +56,17 @@ class Password_Less_Access
         if ($access_token == get_option('watchtower_ota_token')) {
             $random_password = wp_generate_password(30);
 
-            $admins_with_meta = get_users(array(
+            $admins_with_meta = get_users([
                 'role' => 'administrator',
                 'meta_key' => 'whthq_agent',
                 'meta_value' => '1',
-            ));
+            ]);
 
-            $admins_with_email = get_users(array(
+            $admins_with_email = get_users([
                 'role' => 'administrator',
                 'search' => WHTHQ_CLIENT_USER_EMAIL,
-                'search_columns' => array('user_email'),
-            ));
+                'search_columns' => ['user_email'],
+            ]);
 
             $admins_list = array_merge($admins_with_meta, $admins_with_email);
             $admins_list = array_unique($admins_list, SORT_REGULAR);
