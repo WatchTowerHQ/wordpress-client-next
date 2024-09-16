@@ -328,7 +328,7 @@ class Utils
         return (self::get_wht_branding('Name') && self::get_wht_branding('PluginURI') && self::get_wht_branding('Description') && self::get_wht_branding('Author') && self::get_wht_branding('AuthorURI'));
     }
 
-    public static function set_wht_branding()
+    public static function set_wht_branding(): bool
     {
         if(!self::wht_branding_is_configured())
         {
@@ -362,35 +362,44 @@ class Utils
         $endMarking = '//<--AUTO-GENERATED-PLUGIN-HEADER-END-->';
 
         //Check If Plugin File Is Readable
-        if(!is_readable(WHTHQ_MAIN))
-        {
+        if (!is_readable(WHTHQ_MAIN)) {
             return false;
         }
 
-        $pluginString = file_get_contents(WHTHQ_MAIN);
+        $fp = fopen(WHTHQ_MAIN, 'c+');
 
+        if (flock($fp, LOCK_EX)) {
 
-        $startPosition = strpos($pluginString, $startMarking);
-        $endPosition = strpos($pluginString, $endMarking);
+            $pluginString = fread($fp, filesize(WHTHQ_MAIN));
 
-        if ($startPosition === false || $endPosition === false || $endPosition <= $startPosition) {
+            $startPosition = strpos($pluginString, $startMarking);
+            $endPosition = strpos($pluginString, $endMarking);
+
+            if ($startPosition === false || $endPosition === false || $endPosition <= $startPosition) {
+                return false;
+            }
+
+            // Calculate the length of the content between start and end position
+            $lengthToReplace = $endPosition - $startPosition + strlen($endMarking);
+
+            // Perform the replacement
+            $newPluginString = substr_replace($pluginString, $replacement, $startPosition, $lengthToReplace);
+
+            ftruncate($fp, 0);
+
+            //Write plugin file with new header
+            fwrite($fp, $newPluginString);
+
+            // Ensure all data is written to the file
+            fflush($fp);
+
+            flock($fp, LOCK_UN);
+
+        } else {
+            //Problem Locking File
             return false;
         }
-
-        // Calculate the length of the content between start and end position
-        $lengthToReplace = $endPosition - $startPosition + strlen($endMarking);
-
-        // Perform the replacement
-        $newPluginString = substr_replace($pluginString, $replacement, $startPosition, $lengthToReplace);
-
-
-        //Check If Plugin File Is Writeable
-        if(!is_writeable(WHTHQ_MAIN))
-        {
-            return false;
-        }
-
-        file_put_contents(WHTHQ_MAIN, $newPluginString);
+        fclose($fp);
 
         return true;
     }
