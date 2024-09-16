@@ -325,7 +325,39 @@ class Utils
 
     public static function wht_branding_is_configured()
     {
-        return (self::get_wht_branding('Name') && self::get_wht_branding('PluginURI') && self::get_wht_branding('Description') && self::get_wht_branding('Author') && self::get_wht_branding('AuthorURI'));
+        // Retrieve all branding values
+        $name = self::get_wht_branding('Name');
+        $pluginURI = self::get_wht_branding('PluginURI');
+        $description = self::get_wht_branding('Description');
+        $author = self::get_wht_branding('Author');
+        $authorURI = self::get_wht_branding('AuthorURI');
+
+        // Define a regex pattern to match disallowed sequences
+        $disallowedPatterns = [
+            '/<!--/',
+            '/-->/',
+            '/\/\*\*/',
+            '/\*\*\//'
+        ];
+
+        // Check if any of the values are empty or contain disallowed sequences
+        $values = [$name, $pluginURI, $description, $author, $authorURI];
+
+        foreach ($values as $value) {
+            // Check for empty values
+            if (empty($value)) {
+                return false;
+            }
+
+            // Check for disallowed patterns
+            foreach ($disallowedPatterns as $pattern) {
+                if (preg_match($pattern, $value)) {
+                    return false;
+                }
+            }
+        }
+
+        return true;
     }
 
     public static function set_wht_branding(): bool
