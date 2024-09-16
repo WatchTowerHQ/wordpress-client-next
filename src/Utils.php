@@ -366,7 +366,7 @@ class Utils
             return false;
         }
 
-        $fp = fopen(WHTHQ_MAIN, 'c+');
+        $fp = fopen(WHTHQ_MAIN, 'r+');
 
         if (flock($fp, LOCK_EX)) {
 
@@ -384,6 +384,8 @@ class Utils
 
             // Perform the replacement
             $newPluginString = substr_replace($pluginString, $replacement, $startPosition, $lengthToReplace);
+
+            rewind($fp);
 
             ftruncate($fp, 0);
 
