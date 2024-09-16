@@ -1,6 +1,11 @@
 <?php
+
+use WhatArmy\Watchtower\Watchtower;
+
 defined('ABSPATH') or die('No script kiddies please!');
 
+//DO NOT EDIT BELLOW THIS LINE
+//<--AUTO-GENERATED-PLUGIN-HEADER-START-->
 /**
  * Plugin Name: WatchTowerHQ
  * Plugin URI: https://github.com/WhatArmy/WatchtowerWpClient
@@ -12,7 +17,7 @@ defined('ABSPATH') or die('No script kiddies please!');
  * License: GPLv2 or later
  * Text Domain: watchtower
  **/
-//<--AUTO GENERATED MARKING-->
+//<--AUTO-GENERATED-PLUGIN-HEADER-END-->
 //DO NOT EDIT ABOVE THIS LINE
 
 /**
@@ -34,7 +39,6 @@ define('WHTHQ_BACKUP_FILES_PER_QUEUE', class_exists("ZipArchive") ? 450 : 200);
 define('WHTHQ_DB_RECORDS_MAX', 6000);
 define('WHTHQ_BRANDING_FILE',wp_upload_dir()['basedir'].'/'.'WatchTowerClientCustomBranding.json');
 
-use WhatArmy\Watchtower\Watchtower;
 
 if (version_compare(PHP_VERSION, WHTHQ_MIN_PHP) >= 0) {
     /**

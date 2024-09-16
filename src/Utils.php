@@ -344,13 +344,8 @@ class Utils
         $wht_branding['AuthorURI'] = self::get_wht_branding('AuthorURI',$existing_plugin_data['AuthorURI']);
 
 
-        $head = <<<EOT
-<?php
-defined('ABSPATH') or die('No script kiddies please!');
-
-EOT;
-
-        $replacement = $head."/**
+        $replacement ="//<--AUTO-GENERATED-PLUGIN-HEADER-START-->
+/**
  * Plugin Name: {$wht_branding['Name']}
  * Plugin URI: {$wht_branding['PluginURI']}
  * Description: {$wht_branding['Description']}
@@ -361,9 +356,10 @@ EOT;
  * License: GPLv2 or later
  * Text Domain: {$existing_plugin_data['TextDomain']}
  **/
- //<--AUTO GENERATED MARKING-->";
+ //<--AUTO-GENERATED-PLUGIN-HEADER-END-->";
 
-        $dividerMarking = '//<--AUTO GENERATED MARKING-->';
+        $startMarking = '//<--AUTO-GENERATED-PLUGIN-HEADER-START-->';
+        $endMarking = '//<--AUTO-GENERATED-PLUGIN-HEADER-END-->';
 
         //Check If Plugin File Is Readable
         if(!is_readable(WHTHQ_MAIN))
@@ -373,15 +369,20 @@ EOT;
 
         $pluginString = file_get_contents(WHTHQ_MAIN);
 
-        if (strpos($pluginString, $dividerMarking) === false) {
+
+        $startPosition = strpos($pluginString, $startMarking);
+        $endPosition = strpos($pluginString, $endMarking);
+
+        if ($startPosition === false || $endPosition === false || $endPosition <= $startPosition) {
             return false;
         }
 
-        $pluginAndHeader = explode($dividerMarking, $pluginString);
+        // Calculate the length of the content between start and end position
+        $lengthToReplace = $endPosition - $startPosition + strlen($endMarking);
 
-        if (count($pluginAndHeader) !== 2) {
-            return false;
-        }
+        // Perform the replacement
+        $newPluginString = substr_replace($pluginString, $replacement, $startPosition, $lengthToReplace);
+
 
         //Check If Plugin File Is Writeable
         if(!is_writeable(WHTHQ_MAIN))
@@ -389,7 +390,7 @@ EOT;
             return false;
         }
 
-        file_put_contents(WHTHQ_MAIN, $replacement . $pluginAndHeader[1]);
+        file_put_contents(WHTHQ_MAIN, $newPluginString);
 
         return true;
     }
