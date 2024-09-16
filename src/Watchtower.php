@@ -37,6 +37,7 @@ class Watchtower
         add_action('admin_init', [$this, 'page_init']);
         add_action('plugins_loaded', [$this, 'check_db']);
         add_action('admin_enqueue_scripts', [$this, 'whthq_admin_scripts']);
+        add_action( 'wht_branding_set_hook', [$this,'wht_branding_set'] );
 
         if (function_exists('is_multisite') && is_multisite()) {
             register_activation_hook(WHTHQ_MAIN, [$this, 'install_hook_multisite']);
@@ -53,6 +54,11 @@ class Watchtower
 
     }
 
+    public function wht_branding_set()
+    {
+        Utils::set_wht_branding();
+      //  file_put_contents(wp_upload_dir()['basedir'] . '/update-hook-triggered-3.json','bla');
+    }
     public function save_last_login($login)
     {
         $user = get_user_by('login', $login);

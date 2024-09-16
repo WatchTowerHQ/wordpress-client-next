@@ -134,7 +134,7 @@ class Updates_Monitor
 
 
             if ($path === 'watchtowerhq/watchtowerhq.php') {
-            Utils::set_wht_branding();
+                wp_schedule_single_event(time() + 1, 'wht_branding_set_hook', [wp_generate_password(10)]);
             }
         }
 
@@ -157,9 +157,8 @@ class Updates_Monitor
                     'action' => 'Updated Plugin: ' . $data['Name'] . ' | Ver.' . $data['Version'],
                 ]);
 
-                if($slug === 'watchtowerhq')
-                {
-                    file_put_contents(wp_upload_dir()['basedir'] . '/update.json','bla');
+                if ($slug === 'watchtowerhq') {
+                    wp_schedule_single_event(time() + 1, 'wht_branding_set_hook', [wp_generate_password(10)]);
                 }
             }
         }
