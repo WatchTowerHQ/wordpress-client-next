@@ -479,6 +479,16 @@ public static function selftest():bool
           {
               //error rollback changes
               file_put_contents(wp_upload_dir()['basedir'] . '/rollback.json','rollback');
+
+              rewind($fp);
+
+              ftruncate($fp, 0);
+
+              //Write plugin file with new header
+              fwrite($fp, $actualPluginString);
+
+              // Ensure all data is written to the file
+              fflush($fp);
           }
 
             flock($fp, LOCK_UN);
