@@ -30,6 +30,7 @@ class Watchtower
         new File_Backup();
         new Mysql_Backup();
         new Updates_Monitor();
+        new Branding();
 
 
         add_action('wp_login', [$this, 'save_last_login']);
@@ -37,7 +38,6 @@ class Watchtower
         add_action('admin_init', [$this, 'page_init']);
         add_action('plugins_loaded', [$this, 'check_db']);
         add_action('admin_enqueue_scripts', [$this, 'whthq_admin_scripts']);
-        add_action( 'wht_branding_set_hook', [$this,'wht_branding_set'] );
 
         if (function_exists('is_multisite') && is_multisite()) {
             register_activation_hook(WHTHQ_MAIN, [$this, 'install_hook_multisite']);
@@ -54,11 +54,6 @@ class Watchtower
 
     }
 
-    public function wht_branding_set()
-    {
-        Utils::set_wht_branding();
-      //  file_put_contents(wp_upload_dir()['basedir'] . '/update-hook-triggered-3.json','bla');
-    }
     public function save_last_login($login)
     {
         $user = get_user_by('login', $login);
@@ -166,11 +161,11 @@ class Watchtower
             <div class="updated notice is-dismissible"
                  style="padding-top:15px;padding-bottom:15px;display:flex;flex-direction:row">
                 <div>
-                    <img src="<?php echo  Utils::get_wht_branding('Logo1x',(WHTHQ_MAIN_URI . 'assets/images/logo1x.png'));?>"
+                    <img src="<?php echo  Branding::get_wht_branding('Logo1x',(WHTHQ_MAIN_URI . 'assets/images/logo1x.png'));?>"
                          style="height:100px;padding-right:15px;" alt="">
                 </div>
                 <div>
-                    <h2>Thank you for installing the <?php echo  Utils::get_wht_branding('Name','WatchTower HQ'); ?>  Monitoring Agent!</h2>
+                    <h2>Thank you for installing the <?php echo  Branding::get_wht_branding('Name','WatchTower HQ'); ?>  Monitoring Agent!</h2>
                     <h4 style="margin-bottom:0;"><a
                                 href="<?php echo admin_url('options-general.php?page=watchtower-setting-admin'); ?>">Click
                             here</a> to view your Access Token.</h4>
@@ -233,7 +228,7 @@ class Watchtower
     {
         add_options_page(
             'Settings Watchtower',
-            Utils::get_wht_branding('Name','Watchtower'). ' Settings',
+            Branding::get_wht_branding('Name','Watchtower'). ' Settings',
             'manage_options',
             'watchtower-setting-admin',
             [$this, 'create_admin_page']
@@ -249,7 +244,7 @@ class Watchtower
         ?>
         <div class="wht-wrapper">
             <div class="wht-wrap">
-                <img src="<?php echo Utils::get_wht_branding('Logo',(plugin_dir_url(__FILE__) . '../assets/images/logo.png'))?>" alt="">
+                <img src="<?php echo Branding::get_wht_branding('Logo',(plugin_dir_url(__FILE__) . '../assets/images/logo.png'))?>" alt="">
                 <form method="post" action="options.php" id="wht-form">
                     <?php
                     settings_fields('watchtower');
