@@ -111,7 +111,8 @@ class Api
         }
 
         file_put_contents(WHTHQ_BRANDING_FILE, $request->get_param('branding'));
-        Utils::set_wht_branding();
+
+        Branding::set_wht_branding();
 
         return $this->make_response(['status' => 'done']);
     }
