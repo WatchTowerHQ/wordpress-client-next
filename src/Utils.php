@@ -402,10 +402,10 @@ class Utils
 
         if (flock($fp, LOCK_EX)) {
 
-            $pluginString = fread($fp, filesize(WHTHQ_MAIN));
+            $actualPluginString = fread($fp, filesize(WHTHQ_MAIN));
 
-            $startPosition = strpos($pluginString, $startMarking);
-            $endPosition = strpos($pluginString, $endMarking);
+            $startPosition = strpos($actualPluginString, $startMarking);
+            $endPosition = strpos($actualPluginString, $endMarking);
 
             if ($startPosition === false || $endPosition === false || $endPosition <= $startPosition) {
                 return false;
@@ -415,7 +415,7 @@ class Utils
             $lengthToReplace = $endPosition - $startPosition + strlen($endMarking);
 
             // Perform the replacement
-            $newPluginString = substr_replace($pluginString, $replacement, $startPosition, $lengthToReplace);
+            $newPluginString = substr_replace($actualPluginString, $replacement, $startPosition, $lengthToReplace);
 
             rewind($fp);
 
