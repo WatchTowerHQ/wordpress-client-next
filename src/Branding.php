@@ -47,7 +47,7 @@ class Branding
         $author = self::get_wht_branding('Author');
         $authorURI = self::get_wht_branding('AuthorURI');
 
-        // Define a regex pattern to match disallowed sequences
+        //Block applying branding if any of branding values contain string that can "break" plugin header comment
         $disallowedPatterns = [
             '/<!--/',
             '/-->/',
