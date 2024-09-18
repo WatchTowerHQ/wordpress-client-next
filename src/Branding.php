@@ -108,7 +108,11 @@ class Branding
         $endMarking = '//<--AUTO-GENERATED-PLUGIN-HEADER-END-->';
 
         //Check If Plugin File Exist And Is Readable
-        if (!is_file(WHTHQ_MAIN) || !is_readable(WHTHQ_MAIN)) {
+        if (!is_file(WHTHQ_MAIN)) {
+            return false;
+        }
+
+        if (!is_readable(WHTHQ_MAIN)) {
             return false;
         }
 
