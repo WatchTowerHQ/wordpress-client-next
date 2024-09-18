@@ -155,7 +155,7 @@ class Branding
 
                 ftruncate($fp, 0);
 
-                //Write plugin file with new header
+                //Write Plugin Before Modification
                 fwrite($fp, $actualPluginString);
 
                 // Ensure all data is written to the file
