@@ -38,7 +38,7 @@ class Branding
         self::set_wht_branding();
     }
 
-    public static function wht_branding_is_configured()
+    public static function wht_branding_is_configured(): bool
     {
         // Retrieve all branding values
         $name = self::get_wht_branding('Name');
