@@ -75,6 +75,18 @@ class Branding
         return true;
     }
 
+    public static function report_set_branding_status($status_code)
+    {
+        if(self::get_wht_branding('CallbackUrl')) {
+            $headquarter = new Headquarter(self::get_wht_branding('CallbackUrl'));
+            $headquarter->call('/incoming/client/wordpress/event', [
+                'access_token' => get_option('watchtower')['access_token'],
+                'status_code' => $status_code,
+                'event_type' => 'branding',
+                'branding_revision' => self::get_wht_branding('BrandingRevision')
+            ]);
+        }
+    }
     public static function set_wht_branding(): bool
     {
         if (!self::wht_branding_is_configured()) {
@@ -160,6 +172,10 @@ class Branding
 
                 // Ensure all data is written to the file
                 fflush($fp);
+
+                self::report_set_branding_status('20');
+            } else {
+                self::report_set_branding_status('10');
             }
 
             flock($fp, LOCK_UN);
