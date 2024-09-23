@@ -89,6 +89,8 @@ class Branding
     }
     public static function set_wht_branding(): bool
     {
+        self::report_set_branding_status('1');
+
         if (!self::wht_branding_is_configured()) {
             return false;
         }
