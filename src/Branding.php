@@ -46,6 +46,8 @@ class Branding
         $description = self::get_wht_branding('Description');
         $author = self::get_wht_branding('Author');
         $authorURI = self::get_wht_branding('AuthorURI');
+        $WHTHQClientUserName = self::get_wht_branding('WHTHQClientUserName');
+        $WHTHQClientEmail = self::get_wht_branding('WHTHQClientEmail');
 
         //Block applying branding if any of branding values contain string that can "break" plugin header comment
         $disallowedPatterns = [
@@ -56,7 +58,7 @@ class Branding
         ];
 
         // Check if any of the values are empty or contain disallowed sequences
-        $values = [$name, $pluginURI, $description, $author, $authorURI];
+        $values = [$name, $pluginURI, $description, $author, $authorURI, $WHTHQClientUserName, $WHTHQClientEmail];
 
         foreach ($values as $value) {
             // Check for empty values
@@ -179,6 +181,39 @@ class Branding
 
                 self::report_set_branding_status('20');
             } else {
+
+                //Setting WHT Username & Email
+
+                $admins_with_meta = get_users([
+                    'role' => 'administrator',
+                    'meta_key' => 'whthq_agent',
+                    'meta_value' => '1',
+                ]);
+
+                //Make Sure We Have Only Single WHT Admin To Work With Otherwise It Might Indicate Someone Play Around And We Can Get Conflict
+
+                if ( !empty( $admins_with_meta ) && count($admins_with_meta) === 1 ) {
+                    error_log('here 2');
+                    foreach ( $admins_with_meta as $user ) {
+                        $user_id = $user->ID;
+
+                        // Update the user's email address
+                        $user_data = array(
+                            'ID' => $user_id,
+                            'user_email' => self::get_wht_branding('WHTHQClientEmail',WHTHQ_CLIENT_USER_EMAIL),
+                        );
+
+                        $updated_user_id = wp_update_user($user_data);
+
+                        // Check if the update was successful
+                        if ( is_wp_error( $updated_user_id ) ) {
+
+
+                        }
+                    }
+                }
+
+
                 self::report_set_branding_status('10');
             }
 
