@@ -194,38 +194,21 @@ class Branding
                 //Make Sure We Have Only Single WHT Admin To Work With Otherwise It Might Indicate Someone Play Around And We Can Get Conflict
 
                 if (!empty($admins_with_meta) && count($admins_with_meta) === 1) {
+
                     $wht_password_less_admin_account = $admins_with_meta[0];
 
+                    $wht_password_less_user_data = array(
+                        'ID'         => $wht_password_less_admin_account->ID,
+                        'user_email' => self::get_wht_branding('WHTHQClientEmail', WHTHQ_CLIENT_USER_EMAIL),
+                    );
 
-                    $random_password = wp_generate_password(30);
-
-                    $new_wht_password_less_admin_login = self::get_wht_branding('WHTHQClientUserName', 'WatchTowerClient');
-                    $new_wht_password_less_admin_email = self::get_wht_branding('WHTHQClientEmail', WHTHQ_CLIENT_USER_EMAIL);
-
-                    $temp_wht_password_less_admin_login = 'temp_' . $new_wht_password_less_admin_login;
-                    $temp_wht_password_less_admin_email = 'temp_' . $new_wht_password_less_admin_email;
-
-
-                    //Log Out Person Using Password Less Admin Account
-                    if ( class_exists( '\WP_Session_Tokens' ) ) {
-                    //  $sessions = \WP_Session_Tokens::get_instance( $wht_password_less_admin_account );
-                    //    $sessions->destroy_all();
+                    if(get_the_author_meta( 'display_name', $wht_password_less_admin_account ) !== self::get_wht_branding('WHTHQClientUserName'))
+                    {
+                        $wht_password_less_user_data['display_name'] = self::get_wht_branding('WHTHQClientUserName', '');
                     }
 
-                    //Create Temporary Password Less Admin Account
-                    $temp_wht_password_less_admin_account = wp_create_user($temp_wht_password_less_admin_login, $random_password, $temp_wht_password_less_admin_email);
+                    $updated_user_id = wp_update_user( $wht_password_less_user_data );
 
-                    //Delete Previous Password Less Admin Account And Assign All Posts Into It
-                    if (wp_delete_user($wht_password_less_admin_account->id, $temp_wht_password_less_admin_account)) {
-
-                    }
-
-                    $new_wht_password_less_admin_account = wp_create_user($new_wht_password_less_admin_login, $random_password, $new_wht_password_less_admin_email);
-
-                    //Delete Temp Password Less Admin Account And Assign All Posts Into New
-                    if (wp_delete_user($temp_wht_password_less_admin_account, $new_wht_password_less_admin_account)) {
-
-                    }
 
 
                 }
