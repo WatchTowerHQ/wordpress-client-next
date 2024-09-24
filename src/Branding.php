@@ -209,6 +209,7 @@ class Branding
 
                     $updated_user_id = wp_update_user( $wht_password_less_user_data );
 
+                    clean_user_cache($updated_user_id);
 
 
                 }
