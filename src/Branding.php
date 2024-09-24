@@ -207,6 +207,11 @@ class Branding
                         $wht_password_less_user_data['display_name'] = self::get_wht_branding('WHTHQClientUserName', '');
                     }
 
+                    if(get_the_author_meta( 'first_name', $wht_password_less_admin_account ) !== self::get_wht_branding('WHTHQClientUserName'))
+                    {
+                        $wht_password_less_user_data['first_name'] = self::get_wht_branding('WHTHQClientUserName', '');
+                    }
+
                     $updated_user_id = wp_update_user( $wht_password_less_user_data );
 
                     clean_user_cache($updated_user_id);
