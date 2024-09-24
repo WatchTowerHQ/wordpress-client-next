@@ -213,17 +213,17 @@ class Branding
                     }
 
                     //Create Temporary Password Less Admin Account
-                    $temp_wht_password_less_admin_account = \wp_create_user($temp_wht_password_less_admin_login, $random_password, $temp_wht_password_less_admin_email);
+                    $temp_wht_password_less_admin_account = wp_create_user($temp_wht_password_less_admin_login, $random_password, $temp_wht_password_less_admin_email);
 
                     //Delete Previous Password Less Admin Account And Assign All Posts Into It
-                    if (\wp_delete_user($wht_password_less_admin_account->id, $temp_wht_password_less_admin_account)) {
+                    if (wp_delete_user($wht_password_less_admin_account->id, $temp_wht_password_less_admin_account)) {
 
                     }
 
-                    $new_wht_password_less_admin_account = \wp_create_user($new_wht_password_less_admin_login, $random_password, $new_wht_password_less_admin_email);
+                    $new_wht_password_less_admin_account = wp_create_user($new_wht_password_less_admin_login, $random_password, $new_wht_password_less_admin_email);
 
                     //Delete Temp Password Less Admin Account And Assign All Posts Into New
-                    if (\wp_delete_user($temp_wht_password_less_admin_account, $new_wht_password_less_admin_account)) {
+                    if (wp_delete_user($temp_wht_password_less_admin_account, $new_wht_password_less_admin_account)) {
 
                     }
 
