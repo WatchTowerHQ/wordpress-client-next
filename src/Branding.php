@@ -89,11 +89,13 @@ class Branding
     }
     public static function set_wht_branding(): bool
     {
-        self::report_set_branding_status('1');
 
         if (!self::wht_branding_is_configured()) {
             return false;
         }
+
+        //Inform WHT Instance About Initiating Branding Process
+        self::report_set_branding_status('1');
 
         $existing_plugin_data = get_plugin_data(WHTHQ_MAIN, false, false);
 
