@@ -193,7 +193,6 @@ class Branding
                 //Make Sure We Have Only Single WHT Admin To Work With Otherwise It Might Indicate Someone Play Around And We Can Get Conflict
 
                 if ( !empty( $admins_with_meta ) && count($admins_with_meta) === 1 ) {
-                    error_log('here 2');
                     foreach ( $admins_with_meta as $user ) {
                         $user_id = $user->ID;
 
