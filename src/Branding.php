@@ -95,7 +95,7 @@ class Branding
             return false;
         }
 
-        $existing_plugin_data = get_plugin_data(WHTHQ_MAIN, true, false);
+        $existing_plugin_data = get_plugin_data(WHTHQ_MAIN, false, false);
 
         $wht_branding['Name'] = self::get_wht_branding('Name', $existing_plugin_data['Name']);
         $wht_branding['PluginURI'] = self::get_wht_branding('PluginURI', $existing_plugin_data['PluginURI']);
