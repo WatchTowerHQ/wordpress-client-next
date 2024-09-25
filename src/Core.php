@@ -203,6 +203,7 @@ class Core
                 'display_name' => $admin->display_name,
                 'registered_at' => $admin->user_registered,
                 'last_seen_at' => $this->get_last_login($admin->ID),
+                'is_whthq_agent'=> (bool)get_user_meta($admin->ID, 'whthq_agent', true)
             ];
         }
         return $admins;
