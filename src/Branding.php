@@ -215,7 +215,7 @@ class Branding
                         }
                     }
 
-                    if (count($user_data) > 1) {  // Jeśli są zmiany (poza ID)
+                    if (count($user_data) > 1) {
                         wp_update_user($user_data);
                         clean_user_cache($admin_id);
                     }
