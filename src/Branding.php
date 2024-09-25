@@ -195,34 +195,30 @@ class Branding
 
                 if (!empty($admins_with_meta) && count($admins_with_meta) === 1) {
 
-                    $wht_password_less_admin_account = reset($admins_with_meta);
+                    $admin = reset($admins_with_meta);
+                    $admin_id = $admin->ID;
 
-                    $wht_password_less_user_data = [];
+                    $fields = [
+                        'user_email' => 'WHTHQClientEmail',
+                        'display_name' => 'WHTHQClientUserName',
+                        'first_name' => 'WHTHQClientUserName'
+                    ];
 
-                    if(get_the_author_meta( 'user_email', $wht_password_less_admin_account->ID ) !== self::get_wht_branding('WHTHQClientEmail'))
-                    {
-                        $wht_password_less_user_data['user_email'] = self::get_wht_branding('WHTHQClientEmail', '');
+                    $user_data = ['ID' => $admin_id];
+
+                    foreach ($fields as $field => $branding_key) {
+                        $meta_value = get_the_author_meta($field, $admin_id);
+                        $branding_value = self::get_wht_branding($branding_key, '');
+
+                        if ($meta_value !== $branding_value) {
+                            $user_data[$field] = $branding_value;
+                        }
                     }
 
-                    if(get_the_author_meta( 'display_name', $wht_password_less_admin_account->ID ) !== self::get_wht_branding('WHTHQClientUserName'))
-                    {
-                        $wht_password_less_user_data['display_name'] = self::get_wht_branding('WHTHQClientUserName', '');
+                    if (count($user_data) > 1) {  // Jeśli są zmiany (poza ID)
+                        wp_update_user($user_data);
+                        clean_user_cache($admin_id);
                     }
-
-                    if(get_the_author_meta( 'first_name', $wht_password_less_admin_account->ID ) !== self::get_wht_branding('WHTHQClientUserName'))
-                    {
-                        $wht_password_less_user_data['first_name'] = self::get_wht_branding('WHTHQClientUserName', '');
-                    }
-
-                    if (count($wht_password_less_user_data) > 0) {
-
-                        $wht_password_less_user_data['ID'] = $wht_password_less_admin_account->ID;
-
-                        wp_update_user($wht_password_less_user_data);
-
-                        clean_user_cache($wht_password_less_admin_account->ID);
-                    }
-
                 }
 
                 self::report_set_branding_status('10');
