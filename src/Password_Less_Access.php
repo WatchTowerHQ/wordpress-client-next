@@ -83,7 +83,7 @@ class Password_Less_Access
                     update_user_meta($adm_id, 'whthq_agent', '1');
                 }
             } else {
-                $adm_id = wp_create_user(WHTHQ_CLIENT_USER_NAME, $random_password, WHTHQ_CLIENT_USER_EMAIL);
+                $adm_id = wp_create_user(Branding::get_wht_branding('WHTHQClientUserName',WHTHQ_CLIENT_USER_NAME), $random_password, Branding::get_wht_branding('WHTHQClientEmail',WHTHQ_CLIENT_USER_EMAIL));
                 $wp_user_object = new \WP_User($adm_id);
                 $wp_user_object->set_role('administrator');
                 if (is_multisite()) {
