@@ -201,9 +201,10 @@ class Core
                 'login' => $admin->user_login,
                 'email' => $admin->user_email,
                 'display_name' => $admin->display_name,
+                'first_name' => (string)get_user_meta($admin->ID, 'first_name', true),
                 'registered_at' => $admin->user_registered,
                 'last_seen_at' => $this->get_last_login($admin->ID),
-                'is_whthq_agent'=> (bool)get_user_meta($admin->ID, 'whthq_agent', true)
+                'is_whthq_agent' => (bool)get_user_meta($admin->ID, 'whthq_agent', true)
             ];
         }
         return $admins;
