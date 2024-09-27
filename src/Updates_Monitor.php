@@ -21,7 +21,91 @@ class Updates_Monitor
         add_action('activated_plugin', [&$this, 'hooks_activated_plugin']);
         add_action('deactivated_plugin', [&$this, 'hooks_deactivated_plugin']);
         add_action('upgrader_process_complete', [&$this, 'hooks_plugin_install_or_update'], 10, 2);
+
+        // Add hooks to listen for when the update checks are completed
+        add_action('set_site_transient_update_plugins', [&$this, 'handle_set_site_transient_update_plugins']);
+        add_action('set_site_transient_update_themes', [&$this, 'handle_set_site_transient_update_themes']);
+        add_action('set_site_transient_update_core', [&$this, 'handle_set_site_transient_update_core']);
+        
         $this->isMultisite = is_multisite();
+    }
+
+    private function notify_wht_headquarter_about_updates($update_type)
+    {
+        $headquarter = new Headquarter('whatarmy.whtdev.ovh');
+        $headquarter->call('/incoming/client/wordpress/event', [
+            'access_token' => get_option('watchtower')['access_token'],
+            'event_type' => 'updates_available',
+            'update_type' => $update_type,
+        ]);
+    }
+
+    public function handle_set_site_transient_update_plugins()
+    {
+        $plugin_updates = get_site_transient('update_plugins');
+        if (!empty($plugin_updates->response)) {
+            $plugins_to_update = [];
+            foreach ($plugin_updates->response as $plugin_slug => $update_info) {
+
+                $plugins_to_update[] = [
+                    'slug' => $plugin_slug,
+                    'new_version' => $update_info->new_version,
+                    'url' => $update_info->url,
+                ];
+            }
+
+            $cache_key = 'wht_plugins_updates_' . sha1(serialize($plugins_to_update));
+
+            if (get_transient($cache_key) === false) {
+                $this->notify_wht_headquarter_about_updates('plugins');
+                set_transient($cache_key, true, 360);
+            }
+
+        }
+    }
+
+    public function handle_set_site_transient_update_themes()
+    {
+        $theme_updates = get_site_transient('update_themes');
+        if (!empty($theme_updates->response)) {
+            $themes_to_update = [];
+            foreach ($theme_updates->response as $theme_slug => $update_info) {
+
+                $themes_to_update[] = [
+                    'slug' => $theme_slug,
+                    'new_version' => $update_info->new_version,
+                    'url' => $update_info->url,
+                ];
+            }
+
+            $cache_key = 'wht_themes_updates_' . sha1(serialize($themes_to_update));
+            if (get_transient($cache_key) === false) {
+                $this->notify_wht_headquarter_about_updates('themes');
+                set_transient($cache_key, true, 360);
+            }
+
+        }
+    }
+
+    public function handle_set_site_transient_update_core()
+    {
+        $core_updates = get_site_transient('update_core');
+
+        $core_to_update = [];
+        if (!empty($core_updates->updates)) {
+            foreach ($core_updates->updates as $update) {
+                if ($update->response == 'upgrade') {
+                    $core_to_update[] = $update;
+                }
+            }
+
+        error_log(serialize($core_to_update));
+            $cache_key = 'wht_core_updates_' . sha1(serialize($core_to_update));
+            if (get_transient($cache_key) === false) {
+                $this->notify_wht_headquarter_about_updates('core');
+                set_transient($cache_key, true, 360);
+            }
+        }
     }
 
     /**
