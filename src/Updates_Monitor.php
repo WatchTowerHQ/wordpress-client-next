@@ -70,11 +70,10 @@ class Updates_Monitor
         if (!empty($theme_updates->response)) {
             $themes_to_update = [];
             foreach ($theme_updates->response as $theme_slug => $update_info) {
-
                 $themes_to_update[] = [
                     'slug' => $theme_slug,
-                    'new_version' => $update_info->new_version,
-                    'url' => $update_info->url,
+                    'new_version' => $update_info['new_version'],
+                    'url' => $update_info['url'],
                 ];
             }
 
