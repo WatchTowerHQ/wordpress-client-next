@@ -14,7 +14,7 @@ namespace WhatArmy\Watchtower;
 class Headquarter
 {
     public $headquarterUrl;
-    private int $curlTimeout = 10000;
+    private int $curlTimeoutMs = 10000;
 
     /**
      * Headquarter constructor.
@@ -36,7 +36,7 @@ class Headquarter
             $curl = new \Curl();
             $curl->options['CURLOPT_SSL_VERIFYPEER'] = false;
             $curl->options['CURLOPT_SSL_VERIFYHOST'] = false;
-            $curl->options['CURLOPT_TIMEOUT_MS'] = $this->curlTimeout;
+            $curl->options['CURLOPT_TIMEOUT_MS'] = $this->curlTimeoutMs;
             $curl->options['CURLOPT_NOSIGNAL'] = 1;
             $data['access_token'] = get_option('watchtower')['access_token'];
             $curl->get($this->headquarterUrl.$endpoint, $data);
@@ -50,6 +50,6 @@ class Headquarter
 
     public function setCurlTimeoutInSeconds(int $seconds): void
     {
-        $this->curlTimeout = $seconds*1000;
+        $this->curlTimeoutMs = $seconds*1000;
     }
 }
