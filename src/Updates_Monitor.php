@@ -30,14 +30,20 @@ class Updates_Monitor
         $this->isMultisite = is_multisite();
     }
 
-    private function notify_wht_headquarter_about_updates($update_type)
+    private function notify_wht_headquarter_about_updates($update_type, $to_update)
     {
-        $headquarter = new Headquarter('whatarmy.whtdev.ovh');
-        $headquarter->call('/incoming/client/wordpress/event', [
-            'access_token' => get_option('watchtower')['access_token'],
-            'event_type' => 'updates_available',
-            'update_type' => $update_type,
-        ]);
+        $headquarters = get_option('whthq_headquarters', []);
+        foreach ($headquarters as $callback => $last_used) {
+            if (!empty($callback) && !empty($last_used) && ($last_used >= time() - 172800)) {
+                $headquarter = new Headquarter($callback);
+                $headquarter->call('/incoming/client/wordpress/event', [
+                    'access_token' => get_option('watchtower')['access_token'],
+                    'event_type' => 'updates_available',
+                    'update_type' => $update_type,
+                    'require_update' => $to_update,
+                ]);
+            }
+        }
     }
 
     public function handle_set_site_transient_update_plugins()
@@ -45,19 +51,18 @@ class Updates_Monitor
         $plugin_updates = get_site_transient('update_plugins');
         if (!empty($plugin_updates->response)) {
             $plugins_to_update = [];
-            foreach ($plugin_updates->response as $plugin_slug => $update_info) {
+            foreach ($plugin_updates->response as $plugin_basename => $update_info) {
 
                 $plugins_to_update[] = [
-                    'slug' => $plugin_slug,
+                    'basename' => $plugin_basename,
                     'new_version' => $update_info->new_version,
-                    'url' => $update_info->url,
                 ];
             }
 
             $cache_key = 'wht_plugins_updates_' . sha1(serialize($plugins_to_update));
 
             if (get_transient($cache_key) === false) {
-                $this->notify_wht_headquarter_about_updates('plugins');
+                $this->notify_wht_headquarter_about_updates('plugins',$plugins_to_update);
                 set_transient($cache_key, true, 360);
             }
 
@@ -69,17 +74,16 @@ class Updates_Monitor
         $theme_updates = get_site_transient('update_themes');
         if (!empty($theme_updates->response)) {
             $themes_to_update = [];
-            foreach ($theme_updates->response as $theme_slug => $update_info) {
+            foreach ($theme_updates->response as $theme => $update_info) {
                 $themes_to_update[] = [
-                    'slug' => $theme_slug,
+                    'theme' => $theme,
                     'new_version' => $update_info['new_version'],
-                    'url' => $update_info['url'],
                 ];
             }
 
             $cache_key = 'wht_themes_updates_' . sha1(serialize($themes_to_update));
             if (get_transient($cache_key) === false) {
-                $this->notify_wht_headquarter_about_updates('themes');
+                $this->notify_wht_headquarter_about_updates('themes',$themes_to_update);
                 set_transient($cache_key, true, 360);
             }
 
@@ -94,14 +98,14 @@ class Updates_Monitor
         if (!empty($core_updates->updates)) {
             foreach ($core_updates->updates as $update) {
                 if ($update->response == 'upgrade') {
-                    $core_to_update[] = $update;
+                    $core_to_update[] = [
+                        'new_version' => $update->current];
                 }
             }
 
-        error_log(serialize($core_to_update));
             $cache_key = 'wht_core_updates_' . sha1(serialize($core_to_update));
             if (get_transient($cache_key) === false) {
-                $this->notify_wht_headquarter_about_updates('core');
+                $this->notify_wht_headquarter_about_updates('core',$core_to_update);
                 set_transient($cache_key, true, 360);
             }
         }
