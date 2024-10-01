@@ -36,6 +36,7 @@ class Updates_Monitor
         foreach ($headquarters as $callback => $last_used) {
             if (!empty($callback) && !empty($last_used) && ($last_used >= time() - 172800)) {
                 $headquarter = new Headquarter($callback);
+                $headquarter->setCurlTimeoutInSeconds(5);
                 $headquarter->call('/incoming/client/wordpress/event', [
                     'access_token' => get_option('watchtower')['access_token'],
                     'event_type' => 'updates_available',
