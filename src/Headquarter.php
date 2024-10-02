@@ -15,6 +15,23 @@ class Headquarter
 {
     public $headquarterUrl;
     private int $curlTimeoutMs = 10000;
+    private int $retryTimes = 1;
+    private int $retryDelaySeconds = 600;
+
+    public function setRetryTimes(int $retryTimes): void
+    {
+        $this->retryTimes = $retryTimes;
+    }
+
+    public function setRetryDelaySeconds(int $retryDelaySeconds): void
+    {
+        $this->retryDelaySeconds = $retryDelaySeconds;
+    }
+
+    public function setCurlTimeoutMs(int $curlTimeoutMs): void
+    {
+        $this->curlTimeoutMs = $curlTimeoutMs;
+    }
 
     /**
      * Headquarter constructor.
@@ -55,18 +72,18 @@ class Headquarter
         return false;
     }
 
-    public function retryOnFailure(string $endpoint = '/', array $data = [],int $retryTimes = 1,  int $retryDelay = 600)
+    public function retryOnFailure(string $endpoint = '/', array $data = [])
     {
-        $retryTimes--;
+        $this->retryTimes--;
 
         // Call the initial endpoint
         $success = $this->call($endpoint, $data);
 
         // If the call failed, schedule a retry
         if (!$success) {
-            if($retryTimes > 0) {
-                if (!wp_next_scheduled('retry_headquarter_call', [$this->headquarterUrl, $endpoint, $data, $retryTimes, $retryDelay])) {
-                    wp_schedule_single_event(time() + $retryDelay, 'retry_headquarter_call', [$this->headquarterUrl, $endpoint, $data, $retryTimes, $retryDelay]);
+            if($this->retryTimes > 0) {
+                if (!wp_next_scheduled('retry_headquarter_call', [$this->headquarterUrl, $endpoint, $data, $this->retryTimes, $this->retryDelaySeconds, $this->curlTimeoutMs])) {
+                    wp_schedule_single_event(time() + $this->retryDelaySeconds, 'retry_headquarter_call', [$this->headquarterUrl, $endpoint, $data, $this->retryTimes, $this->retryDelaySeconds, $this->curlTimeoutMs]);
                 }
             }
             else

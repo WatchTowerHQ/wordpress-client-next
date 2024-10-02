@@ -37,11 +37,13 @@ class Updates_Monitor
             if (!empty($callback) && !empty($last_used) && ($last_used >= time() - 172800)) {
                 $headquarter = new Headquarter($callback);
                 $headquarter->setCurlTimeoutInSeconds(5);
+                $headquarter->setRetryDelaySeconds(30);
+                $headquarter->setRetryTimes(3);
                 $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
                     'event_type' => 'updates_available',
                     'update_type' => $update_type,
                     'require_update' => $to_update,
-                ], 3, 30);
+                ]);
             }
         }
     }
