@@ -11,6 +11,7 @@ namespace WhatArmy\Watchtower;
 class Updates_Monitor
 {
     public $isMultisite;
+    private int $updateNotificationGapInSeconds = 60;
 
     /**
      * Updates_Monitor constructor.
@@ -65,7 +66,7 @@ class Updates_Monitor
 
             if (get_transient($cache_key) === false) {
                 $this->notify_wht_headquarter_about_updates('plugins',$plugins_to_update);
-                set_transient($cache_key, true, 60);
+                set_transient($cache_key, true, $this->updateNotificationGapInSeconds);
             }
 
         }
@@ -86,7 +87,7 @@ class Updates_Monitor
             $cache_key = 'wht_themes_updates_' . sha1(serialize($themes_to_update));
             if (get_transient($cache_key) === false) {
                 $this->notify_wht_headquarter_about_updates('themes',$themes_to_update);
-                set_transient($cache_key, true, 60);
+                set_transient($cache_key, true, $this->updateNotificationGapInSeconds);
             }
 
         }
@@ -110,7 +111,7 @@ class Updates_Monitor
                 $cache_key = 'wht_core_updates_' . sha1(serialize($core_to_update));
                 if (get_transient($cache_key) === false) {
                     $this->notify_wht_headquarter_about_updates('core', $core_to_update);
-                    set_transient($cache_key, true, 60);
+                    set_transient($cache_key, true, $this->updateNotificationGapInSeconds);
                 }
             }
 
