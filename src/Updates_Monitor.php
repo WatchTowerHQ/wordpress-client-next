@@ -103,11 +103,15 @@ class Updates_Monitor
                 }
             }
 
-            $cache_key = 'wht_core_updates_' . sha1(serialize($core_to_update));
-            if (get_transient($cache_key) === false) {
-                $this->notify_wht_headquarter_about_updates('core',$core_to_update);
-                set_transient($cache_key, true, 60);
+            //Need To Check If There Are Actual Updates Because WP Return Download Link To Same Version
+            if(!empty($core_to_update)) {
+                $cache_key = 'wht_core_updates_' . sha1(serialize($core_to_update));
+                if (get_transient($cache_key) === false) {
+                    $this->notify_wht_headquarter_about_updates('core', $core_to_update);
+                    set_transient($cache_key, true, 60);
+                }
             }
+
         }
     }
 

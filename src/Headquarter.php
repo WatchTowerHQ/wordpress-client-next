@@ -37,7 +37,7 @@ class Headquarter
             $curl->options['CURLOPT_SSL_VERIFYHOST'] = false;
             $curl->options['CURLOPT_TIMEOUT_MS'] = $this->curlTimeoutMs;
             $curl->options['CURLOPT_NOSIGNAL'] = 1;
-           // $curl->options['CURLOPT_FOLLOWLOCATION'] = true;
+            $curl->headers['Accept']= 'application/json';
             $data['access_token'] = get_option('watchtower')['access_token'];
             $response = $curl->get($this->headquarterUrl.$endpoint, $data);
 
