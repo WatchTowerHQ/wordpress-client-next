@@ -24,13 +24,12 @@ class Headquarter
     {
         $this->headquarterUrl = $headquarterUrl;
     }
-
     /**
      * @param string $endpoint
      * @param array $data
-     * @return $this
+     * @return bool
      */
-    public function call(string $endpoint = '/', array $data = []): Headquarter
+    public function call(string $endpoint = '/', array $data = []): bool
     {
         try {
             $curl = new \Curl();
@@ -38,14 +37,47 @@ class Headquarter
             $curl->options['CURLOPT_SSL_VERIFYHOST'] = false;
             $curl->options['CURLOPT_TIMEOUT_MS'] = $this->curlTimeoutMs;
             $curl->options['CURLOPT_NOSIGNAL'] = 1;
+           // $curl->options['CURLOPT_FOLLOWLOCATION'] = true;
             $data['access_token'] = get_option('watchtower')['access_token'];
-            $curl->get($this->headquarterUrl.$endpoint, $data);
+            $response = $curl->get($this->headquarterUrl.$endpoint, $data);
+
+            error_log($this->headquarterUrl.$endpoint);
+            error_log(serialize($response->headers));
+            $test = $response->body;
+            error_log($test);
+
+         //   if (strpos()) {
+                // Request succeeded
+         //       return true;
+         //   }
         } catch (\Exception $e) {
 
         }
 
 
-        return $this;
+        return false;
+    }
+
+    public function retryOnFailure(string $endpoint = '/', array $data = [], int $retryDelay = 600)
+    {
+        // Call the initial endpoint
+        $success = $this->call($endpoint, $data);
+        error_log('here');
+        if($success)
+        {
+            error_log('ok');
+        }
+        else
+        {
+            error_log('error');
+        }
+        // If the call failed, schedule a retry
+        if (!$success) {
+            // Schedule the retry using wp_schedule_single_event
+            if (!wp_next_scheduled('retry_headquarter_call', [$endpoint, $data])) {
+             //   wp_schedule_single_event(time() + $retryDelay, 'retry_headquarter_call', [$endpoint, $data]);
+            }
+        }
     }
 
     public function setCurlTimeoutInSeconds(int $seconds): void

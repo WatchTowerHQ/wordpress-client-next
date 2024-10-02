@@ -37,8 +37,7 @@ class Updates_Monitor
             if (!empty($callback) && !empty($last_used) && ($last_used >= time() - 172800)) {
                 $headquarter = new Headquarter($callback);
                 $headquarter->setCurlTimeoutInSeconds(5);
-                $headquarter->call('/incoming/client/wordpress/event', [
-                    'access_token' => get_option('watchtower')['access_token'],
+                $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
                     'event_type' => 'updates_available',
                     'update_type' => $update_type,
                     'require_update' => $to_update,
@@ -64,7 +63,7 @@ class Updates_Monitor
 
             if (get_transient($cache_key) === false) {
                 $this->notify_wht_headquarter_about_updates('plugins',$plugins_to_update);
-                set_transient($cache_key, true, 360);
+                set_transient($cache_key, true, 60);
             }
 
         }
@@ -85,7 +84,7 @@ class Updates_Monitor
             $cache_key = 'wht_themes_updates_' . sha1(serialize($themes_to_update));
             if (get_transient($cache_key) === false) {
                 $this->notify_wht_headquarter_about_updates('themes',$themes_to_update);
-                set_transient($cache_key, true, 360);
+                set_transient($cache_key, true, 60);
             }
 
         }
@@ -107,7 +106,7 @@ class Updates_Monitor
             $cache_key = 'wht_core_updates_' . sha1(serialize($core_to_update));
             if (get_transient($cache_key) === false) {
                 $this->notify_wht_headquarter_about_updates('core',$core_to_update);
-                set_transient($cache_key, true, 360);
+                set_transient($cache_key, true, 60);
             }
         }
     }

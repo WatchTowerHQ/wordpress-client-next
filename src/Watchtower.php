@@ -24,6 +24,8 @@ class Watchtower
         $this->load_wp_plugin_class();
         add_filter('action_scheduler_queue_runner_batch_size', [$this, 'batch_size']);
         add_filter('action_scheduler_queue_runner_concurrent_batches', [$this, 'concurrent_batches']);
+        add_action('retry_headquarter_call', 'retry_headquarter_call_handler', 10, 2);
+
         new Password_Less_Access();
         new Download();
         new Api();
@@ -51,6 +53,17 @@ class Watchtower
 
         add_filter('plugin_action_links_' . plugin_basename(WHTHQ_MAIN), [$this, 'plugin_action_links']);
 
+
+
+    }
+
+    function retry_headquarter_call_handler($endpoint, $data)
+    {
+       // $headquarter = new Headquarter(get_option('watchtower')['headquarter_url']);
+     //   $headquarter->setCurlTimeoutInSeconds(5);
+
+        // Retry the call
+      //  $headquarter->call($endpoint, $data);
     }
 
     public function save_last_login($login)
