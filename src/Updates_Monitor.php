@@ -41,7 +41,7 @@ class Updates_Monitor
                     'event_type' => 'updates_available',
                     'update_type' => $update_type,
                     'require_update' => $to_update,
-                ]);
+                ], 3, 30);
             }
         }
     }

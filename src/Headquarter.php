@@ -44,7 +44,7 @@ class Headquarter
 
             $response = $curl->get($this->headquarterUrl.$endpoint, $data);
 
-            if (isset($response->headers['Status-Code']) && $response->headers['Status-Code'] === '200') {
+            if (isset($response->headers['Status-Code']) && $response->headers['Status-Code'] === '201') {
                 return true;
             }
 
@@ -55,24 +55,25 @@ class Headquarter
         return false;
     }
 
-    public function retryOnFailure(string $endpoint = '/', array $data = [], int $retryDelay = 600)
+    public function retryOnFailure(string $endpoint = '/', array $data = [],int $retryTimes = 1,  int $retryDelay = 600)
     {
+        $retryTimes--;
+
         // Call the initial endpoint
         $success = $this->call($endpoint, $data);
-        error_log('here');
-        if($success)
-        {
-            error_log('ok');
-        }
-        else
-        {
-            error_log('error');
-        }
+
         // If the call failed, schedule a retry
         if (!$success) {
-            // Schedule the retry using wp_schedule_single_event
-            if (!wp_next_scheduled('retry_headquarter_call', [$endpoint, $data])) {
-             //   wp_schedule_single_event(time() + $retryDelay, 'retry_headquarter_call', [$endpoint, $data]);
+            if($retryTimes > 0) {
+                if (!wp_next_scheduled('retry_headquarter_call', [$this->headquarterUrl, $endpoint, $data, $retryTimes, $retryDelay])) {
+                    wp_schedule_single_event(time() + $retryDelay, 'retry_headquarter_call', [$this->headquarterUrl, $endpoint, $data, $retryTimes, $retryDelay]);
+                }
+            }
+            else
+            {
+                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                    error_log('Contacting WHTHQ failed using endpoint: ' . $endpoint);
+                }
             }
         }
     }
