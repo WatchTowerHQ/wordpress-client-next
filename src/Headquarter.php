@@ -61,7 +61,7 @@ class Headquarter
 
             $response = $curl->get($this->headquarterUrl.$endpoint, $data);
 
-            if (isset($response->headers['Status-Code']) && $response->headers['Status-Code'] === '201') {
+            if (isset($response->headers['Status-Code']) && $response->headers['Status-Code'] === '200') {
                 return true;
             }
 
