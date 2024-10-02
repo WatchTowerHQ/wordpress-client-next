@@ -37,23 +37,20 @@ class Headquarter
             $curl->options['CURLOPT_SSL_VERIFYHOST'] = false;
             $curl->options['CURLOPT_TIMEOUT_MS'] = $this->curlTimeoutMs;
             $curl->options['CURLOPT_NOSIGNAL'] = 1;
+
             $curl->headers['Accept']= 'application/json';
+
             $data['access_token'] = get_option('watchtower')['access_token'];
+
             $response = $curl->get($this->headquarterUrl.$endpoint, $data);
 
-            error_log($this->headquarterUrl.$endpoint);
-            error_log(serialize($response->headers));
-            $test = $response->body;
-            error_log($test);
+            if (isset($response->headers['Status-Code']) && $response->headers['Status-Code'] === '200') {
+                return true;
+            }
 
-         //   if (strpos()) {
-                // Request succeeded
-         //       return true;
-         //   }
         } catch (\Exception $e) {
 
         }
-
 
         return false;
     }
