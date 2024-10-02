@@ -11,7 +11,7 @@ namespace WhatArmy\Watchtower;
 class Updates_Monitor
 {
     public $isMultisite;
-    private int $updateNotificationGapInSeconds = 60;
+    private int $updateNotificationGapInSeconds = 600;
 
     /**
      * Updates_Monitor constructor.
@@ -38,7 +38,7 @@ class Updates_Monitor
             if (!empty($callback) && !empty($last_used) && ($last_used >= time() - 172800)) {
                 $headquarter = new Headquarter($callback);
                 $headquarter->setCurlTimeoutInSeconds(5);
-                $headquarter->setRetryDelaySeconds(30);
+                $headquarter->setRetryDelaySeconds(180);
                 $headquarter->setRetryTimes(3);
                 $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
                     'event_type' => 'updates_available',
