@@ -34,6 +34,48 @@ class Schedule
 
     /**
      * @param $callbackHeadquarterUrl
+     * @param $backup_name
+     * @param string $file_extension
+     */
+    public static function call_headquarter_mysql_ready($callbackHeadquarterUrl, $filename)
+    {
+        $headquarter = new Headquarter($callbackHeadquarterUrl);
+        $backup_origin = WHTHQ_BACKUP_DIR . '/' . $filename;
+
+        $headquarter->setCurlTimeoutInSeconds(25);
+        $headquarter->setRetryDelayMinutes(5);
+        $headquarter->setRetryTimes(5);
+
+        $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
+            'event_type' =>'mysql_backup_ready',
+            'filename' => $filename,
+            'memory_limit' =>ini_get('memory_limit'),
+            'mysql_backup' => ['origin' => str_replace(ABSPATH, '', $backup_origin), 'type' => 'file', 'sha1' => sha1_file($backup_origin), 'filesize' => filesize($backup_origin)]
+        ]);
+    }
+
+    /**
+     * @param $callbackHeadquarterUrl
+     * @param $progress
+     * @param $filename
+     */
+    public static function call_headquarter_mysql_status($callbackHeadquarterUrl, $progress, $filename)
+    {
+        $headquarter = new Headquarter($callbackHeadquarterUrl);
+
+        $headquarter->setCurlTimeoutInSeconds(5);
+        $headquarter->setRetryDelayMinutes(1);
+        $headquarter->setRetryTimes(3);
+
+        $headquarter->call('/incoming/client/wordpress/event', [
+            'event_type' =>'mysql_backup_status',
+            'progress' => $progress,
+            'filename' => $filename,
+        ]);
+    }
+
+    /**
+     * @param $callbackHeadquarterUrl
      * @param $status
      * @param $filename
      */

@@ -28,6 +28,11 @@ class Headquarter
         $this->retryDelaySeconds = $retryDelaySeconds;
     }
 
+    public function setRetryDelayMinutes(int $retryDelayMinutes): void
+    {
+        $this->retryDelaySeconds = $retryDelayMinutes * 60;
+    }
+
     public function setCurlTimeoutMs(int $curlTimeoutMs): void
     {
         $this->curlTimeoutMs = $curlTimeoutMs;
@@ -63,6 +68,10 @@ class Headquarter
 
             if (isset($response->headers['Status-Code']) && $response->headers['Status-Code'] === '200') {
                 return true;
+            }
+
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                error_log($response->body);
             }
 
         } catch (\Exception $e) {
