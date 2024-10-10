@@ -64,10 +64,10 @@ class Schedule
         $headquarter = new Headquarter($callbackHeadquarterUrl);
 
         $headquarter->setCurlTimeoutInSeconds(5);
-        $headquarter->setRetryDelayMinutes(1);
-        $headquarter->setRetryTimes(3);
+        $headquarter->setRetryDelaySeconds(30);
+        $headquarter->setRetryTimes(2);
 
-        $headquarter->call('/incoming/client/wordpress/event', [
+        $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
             'event_type' =>'mysql_backup_status',
             'progress' => $progress,
             'filename' => $filename,
