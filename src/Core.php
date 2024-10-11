@@ -128,11 +128,16 @@ class Core
         $bytesTotal = 0;
         $path = realpath($path);
         if ($path !== false && $path != '' && file_exists($path)) {
-            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path,
-                \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::LEAVES_ONLY, \RecursiveIteratorIterator::CATCH_GET_CHILD) as $object) {
-                if (strpos($object->getPath(), WHTHQ_BACKUP_DIR_NAME) == false && $object->isFile()) {
-                    $bytesTotal += $object->getSize();
+            $dir = new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS);
+            $filter = new \RecursiveCallbackFilterIterator($dir, function ($current, $key, $iterator) {
+                if ($current->isDir() && strpos($current->getPathname(), WHTHQ_BACKUP_DIR_NAME) !== false) {
+                    return false;
                 }
+                return true;
+            });
+            $iterator = new \RecursiveIteratorIterator($filter, \RecursiveIteratorIterator::LEAVES_ONLY);
+            foreach ($iterator as $file) {
+                $bytesTotal += $file->getSize();
             }
         }
         if ($humanReadable == true) {
