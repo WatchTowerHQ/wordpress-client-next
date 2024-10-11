@@ -1,4 +1,8 @@
 <?php
+use WhatArmy\Watchtower\Watchtower;
+
+defined('ABSPATH') or die('No script kiddies please!');
+
 //DO NOT EDIT BELLOW THIS LINE
 //<--AUTO-GENERATED-PLUGIN-HEADER-START-->
 /**
@@ -15,9 +19,6 @@
 //<--AUTO-GENERATED-PLUGIN-HEADER-END-->
 //DO NOT EDIT ABOVE THIS LINE
 
-use WhatArmy\Watchtower\Watchtower;
-
-defined('ABSPATH') or die('No script kiddies please!');
 /**
  * Constants
  */
