@@ -19,7 +19,7 @@ class Schedule
      * @param $backup_name
      * @param string $file_extension
      */
-    public static function call_headquarter($callbackHeadquarterUrl, $backup_name, $file_extension = 'zip')
+    public static function call_headquarter($callbackHeadquarterUrl, $backup_name, string $file_extension = 'zip')
     {
         $headquarter = new Headquarter($callbackHeadquarterUrl);
         $backup_origin = WHTHQ_BACKUP_DIR . '/' . join('.', [$backup_name, $file_extension]);
@@ -34,8 +34,7 @@ class Schedule
 
     /**
      * @param $callbackHeadquarterUrl
-     * @param $backup_name
-     * @param string $file_extension
+     * @param $filename
      */
     public static function call_headquarter_mysql_ready($callbackHeadquarterUrl, $filename)
     {

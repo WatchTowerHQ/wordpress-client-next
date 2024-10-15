@@ -35,7 +35,7 @@ class Updates_Monitor
     {
         $headquarters = get_option('whthq_headquarters', []);
         foreach ($headquarters as $callback => $last_used) {
-            if (!empty($callback) && !empty($last_used) && ($last_used >= time() - 172800)) {
+            if (!empty($callback) && !empty($last_used) && ($last_used >= time() - WHTHQ_MAX_HEADQUARTER_IDLE_TIME_SECONDS)) {
                 $headquarter = new Headquarter($callback);
                 $headquarter->setCurlTimeoutInSeconds(5);
                 $headquarter->setRetryDelaySeconds(180);
