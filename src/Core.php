@@ -138,7 +138,7 @@ class Core
      * @param bool $humanReadable
      * @return int|string
      */
-    public function installation_file_size($path = ABSPATH, $humanReadable = true)
+    public function installation_file_size($path = ABSPATH, bool $humanReadable = true)
     {
         $bytesTotal = 0;
         $path = realpath($path);
@@ -150,7 +150,7 @@ class Core
                 }
             }
         }
-        if ($humanReadable == true) {
+        if ($humanReadable) {
             $bytesTotal = Utils::size_human_readable($bytesTotal);
         }
         return $bytesTotal;

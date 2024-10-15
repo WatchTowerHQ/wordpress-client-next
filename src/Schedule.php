@@ -19,7 +19,7 @@ class Schedule
      * @param $backup_name
      * @param string $file_extension
      */
-    public static function call_headquarter($callbackHeadquarterUrl, $backup_name, $file_extension = 'zip')
+    public static function call_headquarter($callbackHeadquarterUrl, $backup_name, string $file_extension = 'zip')
     {
         $headquarter = new Headquarter($callbackHeadquarterUrl);
         $backup_origin = WHTHQ_BACKUP_DIR . '/' . join('.', [$backup_name, $file_extension]);
@@ -29,6 +29,47 @@ class Schedule
             'backup_md5' => md5_file($backup_origin),
             'memory_limit' => ini_get('memory_limit'),
             'mysql_backup' => ['origin' => str_replace(ABSPATH, '', $backup_origin), 'type' => 'file', 'sha1' => sha1_file($backup_origin), 'filesize' => filesize($backup_origin)]
+        ]);
+    }
+
+    /**
+     * @param $callbackHeadquarterUrl
+     * @param $filename
+     */
+    public static function call_headquarter_mysql_ready($callbackHeadquarterUrl, $filename)
+    {
+        $headquarter = new Headquarter($callbackHeadquarterUrl);
+        $backup_origin = WHTHQ_BACKUP_DIR . '/' . $filename;
+
+        $headquarter->setCurlTimeoutInSeconds(25);
+        $headquarter->setRetryDelayMinutes(5);
+        $headquarter->setRetryTimes(5);
+
+        $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
+            'event_type' =>'mysql_backup_ready',
+            'filename' => $filename,
+            'memory_limit' =>ini_get('memory_limit'),
+            'mysql_backup' => ['origin' => str_replace(ABSPATH, '', $backup_origin), 'type' => 'file', 'sha1' => sha1_file($backup_origin), 'filesize' => filesize($backup_origin)]
+        ]);
+    }
+
+    /**
+     * @param $callbackHeadquarterUrl
+     * @param $progress
+     * @param $filename
+     */
+    public static function call_headquarter_mysql_status($callbackHeadquarterUrl, $progress, $filename)
+    {
+        $headquarter = new Headquarter($callbackHeadquarterUrl);
+
+        $headquarter->setCurlTimeoutInSeconds(5);
+        $headquarter->setRetryDelaySeconds(30);
+        $headquarter->setRetryTimes(2);
+
+        $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
+            'event_type' =>'mysql_backup_status',
+            'progress' => $progress,
+            'filename' => $filename,
         ]);
     }
 

@@ -102,7 +102,7 @@ class Utils
         if (strpos($filename, '.zip') !== false) {
             return explode('.zip', $filename)[0];
         }
-
+        return '';
     }
 
     /**
@@ -137,7 +137,7 @@ class Utils
      * @param $text
      * @return string
      */
-    public static function slugify($text)
+    public static function slugify($text): string
     {
         // replace non letter or digits by -
         $text = preg_replace('~[^\pL\d]+~u', '-', $text);
@@ -247,7 +247,7 @@ class Utils
 
         if (Utils::is_json($data)) {
             foreach (json_decode($data) as $d) {
-                if ($d->isContentDir == true) {
+                if ($d->isContentDir) {
                     $p = WP_CONTENT_DIR . '/' . $d->path;
                 } else {
                     $p = ABSPATH . $d->path;

@@ -1,4 +1,5 @@
 <?php
+
 use WhatArmy\Watchtower\Watchtower;
 
 defined('ABSPATH') or die('No script kiddies please!');
@@ -37,6 +38,7 @@ define('WHTHQ_BACKUP_DIR', wp_upload_dir()['basedir'] . '/' . WHTHQ_BACKUP_DIR_N
 define('WHTHQ_BACKUP_FILES_PER_QUEUE', class_exists("ZipArchive") ? 450 : 200);
 define('WHTHQ_DB_RECORDS_MAX', 6000);
 define('WHTHQ_BRANDING_FILE', wp_upload_dir()['basedir'] . '/' . 'WatchTowerClientCustomBranding.json');
+define('WHTHQ_MAX_HEADQUARTER_IDLE_TIME_SECONDS', 172800);
 
 
 if (version_compare(PHP_VERSION, WHTHQ_MIN_PHP) >= 0) {

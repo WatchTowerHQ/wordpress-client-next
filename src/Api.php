@@ -280,17 +280,45 @@ class Api
     }
 
 
-    public function get_all_action(): WP_REST_Response
+    public function get_all_action(WP_REST_Request $request): WP_REST_Response
     {
         $core = new Core;
         $plugins = new Plugin;
         $themes = new Theme;
+
+        $this->update_headquarter_callback($request);
 
         return $this->make_response([
             'core' => $core->get(),
             'plugins' => $plugins->get(),
             'themes' => $themes->get(),
         ]);
+    }
+
+    function validate_and_sanitize_callback_domain($domain) {
+        // Sanitize the input
+        $sanitized_domain = sanitize_text_field($domain);
+
+        // Validate the domain
+        if ((bool) preg_match('/^([a-zA-Z0-9-]+\.)+[a-zA-Z]{2,}$/', $sanitized_domain)) {
+            return $sanitized_domain; // Return the sanitized domain if valid
+        } else {
+            return false; // Return false if invalid
+        }
+    }
+
+    private function update_headquarter_callback(WP_REST_Request $request): void
+    {
+        if($request->get_param('callback_fqdn')) {
+            $callback_url = $this->validate_and_sanitize_callback_domain($request->get_param('callback_fqdn'));
+
+            if($callback_url)
+            {
+                $headquarters = get_option('whthq_headquarters', []);
+                $headquarters[$callback_url] = time();
+                update_option('whthq_headquarters', $headquarters);
+            }
+        }
     }
 
     public function get_themes_action(): WP_REST_Response
