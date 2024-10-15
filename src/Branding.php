@@ -98,7 +98,7 @@ class Branding
         }
 
         //Inform WHT Instance About Initiating Branding Process
-        self::report_set_branding_status('1');
+        self::report_set_branding_status(1);
 
         $existing_plugin_data = get_plugin_data(WHTHQ_MAIN, false, false);
 
@@ -180,7 +180,7 @@ class Branding
                 // Ensure all data is written to the file
                 fflush($fp);
 
-                self::report_set_branding_status('20');
+                self::report_set_branding_status(20);
             } else {
 
                 //Setting WHT Username & Email
@@ -221,7 +221,7 @@ class Branding
                     }
                 }
 
-                self::report_set_branding_status('10');
+                self::report_set_branding_status(10);
             }
 
             flock($fp, LOCK_UN);
