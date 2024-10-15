@@ -329,6 +329,8 @@ public static function selftest():bool
     // Return the response instead of outputting it
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
 
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+
     // Suppress errors and warnings
     $response = @curl_exec($ch);
 

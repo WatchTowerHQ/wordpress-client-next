@@ -178,7 +178,9 @@ class Branding
 
             if (!Utils::selftest()) {
                 //error rollback changes
-                file_put_contents(wp_upload_dir()['basedir'] . '/rollback.json', 'rollback');
+                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                    error_log('Applying WHTHQ branding caused critical error, rolling back.');
+                }
 
                 rewind($fp);
 
