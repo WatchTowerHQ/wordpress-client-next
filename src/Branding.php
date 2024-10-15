@@ -82,8 +82,18 @@ class Branding
     {
         if(self::get_wht_branding('CallbackUrl')) {
             $headquarter = new Headquarter(self::get_wht_branding('CallbackUrl'));
-            $headquarter->call('/incoming/client/wordpress/event', [
-                'access_token' => get_option('watchtower')['access_token'],
+
+            if(in_array($status_code, [20, 10])) {
+                $headquarter->setCurlTimeoutInSeconds(10);
+                $headquarter->setRetryDelayMinutes(5);
+                $headquarter->setRetryTimes(5);
+            }
+            else
+            {
+                $headquarter->setCurlTimeoutInSeconds(3);
+            }
+
+            $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
                 'status_code' => $status_code,
                 'event_type' => 'branding',
                 'branding_revision' => self::get_wht_branding('BrandingRevision')
