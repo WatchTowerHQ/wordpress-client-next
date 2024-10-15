@@ -54,6 +54,9 @@ class Branding
 
         //unlink(WHTHQ_BRANDING_FILE);
 
+        $plugin = new Plugin();
+        $plugin->doUpdate('watchtowerhq/watchtowerhq.php');
+
         self::report_set_branding_status(11);
 
         return file_exists(WHTHQ_BRANDING_FILE) === false;
