@@ -119,10 +119,7 @@ class Api
 
     public function run_remove_branding_action(WP_REST_Request $request): WP_REST_Response
     {
-        if(is_file(WHTHQ_BRANDING_FILE))
-        {
-            unlink(WHTHQ_BRANDING_FILE);
-        }
+        Branding::remove_wht_branding();
 
         return $this->make_response(['status' => 'done']);
     }

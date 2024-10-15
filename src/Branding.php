@@ -39,6 +39,26 @@ class Branding
         self::set_wht_branding();
     }
 
+    public static function remove_wht_branding() : bool
+    {
+        if (!is_file(WHTHQ_BRANDING_FILE)) {
+            return false;
+        }
+
+        if (!is_readable(WHTHQ_BRANDING_FILE)) {
+            return false;
+        }
+
+        //Inform WHT Instance About Initiating Branding Process
+        self::report_set_branding_status(2);
+
+        //unlink(WHTHQ_BRANDING_FILE);
+
+        self::report_set_branding_status(11);
+
+        return file_exists(WHTHQ_BRANDING_FILE) === false;
+    }
+
     public static function wht_branding_is_configured(): bool
     {
         // Retrieve all branding values
@@ -83,7 +103,7 @@ class Branding
         if(self::get_wht_branding('CallbackUrl')) {
             $headquarter = new Headquarter(self::get_wht_branding('CallbackUrl'));
 
-            if(in_array($status_code, [20, 10])) {
+            if(in_array($status_code, [20, 10, 11])) {
                 $headquarter->setCurlTimeoutInSeconds(10);
                 $headquarter->setRetryDelayMinutes(5);
                 $headquarter->setRetryTimes(5);
