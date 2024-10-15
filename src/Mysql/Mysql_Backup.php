@@ -237,8 +237,13 @@ class Mysql_Backup
             Utils::gzCompressFile($this->backupName);
             unlink($this->backupName);
 
-            Schedule::call_headquarter_status($job['callbackHeadquarter'], $job['queue'], $job['filename'] . ".gz");
-            Schedule::call_headquarter($job['callbackHeadquarter'], $job['filename'], 'gz');
+            $progress = explode('/', $job['queue']);
+            $percent = ceil(((int) $progress[0] / (int) $progress[1]) * 100);
+
+            $backupFilename = join('.', [$job['filename'], 'gz']);
+
+            Schedule::call_headquarter_mysql_status($job['callbackHeadquarter'], $percent, $backupFilename);
+            Schedule::call_headquarter_mysql_ready($job['callbackHeadquarter'], $backupFilename);
         }
     }
 
