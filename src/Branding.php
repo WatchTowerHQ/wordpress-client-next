@@ -39,27 +39,27 @@ class Branding
         self::set_wht_branding();
     }
 
-    public static function remove_wht_branding() : bool
+    public static function remove_wht_branding(string $branding_revision) : bool
     {
-        if (!is_file(WHTHQ_BRANDING_FILE)) {
-            return false;
+        //Inform WHT Instance About Initiating De-Branding Process
+        self::report_set_branding_status(2,$branding_revision);
+
+        if (is_file(WHTHQ_BRANDING_FILE) && is_readable(WHTHQ_BRANDING_FILE)) {
+            unlink(WHTHQ_BRANDING_FILE);
         }
-
-        if (!is_readable(WHTHQ_BRANDING_FILE)) {
-            return false;
-        }
-
-        //Inform WHT Instance About Initiating Branding Process
-        self::report_set_branding_status(2);
-
-        //unlink(WHTHQ_BRANDING_FILE);
 
         $plugin = new Plugin();
         $plugin->doUpdate('watchtowerhq/watchtowerhq.php');
 
-        self::report_set_branding_status(11);
-
-        return file_exists(WHTHQ_BRANDING_FILE) === false;
+         if(file_exists(WHTHQ_BRANDING_FILE)){
+             //Inform WHT Instance About Failed De-Branding Process
+             self::report_set_branding_status(12,$branding_revision);
+         }
+         else
+         {
+             //Inform WHT Instance About Success De-Branding Process
+             self::report_set_branding_status(11,$branding_revision);
+         }
     }
 
     public static function wht_branding_is_configured(): bool
@@ -101,26 +101,34 @@ class Branding
         return true;
     }
 
-    public static function report_set_branding_status($status_code)
+    public static function report_set_branding_status($status_code, $branding_revision = '')
     {
-        if(self::get_wht_branding('CallbackUrl')) {
-            $headquarter = new Headquarter(self::get_wht_branding('CallbackUrl'));
+        if (empty($branding_revision)) {
+            $branding_revision = self::get_wht_branding('BrandingRevision');
+        }
 
-            if(in_array($status_code, [20, 10, 11])) {
-                $headquarter->setCurlTimeoutInSeconds(10);
-                $headquarter->setRetryDelayMinutes(5);
-                $headquarter->setRetryTimes(5);
-            }
-            else
-            {
-                $headquarter->setCurlTimeoutInSeconds(3);
-            }
+        $headquarters = get_option('whthq_headquarters', []);
 
-            $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
-                'status_code' => $status_code,
-                'event_type' => 'branding',
-                'branding_revision' => self::get_wht_branding('BrandingRevision')
-            ]);
+        foreach ($headquarters as $callback => $last_used) {
+            if (!empty($callback) && !empty($last_used) && ($last_used >= time() - WHTHQ_MAX_HEADQUARTER_IDLE_TIME_SECONDS)) {
+
+                $headquarter = new Headquarter($callback);
+
+                if (in_array($status_code, [20, 10, 11])) {
+                    $headquarter->setCurlTimeoutInSeconds(10);
+                    $headquarter->setRetryDelayMinutes(5);
+                    $headquarter->setRetryTimes(5);
+                } else {
+                    $headquarter->setCurlTimeoutInSeconds(3);
+                }
+
+                $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
+                    'status_code' => $status_code,
+                    'event_type' => 'branding',
+                    'branding_revision' => $branding_revision
+                ]);
+
+            }
         }
     }
     public static function set_wht_branding(): bool

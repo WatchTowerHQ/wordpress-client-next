@@ -119,7 +119,7 @@ class Api
 
     public function run_remove_branding_action(WP_REST_Request $request): WP_REST_Response
     {
-        Branding::remove_wht_branding();
+        Branding::remove_wht_branding($request->get_param('branding_revision'));
 
         return $this->make_response(['status' => 'done']);
     }
