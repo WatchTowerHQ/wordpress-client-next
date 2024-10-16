@@ -9,7 +9,7 @@ defined('ABSPATH') or die('No script kiddies please!');
  * Plugin URI: https://github.com/WhatArmy/WatchtowerWpClient
  * Description: The WatchTowerHQ plugin allows us to monitor, backup, upgrade, and manage your site!
  * Author: WhatArmy
- * Version: 3.9.6
+ * Version: 3.10.1
  * Requires PHP: 7.4
  * Author URI: https://watchtowerhq.co/
  * License: GPLv2 or later
@@ -33,6 +33,7 @@ define('WHTHQ_BACKUP_EXCLUSIONS_ENDPOINT', '/backupExclusions');
 define('WHTHQ_BACKUP_DIR', wp_upload_dir()['basedir'].'/'.WHTHQ_BACKUP_DIR_NAME);
 define('WHTHQ_BACKUP_FILES_PER_QUEUE', class_exists("ZipArchive") ? 450 : 200);
 define('WHTHQ_DB_RECORDS_MAX', 6000);
+define('WHTHQ_MAX_HEADQUARTER_IDLE_TIME_SECONDS', 172800);
 
 
 if (version_compare(PHP_VERSION, WHTHQ_MIN_PHP) >= 0) {
