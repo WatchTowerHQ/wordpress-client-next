@@ -104,7 +104,7 @@ class Branding
     public static function report_set_branding_status($status_code, $branding_revision = '')
     {
         if (empty($branding_revision)) {
-            $branding_revision = self::get_wht_branding('BrandingRevision');
+            $branding_revision = self::get_wht_branding('BrandingRevision','N/A');
         }
 
         $headquarters = get_option('whthq_headquarters', []);
