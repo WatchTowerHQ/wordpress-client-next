@@ -143,30 +143,10 @@ class Core
         $bytesTotal = 0;
         $path = realpath($path);
         if ($path !== false && $path != '' && file_exists($path)) {
-            $directory = new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS);
-            $filter = new \RecursiveCallbackFilterIterator($directory, function ($current, $key, $iterator) {
-                $filename = $current->getFilename();
-
-                // Pomijanie ukrytych plików i katalogów
-                if ($filename[0] === '.') {
-                    return false;
-                }
-
-                // Pomijanie katalogów o nazwie "cache"
-                if ($current->isDir() && $filename === 'cache') {
-                    return false; // Pomija katalogi o nazwie "cache"
-                }
-
-                // Pomijanie katalogów i plików zawierających WHTHQ_BACKUP_DIR_NAME w ścieżce
-                if (strpos($current->getPathname(), WHTHQ_BACKUP_DIR_NAME) !== false) {
-                    return false; // Pomija katalogi i pliki zawierające WHTHQ_BACKUP_DIR_NAME
-                }
-
-                return true; // Inne pliki i katalogi są dozwolone
-            });
-            foreach (new \RecursiveIteratorIterator($filter) as $file) {
-                if ($file->isFile()) {
-                    $bytesTotal += $file->getSize();
+            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path,
+                \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::LEAVES_ONLY, \RecursiveIteratorIterator::CATCH_GET_CHILD) as $object) {
+                if (strpos($object->getPath(), WHTHQ_BACKUP_DIR_NAME) == false && $object->isFile()) {
+                    $bytesTotal += $object->getSize();
                 }
             }
         }
