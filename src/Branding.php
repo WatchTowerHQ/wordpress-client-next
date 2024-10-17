@@ -8,6 +8,7 @@
 namespace WhatArmy\Watchtower;
 
 use Exception;
+use stdClass;
 use WP_Session_Tokens;
 
 /**
@@ -39,28 +40,89 @@ class Branding
         self::set_wht_branding();
     }
 
-    public static function remove_wht_branding(string $branding_revision) : bool
+    public static function remove_wht_branding(string $branding_revision): bool
     {
         //Inform WHT Instance About Initiating De-Branding Process
-        self::report_set_branding_status(2,$branding_revision);
+        self::report_set_branding_status(2, $branding_revision);
 
         if (is_file(WHTHQ_BRANDING_FILE) && is_readable(WHTHQ_BRANDING_FILE)) {
             unlink(WHTHQ_BRANDING_FILE);
         }
 
+        self::simulate_need_for_update_of_watchtowerhq_plugin();
+
         $plugin = new Plugin();
         $plugin->doUpdate('watchtowerhq/watchtowerhq.php');
 
-         if(file_exists(WHTHQ_BRANDING_FILE)){
-             //Inform WHT Instance About Failed De-Branding Process
-             self::report_set_branding_status(12,$branding_revision);
-         }
-         else
-         {
-             //Inform WHT Instance About Success De-Branding Process
-             self::report_set_branding_status(11,$branding_revision);
-         }
+        if (file_exists(WHTHQ_BRANDING_FILE)) {
+            //Inform WHT Instance About Failed De-Branding Process
+            self::report_set_branding_status(12, $branding_revision);
+        } else {
+            //Inform WHT Instance About Success De-Branding Process
+            self::report_set_branding_status(11, $branding_revision);
+        }
+        return true;
     }
+
+
+    static function simulate_need_for_update_of_watchtowerhq_plugin()
+    {
+        // Fetch the plugin data
+        $plugin_slug = 'watchtowerhq/watchtowerhq.php';
+
+        // Get the current plugin update transient
+        $plugin_updates = get_site_transient('update_plugins');
+
+        // Ensure the transient is an object and modify the specific plugin's update information
+        if (is_object($plugin_updates)) {
+
+            $latest_watchtowerhq_plugin_data = self::get_latest_plugin_info_from_wporg('watchtowerhq');
+            if ($latest_watchtowerhq_plugin_data) {
+                // Create a fake update with the latest version
+                $plugin_info = new stdClass();
+                $plugin_info->slug = $plugin_slug;
+                $plugin_info->new_version = $latest_watchtowerhq_plugin_data['version'];
+                $plugin_info->package = $latest_watchtowerhq_plugin_data['download_link'];
+
+                // Add the plugin to the response, tricking WP into thinking an update is needed
+                $plugin_updates->response[$plugin_slug] = $plugin_info;
+
+                // Set the modified transient back
+                set_site_transient('update_plugins', $plugin_updates);
+            }
+        }
+    }
+
+    static function get_latest_plugin_info_from_wporg($slug)
+    {
+        // WordPress.org API endpoint for plugin information
+        $url = 'https://api.wordpress.org/plugins/info/1.0/' . $slug . '.json';
+
+        // Make the request
+        $response = wp_remote_get($url);
+
+        // Check for errors
+        if (is_wp_error($response)) {
+            return false; // Handle error appropriately
+        }
+
+        // Get the body of the response
+        $body = wp_remote_retrieve_body($response);
+
+        // Decode the JSON response
+        $plugin_info = json_decode($body);
+
+        if (isset($plugin_info->version) && isset($plugin_info->download_link)) {
+            // Return an array with the latest version and download URL
+            return [
+                'version' => $plugin_info->version,
+                'download_link' => $plugin_info->download_link
+            ];
+        }
+
+        return false; // If data is missing, return false
+    }
+
 
     public static function wht_branding_is_configured(): bool
     {
