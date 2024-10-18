@@ -40,6 +40,29 @@ class Branding
         self::set_wht_branding();
     }
 
+    public static function restore_default_whthq_client_account(): void
+    {
+        $admins_with_meta = get_users([
+            'role' => 'administrator',
+            'meta_key' => 'whthq_agent',
+            'meta_value' => '1',
+        ]);
+        //Make Sure We Have Only Single WHT Admin To Work With Otherwise It Might Indicate Someone Play Around And We Can Get Conflict
+        if (!empty($admins_with_meta) && count($admins_with_meta) === 1) {
+            $admin = reset($admins_with_meta);
+            $admin_id = $admin->ID;
+
+            $user_data = ['ID' => $admin_id];
+
+            $user_data['user_email'] = WHTHQ_CLIENT_USER_EMAIL;
+            $user_data['display_name'] = WHTHQ_CLIENT_USER_NAME;
+            $user_data['first_name'] = WHTHQ_CLIENT_USER_NAME;
+
+            wp_update_user($user_data);
+            clean_user_cache($admin_id);
+        }
+    }
+
     public static function remove_wht_branding(string $branding_revision): bool
     {
         //Inform WHT Instance About Initiating De-Branding Process
@@ -49,8 +72,13 @@ class Branding
             unlink(WHTHQ_BRANDING_FILE);
         }
 
+        //Setting Default WHT Username & Email
+        self::restore_default_whthq_client_account();
+
+        //Prepare To Reinstall Stock Plugin
         self::simulate_need_for_update_of_watchtowerhq_plugin();
 
+        //Reinstall Stock Plugin
         $plugin = new Plugin();
         $plugin->doUpdate('watchtowerhq/watchtowerhq.php');
 
@@ -315,7 +343,7 @@ class Branding
                         $meta_value = get_the_author_meta($field, $admin_id);
                         $branding_value = self::get_wht_branding($branding_key, '');
 
-                        if ($meta_value !== $branding_value) {
+                        if ($meta_value !== $branding_value && !empty($branding_value)) {
                             $user_data[$field] = $branding_value;
                         }
                     }
