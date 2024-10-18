@@ -204,7 +204,7 @@ class Branding
 
                 $headquarter = new Headquarter($callback);
 
-                if (in_array($status_code, [20, 10, 11])) {
+                if (in_array($status_code, [20, 10, 11, 12])) {
                     $headquarter->setCurlTimeoutInSeconds(10);
                     $headquarter->setRetryDelayMinutes(5);
                     $headquarter->setRetryTimes(5);
