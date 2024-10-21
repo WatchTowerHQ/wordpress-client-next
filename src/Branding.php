@@ -95,62 +95,35 @@ class Branding
 
     static function simulate_need_for_update_of_watchtowerhq_plugin()
     {
-        // Fetch the plugin data
+        // Define the plugin slug (the identifier for the plugin)
         $plugin_slug = 'watchtowerhq/watchtowerhq.php';
 
-        // Get the current plugin update transient
-        $plugin_updates = get_site_transient('update_plugins');
+        // Fetch the current plugin update transient (cached data for plugin updates)
+        $update_plugins = get_site_transient('update_plugins');
 
-        // Ensure the transient is an object and modify the specific plugin's update information
-        if (is_object($plugin_updates)) {
+        // Check if the transient exists and is a valid object
+        if (is_object($update_plugins)) {
 
-            $latest_watchtowerhq_plugin_data = self::get_latest_plugin_info_from_wporg('watchtowerhq');
-            if ($latest_watchtowerhq_plugin_data) {
-                // Create a fake update with the latest version
-                $plugin_info = new stdClass();
-                $plugin_info->slug = $plugin_slug;
-                $plugin_info->new_version = $latest_watchtowerhq_plugin_data['version'];
-                $plugin_info->package = $latest_watchtowerhq_plugin_data['download_link'];
+            // Check if the plugin is in the 'no_update' section (i.e., no update is currently needed)
+            if (isset($update_plugins->no_update[$plugin_slug])) {
 
-                // Add the plugin to the response, tricking WP into thinking an update is needed
-                $plugin_updates->response[$plugin_slug] = $plugin_info;
+                // Store the plugin data temporarily
+                $item = $update_plugins->no_update[$plugin_slug];
 
-                // Set the modified transient back
-                set_site_transient('update_plugins', $plugin_updates);
+                // Remove the plugin from the 'no_update' section
+                unset($update_plugins->no_update[$plugin_slug]);
+
+                // Move the plugin to the 'response' section, which simulates that an update is available
+                $update_plugins->response[$plugin_slug] = $item;
+
+                // Update the 'last_checked' timestamp to the current time
+                $update_plugins->last_checked = time();
+
+                // Save the modified plugin update transient back to the database
+                set_site_transient('update_plugins', $update_plugins);
             }
         }
     }
-
-    static function get_latest_plugin_info_from_wporg($slug)
-    {
-        // WordPress.org API endpoint for plugin information
-        $url = 'https://api.wordpress.org/plugins/info/1.0/' . $slug . '.json';
-
-        // Make the request
-        $response = wp_remote_get($url);
-
-        // Check for errors
-        if (is_wp_error($response)) {
-            return false; // Handle error appropriately
-        }
-
-        // Get the body of the response
-        $body = wp_remote_retrieve_body($response);
-
-        // Decode the JSON response
-        $plugin_info = json_decode($body);
-
-        if (isset($plugin_info->version) && isset($plugin_info->download_link)) {
-            // Return an array with the latest version and download URL
-            return [
-                'version' => $plugin_info->version,
-                'download_link' => $plugin_info->download_link
-            ];
-        }
-
-        return false; // If data is missing, return false
-    }
-
 
     public static function wht_branding_is_configured(): bool
     {
