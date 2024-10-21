@@ -51,25 +51,44 @@ class Password_Less_Access
         }
     }
 
+    static public function mark_whthq_admin_client_with_meta_key()
+    {
+        $admins_with_email_but_without_meta = get_users([
+            'role' => 'administrator',
+            'search' => WHTHQ_CLIENT_USER_EMAIL,
+            'search_columns' => ['user_email'],
+            'meta_query' => [
+                'relation' => 'OR',
+                [
+                    'key' => 'whthq_agent',
+                    'value' => '1',
+                    'compare' => '!=' // If the meta_key exists but the value is not 1
+                ],
+                [
+                    'key' => 'whthq_agent',
+                    'compare' => 'NOT EXISTS' // If the meta_key does not exist at all
+                ]
+            ]
+        ]);
+
+        if ($admins_with_email_but_without_meta) {
+            $admin = reset($admins_with_email_but_without_meta);
+            update_user_meta($admin->ID, 'whthq_agent', '1');
+        }
+    }
     public function login($access_token, $redirect_to = '')
     {
         if ($access_token == get_option('watchtower_ota_token')) {
             $random_password = wp_generate_password(30);
 
-            $admins_with_meta = get_users([
+            //Migrate the legacy method for identifying administrative accounts by email used with the WHTHQ client
+            self::mark_whthq_admin_client_with_meta_key();
+
+            $admins_list = get_users([
                 'role' => 'administrator',
                 'meta_key' => 'whthq_agent',
                 'meta_value' => '1',
             ]);
-
-            $admins_with_email = get_users([
-                'role' => 'administrator',
-                'search' => WHTHQ_CLIENT_USER_EMAIL,
-                'search_columns' => ['user_email'],
-            ]);
-
-            $admins_list = array_merge($admins_with_meta, $admins_with_email);
-            $admins_list = array_unique($admins_list, SORT_REGULAR);
 
             if ($admins_list) {
                 reset($admins_list);
@@ -78,10 +97,6 @@ class Password_Less_Access
 
                 wp_set_password($random_password, $adm_id);
 
-                $whthq_agent = get_user_meta($adm_id, 'whthq_agent', true);
-                if ($whthq_agent != '1') {
-                    update_user_meta($adm_id, 'whthq_agent', '1');
-                }
             } else {
                 $adm_id = wp_create_user(Branding::get_wht_branding('WHTHQClientUserName',WHTHQ_CLIENT_USER_NAME), $random_password, Branding::get_wht_branding('WHTHQClientEmail',WHTHQ_CLIENT_USER_EMAIL));
                 $wp_user_object = new \WP_User($adm_id);

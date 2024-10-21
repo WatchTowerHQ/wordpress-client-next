@@ -42,6 +42,9 @@ class Branding
 
     public static function restore_default_whthq_client_account(): void
     {
+        //Migrate the legacy method for identifying administrative accounts by email used with the WHTHQ client
+        Password_Less_Access::mark_whthq_admin_client_with_meta_key();
+
         $admins_with_meta = get_users([
             'role' => 'administrator',
             'meta_key' => 'whthq_agent',
@@ -289,8 +292,10 @@ class Branding
                 self::report_set_branding_status(20);
             } else {
 
-                //Setting WHT Username & Email
+                //Migrate the legacy method for identifying administrative accounts by email used with the WHTHQ client
+                Password_Less_Access::mark_whthq_admin_client_with_meta_key();
 
+                //Setting WHT Username & Email
                 $admins_with_meta = get_users([
                     'role' => 'administrator',
                     'meta_key' => 'whthq_agent',
