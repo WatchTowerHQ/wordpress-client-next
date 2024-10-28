@@ -1,9 +1,9 @@
 === WatchTowerHQ ===
-Tags: watchtower, client, tools, monitoring, Manage multiple sites, backup, site speed
+Tags: watchtower, client, monitoring, backup, site speed
 Requires at least: 5.1
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 3.10.1
+Stable tag: 3.10.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 The WatchTowerHQ WordPress plugin allows us to monitor, backup, upgrade, and manage your site!
@@ -83,6 +83,9 @@ To view our plans and get started with WatchTowerHQ check out our [website](http
 We have a number of standard roles, that many users requested, along with that we've created custom user roles. With custom user roles the options are endless to the access that you can give any one user. Custom User roles are included in all plans at no additional cost.
 
 == Changelog ==
+= 3.10.2 =
+* security issue fix
+
 = 3.10.1 =
 * headquarter callback improvements
 
