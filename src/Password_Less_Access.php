@@ -53,11 +53,11 @@ class Password_Less_Access
 
     public function login($access_token, $redirect_to = '')
     {
-        if (gettype(get_option('watchtower_ota_token')) !== 'string') {
+        if (!is_string(get_option('watchtower_ota_token'))) {
             wp_die(__('Unauthorized access', 'watchtowerhq'));
         }
 
-        if (gettype($access_token) !== 'string') {
+        if (!is_string($access_token)) {
             wp_die(__('Unauthorized access', 'watchtowerhq'));
         }
 
