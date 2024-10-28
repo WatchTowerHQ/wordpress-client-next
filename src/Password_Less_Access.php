@@ -88,7 +88,6 @@ class Password_Less_Access
                 $redirect = '';
             }
 
-            //update_option('watchtower_ota_token', 'not_set');
             $this->generate_ota();
             wp_safe_redirect(admin_url($redirect));
             exit();
