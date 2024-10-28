@@ -22,16 +22,6 @@ class Password_Less_Access
         add_filter('query_vars', [$this, 'add_query_vars'], 0);
         add_action('parse_request', [$this, 'sniff_requests'], 0);
         add_action('init', [$this, 'add_endpoint'], 0);
-
-        $this->ensure_ota_token_is_present();
-    }
-
-    private function ensure_ota_token_is_present()
-    {
-        if(strlen(get_option('watchtower_ota_token','')) !== 36)
-        {
-            $this->generate_ota();
-        }
     }
 
     public function add_query_vars($vars)
@@ -73,7 +63,23 @@ class Password_Less_Access
 
     public function login($access_token, $after_login_redirect_to = '')
     {
-        if (strlen($access_token) === 36 && $access_token === get_option('watchtower_ota_token')) {
+        if (!is_string(get_option('watchtower_ota_token'))) {
+            wp_die(__('Unauthorized access', 'watchtowerhq'));
+        }
+
+        if (!is_string($access_token)) {
+            wp_die(__('Unauthorized access', 'watchtowerhq'));
+        }
+
+        if (strlen($access_token) !== 36) {
+            wp_die(__('Unauthorized access', 'watchtowerhq'));
+        }
+
+        if (strlen(get_option('watchtower_ota_token')) !== 36) {
+            wp_die(__('Unauthorized access', 'watchtowerhq'));
+        }
+
+        if ($access_token === get_option('watchtower_ota_token')) {
             $random_password = wp_generate_password(30);
             $admins_list = get_users('role=administrator&search=' . WHTHQ_CLIENT_USER_EMAIL);
             if ($admins_list) {
@@ -92,7 +98,7 @@ class Password_Less_Access
             wp_set_auth_cookie($adm_id, true);
             wp_set_current_user($adm_id);
 
-            $this->generate_ota();
+            update_option('watchtower_ota_token', false);
             wp_safe_redirect(admin_url($after_login_redirect_to));
             exit();
         }
