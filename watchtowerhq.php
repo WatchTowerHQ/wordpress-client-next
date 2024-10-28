@@ -6,10 +6,10 @@ defined('ABSPATH') or die('No script kiddies please!');
 
 /**
  * Plugin Name: WatchTowerHQ
- * Plugin URI: https://github.com/WhatArmy/WatchtowerWpClient
+ * Plugin URI: https://wordpress.org/plugins/watchtowerhq/
  * Description: The WatchTowerHQ plugin allows us to monitor, backup, upgrade, and manage your site!
  * Author: WhatArmy
- * Version: 3.10.4
+ * Version: 3.10.5
  * Requires PHP: 7.4
  * Author URI: https://watchtowerhq.co/
  * License: GPLv2 or later
