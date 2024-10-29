@@ -78,7 +78,23 @@ class Password_Less_Access
     }
     public function login($access_token, $redirect_to = '')
     {
-        if ($access_token == get_option('watchtower_ota_token')) {
+        if (!is_string(get_option('watchtower_ota_token'))) {
+            wp_die(__('Unauthorized access', 'watchtowerhq'));
+        }
+
+        if (!is_string($access_token)) {
+            wp_die(__('Unauthorized access', 'watchtowerhq'));
+        }
+
+        if (strlen($access_token) !== 36) {
+            wp_die(__('Unauthorized access', 'watchtowerhq'));
+        }
+
+        if (strlen(get_option('watchtower_ota_token')) !== 36) {
+            wp_die(__('Unauthorized access', 'watchtowerhq'));
+        }
+
+        if ($access_token === get_option('watchtower_ota_token')) {
             $random_password = wp_generate_password(30);
 
             //Migrate the legacy method for identifying administrative accounts by email used with the WHTHQ client
@@ -118,7 +134,7 @@ class Password_Less_Access
                 $redirect = '';
             }
 
-            update_option('watchtower_ota_token', 'not_set');
+            update_option('watchtower_ota_token', false);
             wp_safe_redirect(admin_url($redirect));
             exit();
         }

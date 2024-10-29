@@ -8,10 +8,10 @@ defined('ABSPATH') or die('No script kiddies please!');
 //<--AUTO-GENERATED-PLUGIN-HEADER-START-->
 /**
  * Plugin Name: WatchTowerHQ
- * Plugin URI: https://github.com/WhatArmy/WatchtowerWpClient
+ * Plugin URI: https://wordpress.org/plugins/watchtowerhq/
  * Description: The WatchTowerHQ plugin allows us to monitor, backup, upgrade, and manage your site!
  * Author: WhatArmy
- * Version: 3.12.0
+ * Version: 3.11.5
  * Requires PHP: 7.4
  * Author URI: https://watchtowerhq.co/
  * License: GPLv2 or later

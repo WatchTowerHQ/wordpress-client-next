@@ -143,10 +143,27 @@ class Core
         $bytesTotal = 0;
         $path = realpath($path);
         if ($path !== false && $path != '' && file_exists($path)) {
-            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($path,
-                \FilesystemIterator::SKIP_DOTS), \RecursiveIteratorIterator::LEAVES_ONLY, \RecursiveIteratorIterator::CATCH_GET_CHILD) as $object) {
-                if (strpos($object->getPath(), WHTHQ_BACKUP_DIR_NAME) == false && $object->isFile()) {
-                    $bytesTotal += $object->getSize();
+            $directory = new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS);
+            $filter = new \RecursiveCallbackFilterIterator($directory, function ($current, $key, $iterator) {
+                $filename = $current->getFilename();
+
+                if ($filename[0] === '.') {
+                    return false;
+                }
+
+                if ($current->isDir() && $filename === 'cache') {
+                    return false; // Pomija katalogi o nazwie "cache"
+                }
+
+                if (strpos($current->getPathname(), WHTHQ_BACKUP_DIR_NAME) !== false) {
+                    return false;
+                }
+
+                return true;
+            });
+            foreach (new \RecursiveIteratorIterator($filter) as $file) {
+                if ($file->isFile()) {
+                    $bytesTotal += $file->getSize();
                 }
             }
         }
@@ -168,25 +185,13 @@ class Core
         }
     }
 
-    private function get_last_login($user_id) {
+    private function get_last_login($user_id)
+    {
         $last_login = get_user_meta($user_id, 'wht_user_last_login', true);
         if ($last_login) {
             return $last_login;
         }
         return null;
-    }
-
-    /**
-     * @return mixed
-     */
-    public function db_size()
-    {
-        global $wpdb;
-        $queryStr = 'SELECT  ROUND(SUM(((DATA_LENGTH + INDEX_LENGTH)/1024/1024)),2) AS "MB"
-        FROM INFORMATION_SCHEMA.TABLES
-	WHERE TABLE_SCHEMA = "' . $wpdb->dbname . '";';
-        $query = $wpdb->get_row($queryStr);
-        return $query->MB;
     }
 
     /**
