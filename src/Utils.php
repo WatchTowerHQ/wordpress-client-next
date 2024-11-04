@@ -259,7 +259,7 @@ class Utils
         return $ret;
     }
 
-    public static function allFilesList($excludes = []): Finder
+    public static function allFilesList($excludes = [], $withoutAdditionalFiltering = false): Finder
     {
         $finder = new Finder();
         $finder->in(ABSPATH);
@@ -267,6 +267,12 @@ class Utils
         $finder->ignoreDotFiles(false);
         $finder->ignoreVCS(true);
         $finder->ignoreUnreadableDirs(true);
+
+        if($withoutAdditionalFiltering)
+        {
+            return $finder;
+        }
+
         return $finder->filter(
             function (\SplFileInfo $file) use ($excludes) {
                 $path = $file->getPathname();

@@ -7,6 +7,7 @@
 
 namespace WhatArmy\Watchtower;
 
+use SplFileInfo;
 use WhatArmy\Watchtower\Files\File_Backup;
 use WhatArmy\Watchtower\Mysql\Mysql_Backup;
 use WP_REST_Request as WP_REST_Request;
@@ -60,6 +61,10 @@ class Api
          */
         register_rest_route($this->route_namespace(), 'backup/files/list',
             $this->resolve_action([$this, 'get_backup_files_list_action']));
+        register_rest_route($this->route_namespace(), 'backup/files/list_lite',
+            $this->resolve_action([$this, 'get_backup_files_list_lite_action']));
+        register_rest_route($this->route_namespace(), 'backup/files/list_extended',
+            $this->resolve_action([$this, 'get_backup_files_extended_status_action']));
         register_rest_route($this->route_namespace(), 'backup/files/list/detailed',
             $this->resolve_action([$this, 'get_backup_files_list_detailed_action']));
         register_rest_route($this->route_namespace(), 'backup/files/get',
@@ -227,6 +232,48 @@ class Api
             ];
         }
         return $this->make_response(['memory_limit' => ini_get('memory_limit'), 'max_input_vars' => ini_get('max_input_vars'), 'files' => $files]);
+    }
+
+    public function get_backup_files_list_lite_action(WP_REST_Request $request): WP_REST_Response
+    {
+        set_time_limit(300);
+        $filesListRaw = Utils::allFilesList([], true);
+        $files = [];
+        foreach ($filesListRaw as $file) {
+            $files[] = [
+                'type' => $file->isDir() ? 'dir' : 'file',
+                'origin' => str_replace(ABSPATH, '', $file->getPathname()),
+            ];
+        }
+        return $this->make_response(['memory_limit' => ini_get('memory_limit'), 'max_input_vars' => ini_get('max_input_vars'), 'files' => $files]);
+    }
+
+    public function get_backup_files_extended_status_action(WP_REST_Request $request): WP_REST_Response
+    {
+        $localBackupExclusions = [
+            [
+                'isContentDir' => 1,
+                'path' => 'plugins/watchtowerhq/stubs/web.config.stub',
+            ]];
+
+        $excludes = Utils::createLocalBackupExclusions(array_merge($localBackupExclusions, $request->get_param('clientBackupExclusions')));
+        $filesWithDetails = array_map(function ($file) use ($excludes) {
+        $singleFile = new SplFileInfo(ABSPATH . $file['origin']);
+
+            $path = $singleFile->getPathname();
+            $file['pathreal'] = $path;
+            if (!$singleFile->isReadable() || Utils::strposa($path, $excludes) || strpos($path, WHTHQ_BACKUP_DIR_NAME)) {
+                $file['reject'] = true;
+                $file['type'] = 'unknown';
+            } else {
+                $file['reject'] = false;
+                $file['filesize'] = $singleFile->getSize();
+                $file['type'] = $singleFile->isFile() ? 'file' : 'unknown';
+            }
+            return $file;
+        }, $request->get_param('filesToGetDetails') ?? []);
+
+        return $this->make_response(['files' => $filesWithDetails]);
     }
 
 

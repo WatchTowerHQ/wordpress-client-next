@@ -234,7 +234,7 @@ class Download
             $buffer = fread($handle, round($download_rate * 1024));
             echo $buffer;
             if (strpos($file, 'sql.gz') === false) {
-                @ob_end_flush();
+                wp_ob_end_flush_all();
             }
             flush();
             //use sleep for all non WPE hosting
