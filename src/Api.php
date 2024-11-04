@@ -234,7 +234,7 @@ class Api
         return $this->make_response(['memory_limit' => ini_get('memory_limit'), 'max_input_vars' => ini_get('max_input_vars'), 'files' => $files]);
     }
 
-    public function get_backup_files_list_lite_action(WP_REST_Request $request): WP_REST_Response
+    public function get_backup_files_list_lite_action(): WP_REST_Response
     {
         set_time_limit(300);
         $filesListRaw = Utils::allFilesList([], true);
