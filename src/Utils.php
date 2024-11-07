@@ -215,15 +215,34 @@ class Utils
         return true;
     }
 
-    public static function createLocalBackupExclusions($clientBackupExclusions): array
+    public static function createLocalBackupExclusions($clientBackupExclusions, $type ='dir'): array
     {
+        $localBackupExclusions = [
+            [
+                'type' => 'file',
+                'isContentDir' => 1,
+                'path' => 'plugins/watchtowerhq/stubs/web.config.stub',
+            ],
+            [
+                'type' => 'dir',
+                'isContentDir' => 0,
+                'path' => str_replace(ABSPATH, '', WHTHQ_BACKUP_DIR),
+            ]];
+
+        $clientBackupExclusions = array_merge($localBackupExclusions,$clientBackupExclusions);
+
         $ret = [];
         foreach ($clientBackupExclusions as $d) {
             //Skip Entries That Are Only For WPE
-            if (!function_exists('is_wpe') && isset($d['onlyWPE']) && $d['onlyWPE'] == true) {
+            if (!function_exists('is_wpe') && isset($d['onlyWPE']) && $d['onlyWPE']) {
                 continue;
             }
-            if ($d['isContentDir'] == true) {
+
+            if($d['type'] !== $type) {
+                continue;
+            }
+
+            if ($d['isContentDir']) {
                 $p = WP_CONTENT_DIR . '/' . $d['path'];
             } else {
                 $p = ABSPATH . $d['path'];
@@ -259,28 +278,93 @@ class Utils
         return $ret;
     }
 
-    public static function allFilesList($excludes = [], $withoutAdditionalFiltering = false): Finder
+    public static function allFilesList($excludes = []): array
     {
-        $finder = new Finder();
-        $finder->in(ABSPATH);
-        $finder->followLinks(false);
-        $finder->ignoreDotFiles(false);
-        $finder->ignoreVCS(true);
-        $finder->ignoreUnreadableDirs(true);
+        //This Variable Contain Whole Website Files And Directory Structure
+        $websiteBackupFilesystem = [];
+        
+        $readableDirectoryFinder = new Finder();
+        $readableDirectoryFinder
+            ->in(ABSPATH)
+            ->followLinks(false)
+            ->ignoreVCS(true)
+            ->ignoreUnreadableDirs(true)
+            ->directories();
 
-        if($withoutAdditionalFiltering)
-        {
-            return $finder;
-        }
+        $excludedDirectoryRealPathArray = Utils::createLocalBackupExclusions($excludes,'dir');
+        $includedBackupDirectories[] = ABSPATH; //Always Include Main Directory
+        foreach ($readableDirectoryFinder as $currentDirectory) {
+            $currentDirectoryRealPath = $currentDirectory->getRealPath();
+            $currentPathLength = strlen($currentDirectoryRealPath);
+            $exclude = false;
 
-        return $finder->filter(
-            function (\SplFileInfo $file) use ($excludes) {
-                $path = $file->getPathname();
-                if (!$file->isReadable() || Utils::strposa($path, $excludes) || strpos($path, WHTHQ_BACKUP_DIR_NAME)) {
-                    return false;
+            foreach ($excludedDirectoryRealPathArray as $excludedRealDirectoryPath) {
+                // Check if the current path starts with the excluded path
+                $isPrefixMatch = strpos($currentDirectoryRealPath, $excludedRealDirectoryPath) === 0;
+
+                // Calculate the length of the excluded path
+                $excludedPathLength = strlen($excludedRealDirectoryPath);
+
+                // Check if the paths are exactly the same length (exact match)
+                $isExactMatch = $excludedPathLength === $currentPathLength;
+
+                // Check if the excluded path is followed by a directory separator
+                $isFollowedBySeparator = isset($currentDirectoryRealPath[$excludedPathLength]) &&
+                    in_array($currentDirectoryRealPath[$excludedPathLength], ['/', '\\']);
+
+                // If there's a match and either it's an exact match or followed by a separator, exclude the directory
+                if ($isPrefixMatch && ($isExactMatch || $isFollowedBySeparator)) {
+                    $exclude = true;
+                    break;
                 }
             }
-        );
+
+            if (!$exclude) {
+                $includedBackupDirectories[] = $currentDirectoryRealPath;
+                $websiteBackupFilesystem[] = [
+                    'type' => $currentDirectory->isDir() ? 'dir' : 'file',
+                    'origin' => str_replace(ABSPATH, '', $currentDirectory->getRealPath()),
+                    'filesize' => 0 //Don't Check Folder Size
+                ];
+            }
+        }
+
+        $fileFinder = new Finder();
+
+        foreach ($includedBackupDirectories as $includeDir) {
+            $fileFinder->in($includeDir);
+        }
+
+        $fileFinder->followLinks(false)
+        ->ignoreDotFiles(false)
+        ->ignoreVCS(true)
+        ->depth('== 0') //Prevent Getting Into Directories - Critical To Prevent Enumerating Excluded Directories That Might Contain Lot Of Files
+        ->files();
+
+        $excludedFilesRealPathArray =  Utils::createLocalBackupExclusions($excludes,'file');
+
+        $fileFinder->filter(function (\SplFileInfo $file) use ($excludedFilesRealPathArray) {
+            $currentFileRealPath = $file->getRealPath();
+
+            if (in_array($currentFileRealPath, $excludedFilesRealPathArray, true)) {
+                // This file is excluded
+                return false;
+            }
+
+            // Reject unreadable files
+            return $file->isReadable();
+        });
+
+        foreach ($fileFinder as $file) {
+            $websiteBackupFilesystem[] = [
+                'type' => $file->isDir() ? 'dir' : 'file',
+                'origin' => str_replace(ABSPATH, '', $file->getRealPath()),
+                'filesize' => $file->getSize()
+            ];
+        }
+
+
+        return $websiteBackupFilesystem;
     }
 
     public static function detectMysqldumpLocation()
