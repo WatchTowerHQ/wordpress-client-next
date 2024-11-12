@@ -211,8 +211,8 @@ class Api
     public function get_backup_files_list_action(WP_REST_Request $request): WP_REST_Response
     {
         set_time_limit(300);
-        $files = Utils::allFilesList($request->get_param('clientBackupExclusions') ?? []);
-
+        //$files = Utils::allFilesList($request->get_param('clientBackupExclusions') ?? []);
+        $files = Utils::getFileSystemStructure(ABSPATH,Utils::createLocalBackupExclusions($request->get_param('clientBackupExclusions') ?? []));
         return $this->make_response(['memory_limit' => ini_get('memory_limit'), 'max_input_vars' => ini_get('max_input_vars'), 'files' => $files]);
     }
 

@@ -7,8 +7,12 @@
 
 namespace WhatArmy\Watchtower;
 
-use http\Exception\RuntimeException;
+use FilesystemIterator;
+use RecursiveCallbackFilterIterator;
+use RecursiveDirectoryIterator;
+use RecursiveIteratorIterator;
 use Symfony\Component\Finder\Finder;
+use UnexpectedValueException;
 
 /**
  * Class Utils
@@ -238,10 +242,6 @@ class Utils
                 continue;
             }
 
-            if($d['type'] !== $type) {
-                continue;
-            }
-
             if ($d['isContentDir']) {
                 $p = WP_CONTENT_DIR . '/' . $d['path'];
             } else {
@@ -278,93 +278,67 @@ class Utils
         return $ret;
     }
 
-    public static function allFilesList($excludes = []): array
+
+    static function getFileSystemStructure($baseDir, $excludedPaths)
     {
-        //This Variable Contain Whole Website Files And Directory Structure
-        $websiteBackupFilesystem = [];
-        
-        $readableDirectoryFinder = new Finder();
-        $readableDirectoryFinder
-            ->in(ABSPATH)
-            ->followLinks(false)
-            ->ignoreVCS(true)
-            ->ignoreUnreadableDirs(true)
-            ->directories();
+        $filesystem = [];
 
-        $excludedDirectoryRealPathArray = Utils::createLocalBackupExclusions($excludes,'dir');
-        $includedBackupDirectories[] = ABSPATH; //Always Include Main Directory
-        foreach ($readableDirectoryFinder as $currentDirectory) {
-            $currentDirectoryRealPath = $currentDirectory->getRealPath();
-            $currentPathLength = strlen($currentDirectoryRealPath);
-            $exclude = false;
+        try {
+            // Use RecursiveCallbackFilterIterator to filter out excluded paths
+            $directoryIterator = new RecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS);
+            $filterIterator = new RecursiveCallbackFilterIterator($directoryIterator, function ($path) use ($excludedPaths) {
+                $fullPath = $path->getPathname();
 
-            foreach ($excludedDirectoryRealPathArray as $excludedRealDirectoryPath) {
-                // Check if the current path starts with the excluded path
-                $isPrefixMatch = strpos($currentDirectoryRealPath, $excludedRealDirectoryPath) === 0;
-
-                // Calculate the length of the excluded path
-                $excludedPathLength = strlen($excludedRealDirectoryPath);
-
-                // Check if the paths are exactly the same length (exact match)
-                $isExactMatch = $excludedPathLength === $currentPathLength;
-
-                // Check if the excluded path is followed by a directory separator
-                $isFollowedBySeparator = isset($currentDirectoryRealPath[$excludedPathLength]) &&
-                    in_array($currentDirectoryRealPath[$excludedPathLength], ['/', '\\']);
-
-                // If there's a match and either it's an exact match or followed by a separator, exclude the directory
-                if ($isPrefixMatch && ($isExactMatch || $isFollowedBySeparator)) {
-                    $exclude = true;
-                    break;
+                // Skip excluded paths and their subdirectories
+                foreach ($excludedPaths as $excluded) {
+                    if ($fullPath === $excluded || strpos($fullPath, rtrim($excluded, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) === 0) {
+                        return false; // Exclude this path and its children
+                    }
                 }
-            }
 
-            if (!$exclude) {
-                $includedBackupDirectories[] = $currentDirectoryRealPath;
-                $websiteBackupFilesystem[] = [
-                    'type' => $currentDirectory->isDir() ? 'dir' : 'file',
-                    'origin' => str_replace(ABSPATH, '', $currentDirectory->getRealPath()),
-                    'filesize' => 0 //Don't Check Folder Size
+                return true; // Include this path
+            });
+
+            $iterator = new RecursiveIteratorIterator($filterIterator, RecursiveIteratorIterator::SELF_FIRST);
+
+            foreach ($iterator as $path) {
+                $fullPath = $path->getPathname();
+
+                // Skip unreadable files
+                if ($path->isFile() && !$path->isReadable()) {
+                    continue;
+                }
+
+                // Add to the filesystem array
+                $filesystem[] = [
+                    'type' => $path->isDir() ? 'dir' : 'file',
+                    'origin' => str_replace(ABSPATH, '', $fullPath), // Making the path relative
+                    'filesize' => $path->isFile() ? $path->getSize() : 0
                 ];
             }
+        } catch (UnexpectedValueException $e) {
+            error_log("Failed to open directory: " . $e->getMessage());
         }
 
-        $fileFinder = new Finder();
+        return $filesystem;
+    }
 
-        foreach ($includedBackupDirectories as $includeDir) {
-            $fileFinder->in($includeDir);
-        }
-
-        $fileFinder->followLinks(false)
-        ->ignoreDotFiles(false)
-        ->ignoreVCS(true)
-        ->depth('== 0') //Prevent Getting Into Directories - Critical To Prevent Enumerating Excluded Directories That Might Contain Lot Of Files
-        ->files();
-
-        $excludedFilesRealPathArray =  Utils::createLocalBackupExclusions($excludes,'file');
-
-        $fileFinder->filter(function (\SplFileInfo $file) use ($excludedFilesRealPathArray) {
-            $currentFileRealPath = $file->getRealPath();
-
-            if (in_array($currentFileRealPath, $excludedFilesRealPathArray, true)) {
-                // This file is excluded
-                return false;
+    public static function allFilesList($excludes = []): Finder
+    {
+        $finder = new Finder();
+        $finder->in(ABSPATH);
+        $finder->followLinks(false);
+        $finder->ignoreDotFiles(false);
+        $finder->ignoreVCS(true);
+        $finder->ignoreUnreadableDirs(true);
+        return $finder->filter(
+            function (\SplFileInfo $file) use ($excludes) {
+                $path = $file->getPathname();
+                if (!$file->isReadable() || Utils::strposa($path, $excludes) || strpos($path, WHTHQ_BACKUP_DIR_NAME)) {
+                    return false;
+                }
             }
-
-            // Reject unreadable files
-            return $file->isReadable();
-        });
-
-        foreach ($fileFinder as $file) {
-            $websiteBackupFilesystem[] = [
-                'type' => $file->isDir() ? 'dir' : 'file',
-                'origin' => str_replace(ABSPATH, '', $file->getRealPath()),
-                'filesize' => $file->getSize()
-            ];
-        }
-
-
-        return $websiteBackupFilesystem;
+        );
     }
 
     public static function detectMysqldumpLocation()
