@@ -219,7 +219,7 @@ class Utils
         return true;
     }
 
-    public static function createLocalBackupExclusions($clientBackupExclusions, $type ='dir'): array
+    public static function createLocalBackupExclusions($clientBackupExclusions, $type = 'dir'): array
     {
         $localBackupExclusions = [
             [
@@ -233,7 +233,7 @@ class Utils
                 'path' => str_replace(ABSPATH, '', WHTHQ_BACKUP_DIR),
             ]];
 
-        $clientBackupExclusions = array_merge($localBackupExclusions,$clientBackupExclusions);
+        $clientBackupExclusions = array_merge($localBackupExclusions, $clientBackupExclusions);
 
         $ret = [];
         foreach ($clientBackupExclusions as $d) {
@@ -279,7 +279,7 @@ class Utils
     }
 
 
-    static function getFileSystemStructure($baseDir, $excludedPaths)
+    static function getFileSystemStructure($baseDir, $excludedPaths): array
     {
         $filesystem = [];
 
