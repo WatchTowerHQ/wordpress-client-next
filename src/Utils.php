@@ -277,6 +277,10 @@ class Utils
         return $ret;
     }
 
+    static function iteratorElementIsSameType($iteratorElement,$type)
+    {
+        return  ($iteratorElement->isDir() ? 'dir' : 'file') === $type;
+    }
 
     static function getFileSystemStructure($baseDir, $excludedPaths): array
     {
@@ -287,19 +291,18 @@ class Utils
             $directoryIterator = new RecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS);
             $filterIterator = new RecursiveCallbackFilterIterator($directoryIterator, function ($path) use ($excludedPaths) {
                 $fullPath = $path->getPathname();
-                $iteratedElementType = $path->isDir() ? 'dir' : 'file';
 
                 // Skip excluded paths and their subdirectories
                 foreach ($excludedPaths as $excluded => $excludedType) {
 
-                    if ($iteratedElementType !== $excludedType) {
-                        //This Exclusion Do Not Match File Type That It's Intended For
-                        continue;
+                    if ($fullPath === $excluded && self::iteratorElementIsSameType($path, $excludedType)) {
+                        return false; //File Or Directory Is Excluded
                     }
 
-                    if ($fullPath === $excluded || strpos($fullPath, rtrim($excluded, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) === 0) {
+                    if ($excludedType === 'dir' && strpos($fullPath, rtrim($excluded, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) === 0) {
                         return false; // Exclude this path and its children
                     }
+
                 }
 
                 return true; // Include this path
