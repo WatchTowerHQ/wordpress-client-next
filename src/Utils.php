@@ -326,7 +326,10 @@ class Utils
                 ];
             }
         } catch (UnexpectedValueException $e) {
-            error_log("Failed to open directory: " . $e->getMessage());
+            //error rollback changes
+            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+                error_log('WHTHQ While Performing Backup Catch Exception: '.$e->getMessage());
+            }
         }
 
         return $filesystem;
