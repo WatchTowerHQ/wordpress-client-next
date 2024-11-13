@@ -3,7 +3,7 @@ Tags: watchtower, client, monitoring, backup, site speed
 Requires at least: 5.1
 Tested up to: 6.6
 Requires PHP: 7.4
-Stable tag: 3.11.0
+Stable tag: 3.11.1
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
 The WatchTowerHQ WordPress plugin allows us to monitor, backup, upgrade, and manage your site!
@@ -85,7 +85,6 @@ We have a number of standard roles, that many users requested, along with that w
 == Changelog ==
 = 3.11.0 =
 * code performance improvements
-
 
 = 3.10.5 =
 * security issue fix, change plugin URI

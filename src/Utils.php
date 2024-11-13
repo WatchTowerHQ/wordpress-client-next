@@ -243,11 +243,10 @@ class Utils
             }
 
             if ($d['isContentDir']) {
-                $p = WP_CONTENT_DIR . '/' . $d['path'];
+                $ret[ WP_CONTENT_DIR . '/' . $d['path']] = $d['type'];
             } else {
-                $p = ABSPATH . $d['path'];
+                $ret[ABSPATH . $d['path']] = $d['type'];
             }
-            $ret[] = $p;
         }
         return $ret;
     }
@@ -288,9 +287,16 @@ class Utils
             $directoryIterator = new RecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS);
             $filterIterator = new RecursiveCallbackFilterIterator($directoryIterator, function ($path) use ($excludedPaths) {
                 $fullPath = $path->getPathname();
+                $iteratedElementType = $path->isDir() ? 'dir' : 'file';
 
                 // Skip excluded paths and their subdirectories
-                foreach ($excludedPaths as $excluded) {
+                foreach ($excludedPaths as $excluded => $excludedType) {
+
+                    if ($iteratedElementType !== $excludedType) {
+                        //This Exclusion Do Not Match File Type That It's Intended For
+                        continue;
+                    }
+
                     if ($fullPath === $excluded || strpos($fullPath, rtrim($excluded, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) === 0) {
                         return false; // Exclude this path and its children
                     }
