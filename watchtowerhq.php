@@ -9,7 +9,7 @@ defined('ABSPATH') or die('No script kiddies please!');
  * Plugin URI: https://wordpress.org/plugins/watchtowerhq/
  * Description: The WatchTowerHQ plugin allows us to monitor, backup, upgrade, and manage your site!
  * Author: WhatArmy
- * Version: 3.11.1
+ * Version: 3.11.2
  * Requires PHP: 7.4
  * Author URI: https://watchtowerhq.co/
  * License: GPLv2 or later
