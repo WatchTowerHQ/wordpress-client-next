@@ -9,10 +9,9 @@ namespace WhatArmy\Watchtower;
 
 use FilesystemIterator;
 use RecursiveCallbackFilterIterator;
-use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Finder\Finder;
-use UnexpectedValueException;
+use WhatArmy\Watchtower\Iterators\ErrorHandlingRecursiveDirectoryIterator;
 
 /**
  * Class Utils
@@ -284,52 +283,45 @@ class Utils
 
     static function getFileSystemStructure($baseDir, $excludedPaths): array
     {
+        //This Create WHT Backup Directory That Is Required For Fallback During Filesystem Iteration
+        Utils::create_backup_dir();
+
         $filesystem = [];
 
-        try {
-            // Use RecursiveCallbackFilterIterator to filter out excluded paths
-            $directoryIterator = new RecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS);
-            $filterIterator = new RecursiveCallbackFilterIterator($directoryIterator, function ($path) use ($excludedPaths) {
-                $fullPath = $path->getPathname();
+        // Use the custom IgnorantRecursiveDirectoryIterator to avoid errors on unreadable directories
+        $directoryIterator = new ErrorHandlingRecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS);
+        $filterIterator = new RecursiveCallbackFilterIterator($directoryIterator, function ($path) use ($excludedPaths) {
+            $fullPath = $path->getPathname();
 
-                // Skip excluded paths and their subdirectories
-                foreach ($excludedPaths as $excluded => $excludedType) {
-
-                    if ($fullPath === $excluded && self::iteratorElementIsSameType($path, $excludedType)) {
-                        return false; //File Or Directory Is Excluded
-                    }
-
-                    if ($excludedType === 'dir' && strpos($fullPath, rtrim($excluded, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) === 0) {
-                        return false; // Exclude this path and its children
-                    }
-
+            // Skip excluded paths and their subdirectories
+            foreach ($excludedPaths as $excluded => $excludedType) {
+                if ($fullPath === $excluded && self::iteratorElementIsSameType($path, $excludedType)) {
+                    return false;  //File Or Directory Is Excluded
                 }
-
-                return true; // Include this path
-            });
-
-            $iterator = new RecursiveIteratorIterator($filterIterator, RecursiveIteratorIterator::SELF_FIRST);
-
-            foreach ($iterator as $path) {
-                $fullPath = $path->getPathname();
-
-                // Skip unreadable files
-                if ($path->isFile() && !$path->isReadable()) {
-                    continue;
+                if ($excludedType === 'dir' && strpos($fullPath, rtrim($excluded, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) === 0) {
+                    return false; // Exclude this path and its children
                 }
+            }
 
-                // Add to the filesystem array
-                $filesystem[] = [
-                    'type' => $path->isDir() ? 'dir' : 'file',
-                    'origin' => str_replace(ABSPATH, '', $fullPath), // Making the path relative
-                    'filesize' => $path->isFile() ? $path->getSize() : 0
-                ];
+            return true;  //Include this path
+        });
+
+        $iterator = new RecursiveIteratorIterator($filterIterator, RecursiveIteratorIterator::SELF_FIRST);
+
+        foreach ($iterator as $path) {
+            $fullPath = $path->getPathname();
+
+            // Skip unreadable files
+            if ($path->isFile() && !$path->isReadable()) {
+                continue;
             }
-        } catch (UnexpectedValueException $e) {
-            //error rollback changes
-            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log('WHTHQ While Performing Backup Catch Exception: '.$e->getMessage());
-            }
+
+            // Add to the filesystem array
+            $filesystem[] = [
+                'type' => $path->isDir() ? 'dir' : 'file',
+                'origin' => str_replace(ABSPATH, '', $fullPath),  // Making the path relative
+                'filesize' => $path->isFile() ? $path->getSize() : 0
+            ];
         }
 
         return $filesystem;
