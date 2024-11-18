@@ -306,21 +306,21 @@ class Utils
             return true;  //Include this path
         });
 
-        $iterator = new RecursiveIteratorIterator($filterIterator, RecursiveIteratorIterator::SELF_FIRST);
+        $filesystemIterator = new RecursiveIteratorIterator($filterIterator, RecursiveIteratorIterator::SELF_FIRST);
 
-        foreach ($iterator as $path) {
-            $fullPath = $path->getPathname();
+        foreach ($filesystemIterator as $filesystemEntry) {
+            $fullPath = $filesystemEntry->getPathname();
 
             // Skip unreadable files
-            if ($path->isFile() && !$path->isReadable()) {
+            if ($filesystemEntry->isFile() && !$filesystemEntry->isReadable()) {
                 continue;
             }
 
             // Add to the filesystem array
             $filesystem[] = [
-                'type' => $path->isDir() ? 'dir' : 'file',
+                'type' => $filesystemEntry->isDir() ? 'dir' : 'file',
                 'origin' => str_replace(ABSPATH, '', $fullPath),  // Making the path relative
-                'filesize' => $path->isFile() ? $path->getSize() : 0
+                'filesize' => $filesystemEntry->isFile() ? $filesystemEntry->getSize() : 0
             ];
         }
 
