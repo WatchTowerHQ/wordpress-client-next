@@ -310,17 +310,18 @@ class Utils
 
         foreach ($filesystemIterator as $filesystemEntry) {
             $fullPath = $filesystemEntry->getPathname();
+            $isFile = $filesystemEntry->isFile(); // Cache to prevent multiple filesystem call
 
             // Skip unreadable files
-            if ($filesystemEntry->isFile() && !$filesystemEntry->isReadable()) {
+            if ($isFile && !$filesystemEntry->isReadable()) {
                 continue;
             }
 
             // Add to the filesystem array
             $filesystem[] = [
-                'type' => $filesystemEntry->isDir() ? 'dir' : 'file',
+                'type' => $isFile ? 'file' : 'dir',
                 'origin' => str_replace(ABSPATH, '', $fullPath),  // Making the path relative
-                'filesize' => $filesystemEntry->isFile() ? $filesystemEntry->getSize() : 0
+                'filesize' => $isFile ? $filesystemEntry->getSize() : 0
             ];
         }
 
