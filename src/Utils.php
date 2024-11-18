@@ -276,7 +276,7 @@ class Utils
         return $ret;
     }
 
-    static function iteratorElementIsSameType($iteratorElement,$type)
+    static function checkIfIteratorElementIsSameType($iteratorElement, $type)
     {
         return  ($iteratorElement->isDir() ? 'dir' : 'file') === $type;
     }
@@ -295,7 +295,7 @@ class Utils
 
             // Skip excluded paths and their subdirectories
             foreach ($excludedPaths as $excluded => $excludedType) {
-                if ($fullPath === $excluded && self::iteratorElementIsSameType($path, $excludedType)) {
+                if ($fullPath === $excluded && self::checkIfIteratorElementIsSameType($path, $excludedType)) {
                     return false;  //File Or Directory Is Excluded
                 }
                 if ($excludedType === 'dir' && strpos($fullPath, rtrim($excluded, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) === 0) {
