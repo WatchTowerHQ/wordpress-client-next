@@ -7,8 +7,11 @@
 
 namespace WhatArmy\Watchtower;
 
-use http\Exception\RuntimeException;
+use FilesystemIterator;
+use RecursiveCallbackFilterIterator;
+use RecursiveIteratorIterator;
 use Symfony\Component\Finder\Finder;
+use WhatArmy\Watchtower\Iterators\ErrorHandlingRecursiveDirectoryIterator;
 
 /**
  * Class Utils
@@ -215,20 +218,34 @@ class Utils
         return true;
     }
 
-    public static function createLocalBackupExclusions($clientBackupExclusions): array
+    public static function createLocalBackupExclusions($clientBackupExclusions, $type = 'dir'): array
     {
+        $localBackupExclusions = [
+            [
+                'type' => 'file',
+                'isContentDir' => 1,
+                'path' => 'plugins/watchtowerhq/stubs/web.config.stub',
+            ],
+            [
+                'type' => 'dir',
+                'isContentDir' => 0,
+                'path' => str_replace(ABSPATH, '', WHTHQ_BACKUP_DIR),
+            ]];
+
+        $clientBackupExclusions = array_merge($localBackupExclusions, $clientBackupExclusions);
+
         $ret = [];
         foreach ($clientBackupExclusions as $d) {
             //Skip Entries That Are Only For WPE
-            if (!function_exists('is_wpe') && isset($d['onlyWPE']) && $d['onlyWPE'] == true) {
+            if (!function_exists('is_wpe') && isset($d['onlyWPE']) && $d['onlyWPE']) {
                 continue;
             }
-            if ($d['isContentDir'] == true) {
-                $p = WP_CONTENT_DIR . '/' . $d['path'];
+
+            if ($d['isContentDir']) {
+                $ret[ WP_CONTENT_DIR . '/' . $d['path']] = $d['type'];
             } else {
-                $p = ABSPATH . $d['path'];
+                $ret[ABSPATH . $d['path']] = $d['type'];
             }
-            $ret[] = $p;
         }
         return $ret;
     }
@@ -257,6 +274,58 @@ class Utils
         }
 
         return $ret;
+    }
+
+    static function checkIfIteratorElementIsSameType($iteratorElement, $type)
+    {
+        return  ($iteratorElement->isDir() ? 'dir' : 'file') === $type;
+    }
+
+    static function getFileSystemStructure($baseDir, $excludedPaths): array
+    {
+        //This Create WHT Backup Directory That Is Required For Fallback During Filesystem Iteration
+        Utils::create_backup_dir();
+
+        $filesystem = [];
+
+        // Use the custom IgnorantRecursiveDirectoryIterator to avoid errors on unreadable directories
+        $directoryIterator = new ErrorHandlingRecursiveDirectoryIterator($baseDir, FilesystemIterator::SKIP_DOTS);
+        $filterIterator = new RecursiveCallbackFilterIterator($directoryIterator, function ($path) use ($excludedPaths) {
+            $fullPath = $path->getPathname();
+
+            // Skip excluded paths and their subdirectories
+            foreach ($excludedPaths as $excluded => $excludedType) {
+                if ($fullPath === $excluded && self::checkIfIteratorElementIsSameType($path, $excludedType)) {
+                    return false;  //File Or Directory Is Excluded
+                }
+                if ($excludedType === 'dir' && strpos($fullPath, rtrim($excluded, DIRECTORY_SEPARATOR) . DIRECTORY_SEPARATOR) === 0) {
+                    return false; // Exclude this path and its children
+                }
+            }
+
+            return true;  //Include this path
+        });
+
+        $filesystemIterator = new RecursiveIteratorIterator($filterIterator, RecursiveIteratorIterator::SELF_FIRST);
+
+        foreach ($filesystemIterator as $filesystemEntry) {
+            $fullPath = $filesystemEntry->getPathname();
+            $isFile = $filesystemEntry->isFile(); // Cache to prevent multiple filesystem call
+
+            // Skip unreadable files
+            if ($isFile && !$filesystemEntry->isReadable()) {
+                continue;
+            }
+
+            // Add to the filesystem array
+            $filesystem[] = [
+                'type' => $isFile ? 'file' : 'dir',
+                'origin' => str_replace(ABSPATH, '', $fullPath),  // Making the path relative
+                'filesize' => $isFile ? $filesystemEntry->getSize() : 0
+            ];
+        }
+
+        return $filesystem;
     }
 
     public static function allFilesList($excludes = []): Finder
