@@ -61,6 +61,32 @@ class Password_Less_Access
         }
     }
 
+    static public function mark_whthq_admin_client_with_meta_key()
+    {
+        $admins_with_email_but_without_meta = get_users([
+            'role' => 'administrator',
+            'search' => WHTHQ_CLIENT_USER_EMAIL,
+            'search_columns' => ['user_email'],
+            'meta_query' => [
+                'relation' => 'OR',
+                [
+                    'key' => 'whthq_agent',
+                    'value' => '1',
+                    'compare' => '!=' // If the meta_key exists but the value is not 1
+                ],
+                [
+                    'key' => 'whthq_agent',
+                    'compare' => 'NOT EXISTS' // If the meta_key does not exist at all
+                ]
+            ]
+        ]);
+
+        if ($admins_with_email_but_without_meta) {
+            $admin = reset($admins_with_email_but_without_meta);
+            update_user_meta($admin->ID, 'whthq_agent', '1');
+        }
+    }
+
     public function login($access_token, $after_login_redirect_to = '')
     {
         if (!is_string(get_option('watchtower_ota_token'))) {
@@ -81,19 +107,34 @@ class Password_Less_Access
 
         if ($access_token === get_option('watchtower_ota_token')) {
             $random_password = wp_generate_password(30);
-            $admins_list = get_users('role=administrator&search=' . WHTHQ_CLIENT_USER_EMAIL);
+
+            //Migrate the legacy method for identifying administrative accounts by email used with the WHTHQ client
+            self::mark_whthq_admin_client_with_meta_key();
+
+            $admins_list = get_users([
+                'role' => 'administrator',
+                'meta_key' => 'whthq_agent',
+                'meta_value' => '1',
+            ]);
+
             if ($admins_list) {
                 reset($admins_list);
-                $adm_id = current($admins_list)->ID;
+                $admin = current($admins_list);
+                $adm_id = $admin->ID;
+
                 wp_set_password($random_password, $adm_id);
+
             } else {
-                $adm_id = wp_create_user(WHTHQ_CLIENT_USER_NAME, $random_password, WHTHQ_CLIENT_USER_EMAIL);
+                $adm_id = wp_create_user(Branding::get_wht_branding('WHTHQClientUserName',WHTHQ_CLIENT_USER_NAME), $random_password, Branding::get_wht_branding('WHTHQClientEmail',WHTHQ_CLIENT_USER_EMAIL));
                 $wp_user_object = new \WP_User($adm_id);
                 $wp_user_object->set_role('administrator');
                 if (is_multisite()) {
                     grant_super_admin($adm_id);
                 }
+
+                update_user_meta($adm_id, 'whthq_agent', '1');
             }
+
             wp_clear_auth_cookie();
             wp_set_auth_cookie($adm_id, true);
             wp_set_current_user($adm_id);

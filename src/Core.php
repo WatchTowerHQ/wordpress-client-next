@@ -87,11 +87,26 @@ class Core
                 'mysql_dump_location' => Utils::detectMysqldumpLocation() ? Utils::detectMysqldumpLocation() : 'n/a',
                 'php_version' => Utils::php_version(),
             ],
+            'branding' => $this->get_branding_information(),
             'debug' => [
                 'WP_DEBUG' => defined('WP_DEBUG') ? WP_DEBUG : false,
                 'WP_DEBUG_LOG' => defined('WP_DEBUG_LOG') ? WP_DEBUG_LOG : false,
                 'WP_DEBUG_DISPLAY' => defined('WP_DEBUG_DISPLAY') ? WP_DEBUG_DISPLAY : false,
             ]
+        ];
+    }
+
+    private function get_branding_information(): array
+    {
+        $existing_plugin_data = get_plugin_data(WHTHQ_MAIN, false, false);
+
+        return [
+            'BrandingRevision' => Branding::get_wht_branding('BrandingRevision', 'N/A'),
+            'Name' => $existing_plugin_data['Name'],
+            'PluginURI' => $existing_plugin_data['PluginURI'],
+            'Description' => $existing_plugin_data['Description'],
+            'Author' => $existing_plugin_data['Author'],
+            'AuthorURI' => $existing_plugin_data['AuthorURI'],
         ];
     }
 
@@ -191,8 +206,10 @@ class Core
                 'login' => $admin->user_login,
                 'email' => $admin->user_email,
                 'display_name' => $admin->display_name,
+                'first_name' => (string)get_user_meta($admin->ID, 'first_name', true),
                 'registered_at' => $admin->user_registered,
                 'last_seen_at' => $this->get_last_login($admin->ID),
+                'is_whthq_agent' => (bool)get_user_meta($admin->ID, 'whthq_agent', true)
             ];
         }
         return $admins;

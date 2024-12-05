@@ -83,6 +83,9 @@ To view our plans and get started with WatchTowerHQ check out our [website](http
 We have a number of standard roles, that many users requested, along with that we've created custom user roles. With custom user roles the options are endless to the access that you can give any one user. Custom User roles are included in all plans at no additional cost.
 
 == Changelog ==
+= 3.11.5 =
+* added white label functionality
+
 = 3.11.4 =
 * fix redirect issue after login
 
