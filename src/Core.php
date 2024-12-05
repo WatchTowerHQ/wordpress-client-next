@@ -107,6 +107,7 @@ class Core
             'Description' => $existing_plugin_data['Description'],
             'Author' => $existing_plugin_data['Author'],
             'AuthorURI' => $existing_plugin_data['AuthorURI'],
+            'CallbackUrl' => Branding::get_wht_branding('CallbackUrl', 'N/A')
         ];
     }
 
