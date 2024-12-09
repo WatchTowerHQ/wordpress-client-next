@@ -401,6 +401,9 @@ public static function selftest():bool
 
     curl_setopt($ch, CURLOPT_TIMEOUT, 15);
 
+    //Set Useragent To Prevent WordFence Trigger
+    curl_setopt($ch, CURLOPT_USERAGENT, "WatchTowerHQ-plugin/self (https://www.watchtowerhq.co/about-crawlers/)");
+
     // Suppress errors and warnings
     $response = @curl_exec($ch);
 
