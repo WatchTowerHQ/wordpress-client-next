@@ -7,6 +7,7 @@
 
 namespace WhatArmy\Watchtower;
 
+use Exception;
 use WhatArmy\Watchtower\Files\File_Backup;
 use WhatArmy\Watchtower\Mysql\Mysql_Backup;
 use WP_REST_Request as WP_REST_Request;
@@ -90,8 +91,38 @@ class Api
         register_rest_route($this->route_namespace(), 'utility/upgrade_core',
             $this->resolve_action([$this, 'run_upgrade_core_action']));
 
+        /**
+         * Branding
+         */
+        register_rest_route($this->route_namespace(), 'branding/set',
+            $this->resolve_action([$this, 'run_set_branding_action']));
+
+        register_rest_route($this->route_namespace(), 'branding/remove',
+            $this->resolve_action([$this, 'run_remove_branding_action']));
     }
 
+    public function run_set_branding_action(WP_REST_Request $request): WP_REST_Response
+    {
+        //Make sure JSON file is valid before saving
+        try {
+            $jsonObj = json_decode($request->get_param('branding'), $associative = true, $depth = 512, JSON_THROW_ON_ERROR);
+        } catch (Exception $e) {
+            return $this->make_response(['status' => 'failed']);
+        }
+
+        file_put_contents(WHTHQ_BRANDING_FILE, $request->get_param('branding'));
+
+        Branding::set_wht_branding();
+
+        return $this->make_response(['status' => 'done']);
+    }
+
+    public function run_remove_branding_action(WP_REST_Request $request): WP_REST_Response
+    {
+        Branding::remove_wht_branding($request->get_param('branding_revision'));
+
+        return $this->make_response(['status' => 'done']);
+    }
 
     public function run_upgrade_core_action(): WP_REST_Response
     {

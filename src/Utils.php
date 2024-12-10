@@ -7,6 +7,7 @@
 
 namespace WhatArmy\Watchtower;
 
+use Exception;
 use FilesystemIterator;
 use RecursiveCallbackFilterIterator;
 use RecursiveIteratorIterator;
@@ -378,4 +379,58 @@ class Utils
         $query = $wpdb->get_row($queryStr);
         return $query->MB;
     }
+
+public static function selftest():bool
+{
+    // Initialize cURL
+    $ch = curl_init(get_site_url(null,'?rest_route=/wht/v1/test'));
+    $postData = ['access_token'=>get_option('watchtower')['access_token']];
+    // Set cURL options for POST request
+    curl_setopt($ch, CURLOPT_POST, true);
+    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+
+    // Ignore HTTPS errors
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+
+    // Follow redirects
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+
+    // Return the response instead of outputting it
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+
+    //Set Useragent To Prevent WordFence Trigger
+    curl_setopt($ch, CURLOPT_USERAGENT, "WatchTowerHQ-plugin/self (https://www.watchtowerhq.co/about-crawlers/)");
+
+    // Suppress errors and warnings
+    $response = @curl_exec($ch);
+
+    // Check for any errors
+    if (curl_errno($ch)) {
+        // If an error occurs, return false
+        curl_close($ch);
+        return false;
+    }
+
+    // Close cURL
+    curl_close($ch);
+
+    // Check if response is valid JSON
+    $decodedResponse = json_decode($response, true);
+
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        // JSON is invalid
+        return false;
+    }
+
+    // Check if "version" field exists in the response
+    if (isset($decodedResponse['version'])) {
+        return true;  // Response is valid and contains "version"
+    } else {
+        return false;  // "version" field is missing
+    }
+}
+
 }

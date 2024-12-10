@@ -17,13 +17,4 @@ class Token
     {
         return md5(uniqid());
     }
-
-    public function refresh(): string
-    {
-        $my_options = get_option('watchtower');
-        $my_options['access_token'] = 'dupaaaaaaaa';
-        update_option('watchtower', $my_options);
-
-        return $this->generate();
-    }
 }
