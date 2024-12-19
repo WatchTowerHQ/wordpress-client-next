@@ -180,8 +180,18 @@ class Mysql_Backup
      */
     private function merge($file, $result): void
     {
-        file_put_contents($result, file_get_contents($file), FILE_APPEND | LOCK_EX);
-        unlink($file);
+        $input = fopen($file, 'rb');
+        $output = fopen($result, 'ab');
+
+        while (!feof($input)) {
+            // Read in 8 KB chunks (adjust as necessary)
+            fwrite($output, fread($input, 8192));
+        }
+
+        fclose($input);
+        fclose($output);
+
+        unlink($file); // Delete the original file
     }
 
     /**
