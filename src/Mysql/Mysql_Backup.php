@@ -234,8 +234,15 @@ class Mysql_Backup
 
     public function add_to_dump($job): void
     {
-        if ($job['last'] == false) {
+        $progress = explode('/', $job['queue']);
+        $percent = ceil(((int) $progress[0] / (int) $progress[1]) * 100);
+
+        $backupFilename = join('.', [$job['filename'], 'gz']);
+
+        if (!$job['last']) {
             $this->dump_data($job['table'], $job['dir'], $job['range']);
+            //Throttle This Request Since Looks Like It's Being Called Couple Times In Row
+            Schedule::call_headquarter_mysql_status($job['callbackHeadquarter'],2, $percent, $backupFilename, true);
         } else {
             $this->backupName = $job['dir'] . '_dump.sql';
             $this->dispatch_cleanup_job([
@@ -244,15 +251,12 @@ class Mysql_Backup
                 ]
             ]);
 
+
+            Schedule::call_headquarter_mysql_status($job['callbackHeadquarter'],5, $percent, $backupFilename);
+
             Utils::gzCompressFile($this->backupName);
             unlink($this->backupName);
 
-            $progress = explode('/', $job['queue']);
-            $percent = ceil(((int) $progress[0] / (int) $progress[1]) * 100);
-
-            $backupFilename = join('.', [$job['filename'], 'gz']);
-
-            Schedule::call_headquarter_mysql_status($job['callbackHeadquarter'], $percent, $backupFilename);
             Schedule::call_headquarter_mysql_ready($job['callbackHeadquarter'], $backupFilename);
         }
     }
