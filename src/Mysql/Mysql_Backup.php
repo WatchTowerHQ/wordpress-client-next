@@ -74,7 +74,8 @@ class Mysql_Backup
         $ct = 1;
         foreach ($stats as $table) {
             if ($this->should_separate($table)) {
-                foreach ($this->split_to_parts($table) as $part) {
+                $parts = $this->split_to_parts($table);
+                foreach ($parts as $part) {
                     $this->dispatch_job([
                         'job' => [
                             "table" => $table['name'],
@@ -84,7 +85,7 @@ class Mysql_Backup
                             "filename" => $this->group . '_dump.sql',
                             "file" => Utils::slugify($this->group),
                             "callbackHeadquarter" => $callback_url,
-                            "queue" => $ct . '/' . $ct,
+                            "queue" => $ct . '/' . count($parts),
                         ]
                     ], Utils::slugify($this->group), $ct * 10);
                     $ct++;
@@ -236,6 +237,7 @@ class Mysql_Backup
     {
         $progress = explode('/', $job['queue']);
         $percent = ceil(((int) $progress[0] / (int) $progress[1]) * 100);
+        error_log($percent);
 
         $backupFilename = join('.', [$job['filename'], 'gz']);
 
