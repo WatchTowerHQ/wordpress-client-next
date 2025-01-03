@@ -237,7 +237,6 @@ class Mysql_Backup
     {
         $progress = explode('/', $job['queue']);
         $percent = ceil(((int) $progress[0] / (int) $progress[1]) * 100);
-        error_log($percent);
 
         $backupFilename = join('.', [$job['filename'], 'gz']);
 
