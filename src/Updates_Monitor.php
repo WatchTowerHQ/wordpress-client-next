@@ -49,6 +49,22 @@ class Updates_Monitor
         }
     }
 
+    private function notify_wht_headquarter_about_update_log_event()
+    {
+        $headquarters = get_option('whthq_headquarters', []);
+        foreach ($headquarters as $callback => $last_used) {
+            if (!empty($callback) && !empty($last_used) && ($last_used >= time() - WHTHQ_MAX_HEADQUARTER_IDLE_TIME_SECONDS)) {
+                $headquarter = new Headquarter($callback);
+                $headquarter->setCurlTimeoutInSeconds(5);
+                $headquarter->setRetryDelaySeconds(180);
+                $headquarter->setRetryTimes(3);
+                $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
+                    'event_type' => 'update_log_event',
+                ]);
+            }
+        }
+    }
+
     public function handle_set_site_transient_update_plugins()
     {
         $plugin_updates = get_site_transient('update_plugins');
@@ -139,6 +155,7 @@ class Updates_Monitor
             (new User_Logs())->insert($data['action'],$data['who']);
         }
 
+        $this->notify_wht_headquarter_about_update_log_event();
     }
 
     /**
