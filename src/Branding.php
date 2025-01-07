@@ -146,13 +146,6 @@ class Branding
         //Setting Default WHT Username & Email
         self::restore_default_whthq_client_account();
 
-        //Prepare To Reinstall Stock Plugin
-     //   self::simulate_need_for_update_of_watchtowerhq_plugin();
-
-        //Reinstall Stock Plugin
-      //  $plugin = new Plugin();
-     //   $plugin->doUpdate('watchtowerhq/watchtowerhq.php');
-
         if (file_exists(WHTHQ_BRANDING_FILE)) {
             //Inform WHT Instance About Failed De-Branding Process
             self::report_set_branding_status(12, $branding_revision);
@@ -161,39 +154,6 @@ class Branding
             self::report_set_branding_status(11, $branding_revision);
         }
         return true;
-    }
-
-
-    static function simulate_need_for_update_of_watchtowerhq_plugin()
-    {
-        // Define the plugin slug (the identifier for the plugin)
-        $plugin_slug = 'watchtowerhq/watchtowerhq.php';
-
-        // Fetch the current plugin update transient (cached data for plugin updates)
-        $update_plugins = get_site_transient('update_plugins');
-
-        // Check if the transient exists and is a valid object
-        if (is_object($update_plugins)) {
-
-            // Check if the plugin is in the 'no_update' section (i.e., no update is currently needed)
-            if (isset($update_plugins->no_update[$plugin_slug])) {
-
-                // Store the plugin data temporarily
-                $item = $update_plugins->no_update[$plugin_slug];
-
-                // Remove the plugin from the 'no_update' section
-                unset($update_plugins->no_update[$plugin_slug]);
-
-                // Move the plugin to the 'response' section, which simulates that an update is available
-                $update_plugins->response[$plugin_slug] = $item;
-
-                // Update the 'last_checked' timestamp to the current time
-                $update_plugins->last_checked = time();
-
-                // Save the modified plugin update transient back to the database
-                set_site_transient('update_plugins', $update_plugins);
-            }
-        }
     }
 
     public static function wht_branding_is_configured(): bool
