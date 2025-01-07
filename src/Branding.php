@@ -25,6 +25,27 @@ class Branding
         }
     }
 
+    public function return_branded_banner()
+    {
+        $bannerData = self::get_wht_branding('Banner');
+
+        if (strpos($bannerData, 'data:image/png;base64,') === 0) {
+            $bannerData = substr($bannerData, strlen('data:image/png;base64,'));
+        }
+
+        $imageData = base64_decode($bannerData);
+
+        if ($imageData === false) {
+            wp_die('Invalid image data.', 'Error', ['response' => 500]);
+        }
+
+        header('Content-Type: image/png');
+        header('Content-Length: ' . strlen($imageData));
+
+        echo $imageData;
+        exit;
+
+    }
 
     public function override_plugin_details($result, $action, $args)
     {
@@ -66,8 +87,8 @@ class Branding
 
                 // Add custom banners
                 $result->banners = array(
-                    'low' => 'https://yourwebsite.com/banner-low.jpg',
-                    'high' => 'https://yourwebsite.com/banner-high.jpg',
+                    'low' => 'https://whatarmy.whtdev.ovh/media/wht_branding_logo',
+                    'high' => 'https://whatarmy.whtdev.ovh/media/wht_branding_logo',
                 );
 
 
