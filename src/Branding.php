@@ -8,8 +8,6 @@
 namespace WhatArmy\Watchtower;
 
 use Exception;
-use stdClass;
-use WP_Session_Tokens;
 
 /**
  * Branding
@@ -21,16 +19,15 @@ class Branding
     {
         add_action('wht_branding_set_hook', [$this, 'wht_branding_set']);
 
-        add_filter('all_plugins',[$this, 'all_plugins_branding_handle']);
-
-        add_filter('plugins_api', [$this, 'override_plugin_details'], 10, 3);
+        if(self::wht_branding_is_configured()) {
+            add_filter('all_plugins', [$this, 'all_plugins_branding_handle']);
+            add_filter('plugins_api', [$this, 'override_plugin_details'], 10, 3);
+        }
     }
 
 
     public function override_plugin_details($result, $action, $args)
     {
-      //  error_log('here');
-       // error_log(serialize($result));
         if ($action === 'plugin_information' && isset($args->slug) && $args->slug === 'watchtowerhq') {
 
             // Use a static flag to avoid infinite loops
@@ -52,10 +49,11 @@ class Branding
             // Modify only the "View Details" link
             if (is_object($result)) {
 
-                $result->name = 'Derwisz Plugin Entertament';
-                $result->author = 'Lacztaler HEJ KIU';
-                $result->homepage = 'https://yourwebsite.com';
-                $result->sections['description'] = 'A custom description of your plugin.';
+                $result->name = self::get_wht_branding('Name');
+                $result->author = self::get_wht_branding('Author');
+                $result->homepage = self::get_wht_branding('PluginURI');
+                $result->sections['description'] = self::get_wht_branding('Description');
+
                 unset($result->sections['installation']);
                 unset($result->sections['faq']);
                 unset($result->sections['changelog']);
@@ -72,9 +70,6 @@ class Branding
                     'high' => 'https://yourwebsite.com/banner-high.jpg',
                 );
 
-                // Optionally, add a custom changelog or other info
-                $result->changelog = 'Your custom changelog here...';
-
 
             }
             error_log(serialize($result));
@@ -86,11 +81,11 @@ class Branding
     {
         $plugin_slug = 'watchtowerhq/watchtowerhq.php';
         if (isset($plugins[$plugin_slug])) {
-           // error_log(serialize($plugins[$plugin_slug]));
-            $plugins[$plugin_slug]['Name'] = 'Your Customer’s Company Name Plugin';
-            $plugins[$plugin_slug]['Description'] = 'Customized plugin for Your Customer’s Company.';
-            $plugins[$plugin_slug]['Author'] = 'Your Customer’s Company';
-            $plugins[$plugin_slug]['PluginURI'] = 'https://google.pl';
+            $plugins[$plugin_slug]['Name'] = self::get_wht_branding('Name');
+            $plugins[$plugin_slug]['Description'] = self::get_wht_branding('Description');
+            $plugins[$plugin_slug]['Author'] = self::get_wht_branding('Author');
+            $plugins[$plugin_slug]['AuthorURI'] = self::get_wht_branding('AuthorURI');
+            $plugins[$plugin_slug]['PluginURI'] = self::get_wht_branding('PluginURI');
         }
         return $plugins;
     }
@@ -110,7 +105,7 @@ class Branding
 
     public function wht_branding_set()
     {
-        self::set_wht_branding();
+        //self::set_wht_branding();
     }
 
     public static function restore_default_whthq_client_account(): void
