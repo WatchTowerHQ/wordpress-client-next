@@ -20,6 +20,79 @@ class Branding
     public function __construct()
     {
         add_action('wht_branding_set_hook', [$this, 'wht_branding_set']);
+
+        add_filter('all_plugins',[$this, 'all_plugins_branding_handle']);
+
+        add_filter('plugins_api', [$this, 'override_plugin_details'], 10, 3);
+    }
+
+
+    public function override_plugin_details($result, $action, $args)
+    {
+      //  error_log('here');
+       // error_log(serialize($result));
+        if ($action === 'plugin_information' && isset($args->slug) && $args->slug === 'watchtowerhq') {
+
+            // Use a static flag to avoid infinite loops
+            static $already_fetching = false;
+
+            if ($already_fetching) {
+                return $result;
+            }
+
+            // Set flag to true to prevent recursion
+            $already_fetching = true;
+
+            // Fetch the original plugin data
+            $result = plugins_api($action, $args);
+
+            // Reset the flag after fetching
+            $already_fetching = false;
+
+            // Modify only the "View Details" link
+            if (is_object($result)) {
+
+                $result->name = 'Derwisz Plugin Entertament';
+                $result->author = 'Lacztaler HEJ KIU';
+                $result->homepage = 'https://yourwebsite.com';
+                $result->sections['description'] = 'A custom description of your plugin.';
+                unset($result->sections['installation']);
+                unset($result->sections['faq']);
+                unset($result->sections['changelog']);
+                unset($result->sections['screenshots']);
+                unset($result->sections['reviews']);
+
+                unset($result->contributors);
+                unset($result->ratings);
+
+
+                // Add custom banners
+                $result->banners = array(
+                    'low' => 'https://yourwebsite.com/banner-low.jpg',
+                    'high' => 'https://yourwebsite.com/banner-high.jpg',
+                );
+
+                // Optionally, add a custom changelog or other info
+                $result->changelog = 'Your custom changelog here...';
+
+
+            }
+            error_log(serialize($result));
+        }
+
+        return $result;
+    }
+    public function all_plugins_branding_handle($plugins)
+    {
+        $plugin_slug = 'watchtowerhq/watchtowerhq.php';
+        if (isset($plugins[$plugin_slug])) {
+           // error_log(serialize($plugins[$plugin_slug]));
+            $plugins[$plugin_slug]['Name'] = 'Your Customer’s Company Name Plugin';
+            $plugins[$plugin_slug]['Description'] = 'Customized plugin for Your Customer’s Company.';
+            $plugins[$plugin_slug]['Author'] = 'Your Customer’s Company';
+            $plugins[$plugin_slug]['PluginURI'] = 'https://google.pl';
+        }
+        return $plugins;
     }
 
     public static function get_wht_branding($key, $defaultValue = false)
