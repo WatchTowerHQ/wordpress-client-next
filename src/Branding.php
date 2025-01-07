@@ -265,151 +265,61 @@ class Branding
             }
         }
     }
+
     public static function set_wht_branding(): bool
     {
 
         if (!self::wht_branding_is_configured()) {
+            self::report_set_branding_status(20);
             return false;
         }
 
         //Inform WHT Instance About Initiating Branding Process
         self::report_set_branding_status(1);
 
-        $existing_plugin_data = get_plugin_data(WHTHQ_MAIN, false, false);
 
-        $wht_branding['Name'] = self::get_wht_branding('Name', $existing_plugin_data['Name']);
-        $wht_branding['PluginURI'] = self::get_wht_branding('PluginURI', $existing_plugin_data['PluginURI']);
-        $wht_branding['Description'] = self::get_wht_branding('Description', $existing_plugin_data['Description']);
-        $wht_branding['Author'] = self::get_wht_branding('Author', $existing_plugin_data['Author']);
-        $wht_branding['AuthorURI'] = self::get_wht_branding('AuthorURI', $existing_plugin_data['AuthorURI']);
+        //Migrate the legacy method for identifying administrative accounts by email used with the WHTHQ client
+        Password_Less_Access::mark_whthq_admin_client_with_meta_key();
 
+        //Setting WHT Username & Email
+        $admins_with_meta = get_users([
+            'role' => 'administrator',
+            'meta_key' => 'whthq_agent',
+            'meta_value' => '1',
+        ]);
 
-        $replacement = "//<--AUTO-GENERATED-PLUGIN-HEADER-START-->
-/**
- * Plugin Name: {$wht_branding['Name']}
- * Plugin URI: {$wht_branding['PluginURI']}
- * Description: {$wht_branding['Description']}
- * Author: {$wht_branding['Author']}
- * Version: {$existing_plugin_data['Version']}
- * Requires PHP: {$existing_plugin_data['RequiresPHP']}
- * Author URI: {$wht_branding['AuthorURI']}
- * License: GPLv2 or later
- * Text Domain: {$existing_plugin_data['TextDomain']}
- **/
- //<--AUTO-GENERATED-PLUGIN-HEADER-END-->";
+        //Make Sure We Have Only Single WHT Admin To Work With Otherwise It Might Indicate Someone Play Around And We Can Get Conflict
 
-        $startMarking = '//<--AUTO-GENERATED-PLUGIN-HEADER-START-->';
-        $endMarking = '//<--AUTO-GENERATED-PLUGIN-HEADER-END-->';
+        if (!empty($admins_with_meta) && count($admins_with_meta) === 1) {
 
-        //Check If Plugin File Exist And Is Readable
-        if (!is_file(WHTHQ_MAIN)) {
-            return false;
-        }
+            $admin = reset($admins_with_meta);
+            $admin_id = $admin->ID;
 
-        if (!is_readable(WHTHQ_MAIN)) {
-            return false;
-        }
+            $fields = [
+                'user_email' => 'WHTHQClientEmail',
+                'display_name' => 'WHTHQClientUserName',
+                'first_name' => 'WHTHQClientUserName'
+            ];
 
-        $fp = fopen(WHTHQ_MAIN, 'r+');
+            $user_data = ['ID' => $admin_id];
 
-        if (flock($fp, LOCK_EX)) {
+            foreach ($fields as $field => $branding_key) {
+                $meta_value = get_the_author_meta($field, $admin_id);
+                $branding_value = self::get_wht_branding($branding_key, '');
 
-            $actualPluginString = fread($fp, filesize(WHTHQ_MAIN));
-
-            $startPosition = strpos($actualPluginString, $startMarking);
-            $endPosition = strpos($actualPluginString, $endMarking);
-
-            if ($startPosition === false || $endPosition === false || $endPosition <= $startPosition) {
-                return false;
+                if ($meta_value !== $branding_value && !empty($branding_value)) {
+                    $user_data[$field] = $branding_value;
+                }
             }
 
-            // Calculate the length of the content between start and end position
-            $lengthToReplace = $endPosition - $startPosition + strlen($endMarking);
-
-            // Perform the replacement
-            $newPluginString = substr_replace($actualPluginString, $replacement, $startPosition, $lengthToReplace);
-
-            rewind($fp);
-
-            ftruncate($fp, 0);
-
-            //Write plugin file with new header
-            fwrite($fp, $newPluginString);
-
-            // Ensure all data is written to the file
-            fflush($fp);
-
-            //Validate For Syntax Error
-
-            if (!Utils::selftest()) {
-                //error rollback changes
-                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                    error_log('Applying WHTHQ branding caused critical error, rolling back.');
-                }
-
-                rewind($fp);
-
-                ftruncate($fp, 0);
-
-                //Write Plugin Before Modification
-                fwrite($fp, $actualPluginString);
-
-                // Ensure all data is written to the file
-                fflush($fp);
-
-                self::report_set_branding_status(20);
-            } else {
-
-                //Migrate the legacy method for identifying administrative accounts by email used with the WHTHQ client
-                Password_Less_Access::mark_whthq_admin_client_with_meta_key();
-
-                //Setting WHT Username & Email
-                $admins_with_meta = get_users([
-                    'role' => 'administrator',
-                    'meta_key' => 'whthq_agent',
-                    'meta_value' => '1',
-                ]);
-
-                //Make Sure We Have Only Single WHT Admin To Work With Otherwise It Might Indicate Someone Play Around And We Can Get Conflict
-
-                if (!empty($admins_with_meta) && count($admins_with_meta) === 1) {
-
-                    $admin = reset($admins_with_meta);
-                    $admin_id = $admin->ID;
-
-                    $fields = [
-                        'user_email' => 'WHTHQClientEmail',
-                        'display_name' => 'WHTHQClientUserName',
-                        'first_name' => 'WHTHQClientUserName'
-                    ];
-
-                    $user_data = ['ID' => $admin_id];
-
-                    foreach ($fields as $field => $branding_key) {
-                        $meta_value = get_the_author_meta($field, $admin_id);
-                        $branding_value = self::get_wht_branding($branding_key, '');
-
-                        if ($meta_value !== $branding_value && !empty($branding_value)) {
-                            $user_data[$field] = $branding_value;
-                        }
-                    }
-
-                    if (count($user_data) > 1) {
-                        wp_update_user($user_data);
-                        clean_user_cache($admin_id);
-                    }
-                }
-
-                self::report_set_branding_status(10);
+            if (count($user_data) > 1) {
+                wp_update_user($user_data);
+                clean_user_cache($admin_id);
             }
-
-            flock($fp, LOCK_UN);
-
-        } else {
-            //Problem Locking File
-            return false;
         }
-        fclose($fp);
+
+        self::report_set_branding_status(10);
+
 
         return true;
     }
