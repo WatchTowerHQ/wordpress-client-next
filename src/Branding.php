@@ -147,11 +147,11 @@ class Branding
         self::restore_default_whthq_client_account();
 
         //Prepare To Reinstall Stock Plugin
-        self::simulate_need_for_update_of_watchtowerhq_plugin();
+     //   self::simulate_need_for_update_of_watchtowerhq_plugin();
 
         //Reinstall Stock Plugin
-        $plugin = new Plugin();
-        $plugin->doUpdate('watchtowerhq/watchtowerhq.php');
+      //  $plugin = new Plugin();
+     //   $plugin->doUpdate('watchtowerhq/watchtowerhq.php');
 
         if (file_exists(WHTHQ_BRANDING_FILE)) {
             //Inform WHT Instance About Failed De-Branding Process
