@@ -22,6 +22,7 @@ class Branding
         if(self::wht_branding_is_configured()) {
             add_filter('all_plugins', [$this, 'all_plugins_branding_handle']);
             add_filter('plugins_api', [$this, 'override_plugin_details'], 10, 3);
+            add_action('wp_ajax_wht_plugin_banner', [$this,'return_branded_banner']);
         }
     }
 
@@ -87,8 +88,7 @@ class Branding
 
                 // Add custom banners
                 $result->banners = array(
-                    'low' => 'https://whatarmy.whtdev.ovh/media/wht_branding_logo',
-                    'high' => 'https://whatarmy.whtdev.ovh/media/wht_branding_logo',
+                    'high' => admin_url('admin-ajax.php?action=wht_plugin_banner'),
                 );
 
 
