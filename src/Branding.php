@@ -126,7 +126,7 @@ class Branding
 
     public function wht_branding_set()
     {
-        //self::set_wht_branding();
+        //Leave This To Avoid Errors During Update - We Remove It Later
     }
 
     public static function restore_default_whthq_client_account(): void
