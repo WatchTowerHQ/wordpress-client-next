@@ -8,8 +8,6 @@
 namespace WhatArmy\Watchtower;
 
 use Exception;
-use stdClass;
-use WP_Session_Tokens;
 
 /**
  * Branding
