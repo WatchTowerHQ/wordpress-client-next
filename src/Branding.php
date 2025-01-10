@@ -52,7 +52,7 @@ class Branding
     {
         if ($action === 'plugin_information' && isset($args->slug) && $args->slug === 'watchtowerhq') {
 
-            // Use a static flag to avoid infinite loops
+            // Use A Static Flag To Avoid Infinite Loops Since This Code Will Be Executed In Recursive Manner
             static $already_fetching = false;
 
             if ($already_fetching) {
@@ -68,7 +68,7 @@ class Branding
             // Reset the flag after fetching
             $already_fetching = false;
 
-            // Modify only the "View Details" link
+            // Modify Response From WordPress Database And Replace With Branded Information
             if (is_object($result)) {
 
                 $result->name = self::get_wht_branding('Name');
@@ -76,6 +76,8 @@ class Branding
                 $result->homepage = self::get_wht_branding('PluginURI');
                 $result->sections['description'] = self::get_wht_branding('Description');
 
+
+                //Remove Sections That WIll Give Away This Is Not White Labeled Plugin
                 unset($result->sections['installation']);
                 unset($result->sections['faq']);
                 unset($result->sections['changelog']);
@@ -98,13 +100,12 @@ class Branding
     }
     public function all_plugins_branding_handle($plugins)
     {
-        $plugin_slug = 'watchtowerhq/watchtowerhq.php';
-        if (isset($plugins[$plugin_slug])) {
-            $plugins[$plugin_slug]['Name'] = self::get_wht_branding('Name');
-            $plugins[$plugin_slug]['Description'] = self::get_wht_branding('Description');
-            $plugins[$plugin_slug]['Author'] = self::get_wht_branding('Author');
-            $plugins[$plugin_slug]['AuthorURI'] = self::get_wht_branding('AuthorURI');
-            $plugins[$plugin_slug]['PluginURI'] = self::get_wht_branding('PluginURI');
+        if (isset($plugins[WHTHQ_BASENAME])) {
+            $plugins[WHTHQ_BASENAME]['Name'] = self::get_wht_branding('Name');
+            $plugins[WHTHQ_BASENAME]['Description'] = self::get_wht_branding('Description');
+            $plugins[WHTHQ_BASENAME]['Author'] = self::get_wht_branding('Author');
+            $plugins[WHTHQ_BASENAME]['AuthorURI'] = self::get_wht_branding('AuthorURI');
+            $plugins[WHTHQ_BASENAME]['PluginURI'] = self::get_wht_branding('PluginURI');
         }
         return $plugins;
     }
