@@ -245,7 +245,7 @@ class Updates_Monitor
 
 
             if ($path === 'watchtowerhq/watchtowerhq.php') {
-                wp_schedule_single_event(time() + 1, 'wht_branding_set_hook', [wp_generate_password(10)]);
+               // wp_schedule_single_event(time() + 1, 'wht_branding_set_hook', [wp_generate_password(10)]);
             }
         }
 
@@ -269,7 +269,7 @@ class Updates_Monitor
                 ]);
 
                 if ($slug === 'watchtowerhq') {
-                    wp_schedule_single_event(time() + 1, 'wht_branding_set_hook', [wp_generate_password(10)]);
+                   // wp_schedule_single_event(time() + 1, 'wht_branding_set_hook', [wp_generate_password(10)]);
                 }
             }
         }
