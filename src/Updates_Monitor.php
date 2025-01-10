@@ -243,10 +243,6 @@ class Updates_Monitor
                 'action' => 'Installed Plugin: ' . $data['Name'] . ' | Ver.' . $data['Version'],
             ]);
 
-
-            if ($path === 'watchtowerhq/watchtowerhq.php') {
-               // wp_schedule_single_event(time() + 1, 'wht_branding_set_hook', [wp_generate_password(10)]);
-            }
         }
 
         if ('update' === $extra['action']) {
@@ -268,9 +264,6 @@ class Updates_Monitor
                     'action' => 'Updated Plugin: ' . $data['Name'] . ' | Ver.' . $data['Version'],
                 ]);
 
-                if ($slug === 'watchtowerhq') {
-                   // wp_schedule_single_event(time() + 1, 'wht_branding_set_hook', [wp_generate_password(10)]);
-                }
             }
         }
     }
