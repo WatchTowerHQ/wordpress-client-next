@@ -91,9 +91,7 @@ class Branding
                     'high' => admin_url('admin-ajax.php?action=wht_plugin_banner'),
                 );
 
-
             }
-            error_log(serialize($result));
         }
 
         return $result;
