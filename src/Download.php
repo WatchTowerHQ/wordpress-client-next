@@ -214,7 +214,9 @@ class Download
     {
         $buffer = file_get_contents($file, FALSE, NULL, $offset, $length);
         self::sendObjectHeaders(strlen($buffer), filemtime($file));
-        exit($buffer);
+        echo $buffer;
+        wp_ob_end_flush_all();
+        exit;
     }
 
     /**
