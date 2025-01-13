@@ -87,7 +87,7 @@ class Core
                 'mysql_dump_location' => Utils::detectMysqldumpLocation() ? Utils::detectMysqldumpLocation() : 'n/a',
                 'php_version' => Utils::php_version(),
             ],
-            'branding' => $this->get_branding_information(),
+            'branding' => Branding::wht_branding_is_configured() ? $this->get_branding_information() : null,
             'debug' => [
                 'WP_DEBUG' => defined('WP_DEBUG') ? WP_DEBUG : false,
                 'WP_DEBUG_LOG' => defined('WP_DEBUG_LOG') ? WP_DEBUG_LOG : false,
@@ -98,15 +98,13 @@ class Core
 
     private function get_branding_information(): array
     {
-        $existing_plugin_data = get_plugin_data(WHTHQ_MAIN, false, false);
-
         return [
             'BrandingRevision' => Branding::get_wht_branding('BrandingRevision', 'N/A'),
-            'Name' => $existing_plugin_data['Name'],
-            'PluginURI' => $existing_plugin_data['PluginURI'],
-            'Description' => $existing_plugin_data['Description'],
-            'Author' => $existing_plugin_data['Author'],
-            'AuthorURI' => $existing_plugin_data['AuthorURI'],
+            'Name' => Branding::get_wht_branding('Name', 'N/A'),
+            'PluginURI' => Branding::get_wht_branding('PluginURI', 'N/A'),
+            'Description' => Branding::get_wht_branding('Description', 'N/A'),
+            'Author' => Branding::get_wht_branding('Author', 'N/A'),
+            'AuthorURI' => Branding::get_wht_branding('AuthorURI', 'N/A'),
             'CallbackUrl' => Branding::get_wht_branding('CallbackUrl', 'N/A')
         ];
     }

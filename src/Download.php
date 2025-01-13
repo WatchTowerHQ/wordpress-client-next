@@ -214,7 +214,9 @@ class Download
     {
         $buffer = file_get_contents($file, FALSE, NULL, $offset, $length);
         self::sendObjectHeaders(strlen($buffer), filemtime($file));
-        exit($buffer);
+        echo $buffer;
+        wp_ob_end_flush_all();
+        exit;
     }
 
     /**
@@ -225,7 +227,7 @@ class Download
         $offset = self::resumeTransferOffset($file);
         self::sendHeaders($file, $offset);
         $download_rate = 600 * 10;
-        $handle = fopen($file, 'r');
+        $handle = fopen($file, 'rb');
         // seek to the requested offset, this is 0 if it's not a partial content request
         if ($offset > 0) {
             fseek($handle, $offset);

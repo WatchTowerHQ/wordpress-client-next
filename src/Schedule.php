@@ -58,19 +58,30 @@ class Schedule
      * @param $progress
      * @param $filename
      */
-    public static function call_headquarter_mysql_status($callbackHeadquarterUrl, $progress, $filename)
+    public static function call_headquarter_mysql_status($callbackHeadquarterUrl, $status_code,  $progress, $filename, $throttle = false)
     {
-        $headquarter = new Headquarter($callbackHeadquarterUrl);
+        if (!$throttle || !get_transient('call_headquarter_mysql_status_lock')) {
+            $headquarter = new Headquarter($callbackHeadquarterUrl);
 
-        $headquarter->setCurlTimeoutInSeconds(5);
-        $headquarter->setRetryDelaySeconds(30);
-        $headquarter->setRetryTimes(2);
+            $headquarter->setCurlTimeoutInSeconds(5);
+            $headquarter->setRetryDelaySeconds(30);
+            $headquarter->setRetryTimes(2);
 
-        $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
-            'event_type' =>'mysql_backup_status',
-            'progress' => $progress,
-            'filename' => $filename,
-        ]);
+            $headquarter->retryOnFailure('/incoming/client/wordpress/event', [
+                'event_type' => 'mysql_backup_status',
+                'status_code' => $status_code,
+                'progress' => $progress,
+                'filename' => $filename,
+            ]);
+
+            if($throttle)
+            {
+                // Set a transient to prevent re-triggering for 1 minute
+                set_transient('call_headquarter_mysql_status_lock', true, 60);
+            }
+
+        }
+
     }
 
     /**
