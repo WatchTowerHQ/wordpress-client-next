@@ -23,7 +23,18 @@ class Branding
             add_filter('all_plugins', [$this, 'all_plugins_branding_handle']);
             add_filter('plugins_api', [$this, 'override_plugin_details'], 10, 3);
             add_action('wp_ajax_wht_plugin_banner', [$this,'return_branded_banner']);
+            add_filter('gettext', [$this, 'replace_plugin_name'], 10, 3);
         }
+    }
+
+    public function replace_plugin_name($translated_text, $text, $domain)
+    {
+        // Replace Plugin Name For Custom Branded In Many Places Using Translation Engine - Primarily For "Updates" Page But Also Notifications
+        if ($domain === 'watchtowerhq' && $text === WHTHQ_PLUGIN_NAME) { // Original Plugin Name From The Header
+            return self::get_wht_branding('Name');
+        }
+
+        return $translated_text;
     }
 
     public function return_branded_banner()
