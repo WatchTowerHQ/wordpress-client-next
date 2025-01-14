@@ -11,11 +11,11 @@ defined('ABSPATH') or die('No script kiddies please!');
  * Plugin URI: https://wordpress.org/plugins/watchtowerhq/
  * Description: The WatchTowerHQ plugin allows us to monitor, backup, upgrade, and manage your site!
  * Author: WhatArmy
- * Version: 3.13.3
+ * Version: 3.13.4
  * Requires PHP: 7.4
  * Author URI: https://watchtowerhq.co/
  * License: GPLv2 or later
- * Text Domain: watchtower
+ * Text Domain: watchtowerhq
  **/
 //<--AUTO-GENERATED-PLUGIN-HEADER-END-->
 //DO NOT EDIT ABOVE THIS LINE
@@ -29,6 +29,7 @@ define('WHTHQ_MAIN', __FILE__);
 define('WHTHQ_BASENAME', plugin_basename(__FILE__));
 define('WHTHQ_MAIN_URI', plugin_dir_url(__FILE__));
 define('WHTHQ_DB_VERSION', '1.0');
+define('WHTHQ_PLUGIN_NAME', 'WatchTowerHQ');
 
 define('WHTHQ_CLIENT_USER_NAME', 'WatchTowerClient');
 define('WHTHQ_CLIENT_USER_EMAIL', 'wpdev@whatarmy.com');
