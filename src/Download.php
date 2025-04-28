@@ -155,8 +155,9 @@ class Download
     {
         header('Pragma: public');
         header('Expires: 0');
-        header('Cache-Control: must-revalidate, post-check=0, pre-check=0');
+        header('Cache-Control: no-store, no-cache, must-revalidate, no-transform');
         header('Cache-Control: private', false);
+        header('Content-Type: application/octet-stream');
         header('Content-Transfer-Encoding: binary');
         header('Content-Length: ' . $size);
         header('Created-Timestamp: ' . $timestamp);
@@ -212,6 +213,13 @@ class Download
      */
     public function serveObjectFile($file, $offset, $length)
     {
+        // Clear Output Buffer
+        if (ob_get_level()) {
+            ob_end_clean(); // Clear buffer
+        }
+
+        ob_implicit_flush(true); // Disable further buffering
+
         $buffer = file_get_contents($file, FALSE, NULL, $offset, $length);
         self::sendObjectHeaders(strlen($buffer), filemtime($file));
         echo $buffer;
