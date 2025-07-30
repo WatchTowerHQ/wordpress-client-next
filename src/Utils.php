@@ -36,9 +36,19 @@ class Utils
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         $charactersLength = strlen($characters);
         $randomString = '';
-        for ($i = 0; $i < $length; $i++) {
-            $randomString .= $characters[rand(0, $charactersLength - 1)];
+        
+        // Use cryptographically secure random number generation
+        if (function_exists('random_int')) {
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[random_int(0, $charactersLength - 1)];
+            }
+        } else {
+            // Fallback to mt_rand() if random_int() is not available (still better than rand())
+            for ($i = 0; $i < $length; $i++) {
+                $randomString .= $characters[mt_rand(0, $charactersLength - 1)];
+            }
         }
+        
         return $randomString;
     }
 
@@ -373,9 +383,9 @@ class Utils
     public static function db_size()
     {
         global $wpdb;
-        $queryStr = 'SELECT  ROUND(SUM(((DATA_LENGTH + INDEX_LENGTH)/1024/1024)),2) AS "MB"
+        $queryStr = $wpdb->prepare('SELECT ROUND(SUM(((DATA_LENGTH + INDEX_LENGTH)/1024/1024)),2) AS "MB"
         FROM INFORMATION_SCHEMA.TABLES
-	WHERE TABLE_SCHEMA = "' . $wpdb->dbname . '";';
+        WHERE TABLE_SCHEMA = %s', $wpdb->dbname);
         $query = $wpdb->get_row($queryStr);
         return $query->MB;
     }
