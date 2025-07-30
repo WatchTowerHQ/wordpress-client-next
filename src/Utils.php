@@ -9,6 +9,7 @@ namespace WhatArmy\Watchtower;
 
 use Exception;
 use FilesystemIterator;
+use Random\RandomException;
 use RecursiveCallbackFilterIterator;
 use RecursiveIteratorIterator;
 use Symfony\Component\Finder\Finder;
@@ -30,6 +31,7 @@ class Utils
     /**
      * @param int $length
      * @return string
+     * @throws RandomException
      */
     public static function random_string(int $length = 12): string
     {
