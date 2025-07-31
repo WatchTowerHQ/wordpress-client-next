@@ -101,7 +101,20 @@ class Download
     public function handle_big_object_download_request()
     {
         global $wp;
-        $wp->query_vars['wht_download_big_object_origin'] = wp_unslash($wp->query_vars['wht_download_big_object_origin']);
+        $file_path = wp_unslash($wp->query_vars['wht_download_big_object_origin']);
+        
+        // Validate file path to prevent path traversal attacks
+        $real_file_path = realpath($file_path);
+        $backup_dir_real = realpath(WHTHQ_BACKUP_DIR);
+        
+        // Ensure the file is within the backup directory
+        if ($real_file_path === false || $backup_dir_real === false || 
+            strpos($real_file_path, $backup_dir_real) !== 0) {
+            $this->access_denied_response();
+            exit;
+        }
+        
+        $wp->query_vars['wht_download_big_object_origin'] = $real_file_path;
         $hasAccess = $this->has_access($wp->query_vars['access_token']);
         if ($hasAccess == true) {
             if (file_exists($wp->query_vars['wht_download_big_object_origin'])) {
