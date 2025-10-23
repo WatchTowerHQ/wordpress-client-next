@@ -445,4 +445,102 @@ public static function selftest():bool
     }
 }
 
+    public static function wht_supports_encryption(): bool
+    {
+        try {
+            // Check if OpenSSL extension is loaded
+            if (!extension_loaded('openssl')) {
+                return false;
+            }
+
+            // Confirm AES-256-GCM is available
+            $methods = openssl_get_cipher_methods(true);
+            if (!in_array('aes-256-gcm', $methods, true)) {
+                return false;
+            }
+
+            // Safely get the watchtower option
+            $watchtower = get_option('watchtower');
+            if (!is_array($watchtower) || !isset($watchtower['access_token']) ||
+                strlen($watchtower['access_token']) !== 32) {
+                return false;
+            }
+
+            // Runtime sanity check: encrypt + decrypt a sample message
+            $key = $watchtower['access_token'];
+
+            // Generate secure random bytes for IV
+            $iv = random_bytes(12);  // 96-bit nonce required by GCM
+
+            $tag = '';  // Will be filled by openssl_encrypt
+            $pt = 'probe';
+
+            // Encrypt test message
+            $ct = openssl_encrypt($pt, 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $iv, $tag);
+            if ($ct === false || strlen($tag) !== 16) {
+                return false;
+            }
+
+            // Decrypt and verify
+            $rt = openssl_decrypt($ct, 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $iv, $tag);
+            return $rt === $pt;
+        } catch (Exception $e) {
+            // Handle any exceptions (like from random_bytes)
+            return false;
+        }
+    }
+
+    /**
+     * Build encrypted payload for request using AES-256-GCM.
+     */
+    public static function buildEncryptedPayload($data): array
+    {
+        $plaintext = json_encode($data, JSON_UNESCAPED_SLASHES);
+        $key = get_option('watchtower')['access_token'];
+        $iv = random_bytes(12); // 96-bit nonce for GCM
+        $tag = '';
+        $ciphertext = openssl_encrypt($plaintext, 'aes-256-gcm', $key, OPENSSL_RAW_DATA, $iv, $tag);
+
+        return [
+            'encrypted' => true,
+            'alg' => 'AES-256-GCM',
+            'iv' => base64_encode($iv),
+            'tag' => base64_encode($tag),
+            'ciphertext' => base64_encode($ciphertext),
+        ];
+    }
+
+    public static function doesContainTransparentEncryptionPayload($incomingPayload): bool
+    {
+        if(!is_array($incomingPayload)) {
+            return false;
+        }
+
+        if (!isset($incomingPayload['iv'], $incomingPayload['tag'], $incomingPayload['ciphertext'])) {
+            return false;
+        }
+
+         return true;
+    }
+    public static function tryTransparentlyDecryptPayload($incomingData)
+    {
+       if(!Utils::doesContainTransparentEncryptionPayload($incomingData))
+       {
+           return $incomingData;
+       }
+
+        $iv = base64_decode($incomingData['iv']);
+        $tag = base64_decode($incomingData['tag']);
+        $ciphertext = base64_decode($incomingData['ciphertext']);
+        $plaintext = openssl_decrypt($ciphertext, 'aes-256-gcm', get_option('watchtower')['access_token'], OPENSSL_RAW_DATA, $iv, $tag);
+        if ($plaintext === false) {
+            return null;
+        }
+        $decoded = json_decode($plaintext, true);
+        if (json_last_error() === JSON_ERROR_NONE) {
+            return $decoded;
+        }
+
+        return $incomingData;
+    }
 }
