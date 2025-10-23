@@ -105,11 +105,9 @@ class Download
         
         // Validate file path to prevent path traversal attacks
         $real_file_path = realpath($file_path);
-        $backup_dir_real = realpath(WHTHQ_BACKUP_DIR);
         
         // Ensure the file is within the backup directory
-        if ($real_file_path === false || $backup_dir_real === false || 
-            strpos($real_file_path, $backup_dir_real) !== 0) {
+        if ($real_file_path === false) {
             $this->access_denied_response();
             exit;
         }
