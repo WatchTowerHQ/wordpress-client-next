@@ -213,14 +213,14 @@ class Api
     {
         set_time_limit(300);
         $object_files = [];
-        foreach ($request['wht_backup_origins'] as $object_origin) {
+        foreach (Utils::tryTransparentlyDecryptPayload($request['wht_backup_origins']) as $object_origin) {
             if (file_exists($object_origin)) {
                 $object_files[] = ['origin' => $object_origin, 'created_timestamp' => filemtime($object_origin), 'type' => 'file', 'sha1' => sha1_file($object_origin), 'filesize' => filesize($object_origin), 'file_content' => base64_encode(file_get_contents($object_origin))];
             } else {
                 $object_files[] = ['origin' => $object_origin, 'removed' => true];
             }
         }
-        return $this->make_response(['files' => $object_files]);
+        return $this->make_response(['files' => Utils::doesContainTransparentEncryptionPayload($request['wht_backup_origins']) ? Utils::buildEncryptedPayload($object_files) : $object_files]);
     }
 
 
@@ -228,22 +228,23 @@ class Api
     {
         set_time_limit(300);
         $object_files = [];
-        foreach ($request['wht_backup_origins'] as $object_origin) {
+
+        foreach (Utils::tryTransparentlyDecryptPayload($request['wht_backup_origins']) as $object_origin) {
             if (file_exists($object_origin)) {
                 $object_files[] = ['origin' => $object_origin, 'type' => 'file', 'sha1' => sha1_file($object_origin), 'filesize' => filesize($object_origin)];
             } else {
                 $object_files[] = ['origin' => $object_origin, 'removed' => true];
             }
         }
-        return $this->make_response(['files' => $object_files]);
+        return $this->make_response(['files' => Utils::doesContainTransparentEncryptionPayload($request['wht_backup_origins']) ? Utils::buildEncryptedPayload($object_files) : $object_files]);
     }
 
 
     public function get_backup_files_list_action(WP_REST_Request $request): WP_REST_Response
     {
         set_time_limit(300);
-        $files = Utils::getFileSystemStructure(ABSPATH, Utils::createLocalBackupExclusions($request->get_param('clientBackupExclusions') ?? []));
-        return $this->make_response(['memory_limit' => ini_get('memory_limit'), 'max_input_vars' => ini_get('max_input_vars'), 'files' => $files]);
+        $files = Utils::getFileSystemStructure(ABSPATH, Utils::createLocalBackupExclusions(Utils::tryTransparentlyDecryptPayload($request->get_param('clientBackupExclusions')) ?? []));
+        return $this->make_response(['memory_limit' => ini_get('memory_limit'), 'max_input_vars' => ini_get('max_input_vars'),'files' => Utils::doesContainTransparentEncryptionPayload($request->get_param('clientBackupExclusions')) ? Utils::buildEncryptedPayload($files) : $files]);
     }
 
 
@@ -314,7 +315,10 @@ class Api
     public function test_action(): WP_REST_Response
     {
         $core = new Core;
-        return $this->make_response();
+        $data = [
+            'supports_encryption' => Utils::wht_supports_encryption()
+        ];
+        return $this->make_response($data);
     }
 
 
