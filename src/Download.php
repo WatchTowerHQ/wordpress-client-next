@@ -218,23 +218,45 @@ class Download
     }
 
     /**
+     * Clear all output buffers and disable output buffering.
+     * 
+     * Removes any BOM or premature output from other plugins that could corrupt
+     * the file stream and cause SHA1 hash mismatches during backup operations.
+     */
+    private function clearBuffersAndDisableBuffering()
+    {
+        // Discard ALL output buffers (including any BOM or premature output from other plugins)
+        while (ob_get_level() > 0) {
+            ob_end_clean();
+        }
+
+        // Disable output buffering for clean streaming
+        if (function_exists('apache_setenv')) {
+            @apache_setenv('no-gzip', '1');
+        }
+        @ini_set('zlib.output_compression', 'Off');
+        @ini_set('output_buffering', 'Off');
+        @ini_set('output_handler', '');
+    }
+
+    /**
      * @param $file
      * @param $offset
      * @param $length
      */
     public function serveObjectFile($file, $offset, $length)
     {
-        // Clear Output Buffer
-        if (ob_get_level()) {
-            ob_end_clean(); // Clear buffer
-        }
+        // Clear buffers and disable buffering to prevent BOM contamination
+        $this->clearBuffersAndDisableBuffering();
 
-        ob_implicit_flush(true); // Disable further buffering
-
+        // Read file content
         $buffer = file_get_contents($file, FALSE, NULL, $offset, $length);
+        
+        // Send headers and content
         self::sendObjectHeaders(strlen($buffer), filemtime($file));
         echo $buffer;
-        wp_ob_end_flush_all();
+        
+        flush();
         exit;
     }
 
@@ -243,8 +265,12 @@ class Download
      */
     public function serveFile($file)
     {
+        // Clear buffers and disable buffering to prevent BOM contamination
+        $this->clearBuffersAndDisableBuffering();
+
         $offset = self::resumeTransferOffset($file);
         self::sendHeaders($file, $offset);
+        
         $download_rate = 600 * 10;
         $handle = fopen($file, 'rb');
         // seek to the requested offset, this is 0 if it's not a partial content request

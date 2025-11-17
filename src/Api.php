@@ -35,6 +35,9 @@ class Api
             add_action('rest_api_init', function () {
                 $this->routes();
             });
+
+            // Clear BOM and premature output before REST responses to prevent JSON decode errors
+            add_filter('rest_pre_serve_request', [$this, 'clear_bom_before_response'], 10, 4);
         }
     }
 
@@ -370,5 +373,36 @@ class Api
     private function route_namespace(): string
     {
         return join('/', [self::API_NAMESPACE, self::API_VERSION]);
+    }
+
+    /**
+     * Clear any BOM or premature output before sending REST API responses.
+     * 
+     * When plugins/themes with BOM are loaded, the BOM bytes get output to WordPress's
+     * buffer before the REST response. This causes JSON decode errors on the client side
+     * because the response starts with BOM bytes instead of valid JSON.
+     * 
+     * This filter clears all output buffers before our REST endpoints send their response.
+     * 
+     * @param bool $served Whether the request has already been served
+     * @param mixed $result Result to send to the client
+     * @param WP_REST_Request $request Request object
+     * @param mixed $server REST server instance
+     * @return bool
+     */
+    public function clear_bom_before_response($served, $result, $request, $server)
+    {
+        // Only clear buffers for our WatchTower endpoints
+        if (strpos($request->get_route(), '/wht/') === 0) {
+            // Discard ALL output buffers (including any BOM or premature output from other plugins)
+            while (ob_get_level() > 0) {
+                ob_end_clean();
+            }
+            
+            // Start a fresh buffer for the clean JSON response
+            ob_start();
+        }
+        
+        return $served;
     }
 }
