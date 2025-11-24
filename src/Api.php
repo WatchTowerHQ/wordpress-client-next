@@ -460,13 +460,27 @@ class Api
     {
         // Only clear buffers for our WatchTower endpoints
         if (strpos($request->get_route(), '/wht/') === 0) {
+            $premature_output = '';
+
             // Discard ALL output buffers (including any BOM or premature output from other plugins)
             while (ob_get_level() > 0) {
-                ob_end_clean();
+                $content = ob_get_clean();
+                if ($content !== false) {
+                    $premature_output = $content . $premature_output;
+                }
             }
 
             // Start a fresh buffer for the clean JSON response
             ob_start();
+
+            // If we captured any premature output, add it to the response for debugging
+            if (!empty($premature_output) && $result instanceof WP_REST_Response) {
+                $data = $result->get_data();
+                if (is_array($data)) {
+                    $data['premature_output'] = base64_encode($premature_output);
+                    $result->set_data($data);
+                }
+            }
         }
 
         return $served;
