@@ -35,6 +35,9 @@ class Api
             add_action('rest_api_init', function () {
                 $this->routes();
             });
+
+            // Clear BOM and premature output before REST responses to prevent JSON decode errors
+            add_filter('rest_pre_serve_request', [$this, 'clear_bom_before_response'], 10, 4);
         }
     }
 
@@ -53,52 +56,102 @@ class Api
         /**
          * Password Less Access
          */
-        register_rest_route($this->route_namespace(), 'access/generate_ota',
-            $this->resolve_action([$this, 'access_generate_ota_action']));
+        register_rest_route(
+            $this->route_namespace(),
+            'access/generate_ota',
+            $this->resolve_action([$this, 'access_generate_ota_action'])
+        );
 
         /**
          * Backups
          */
-        register_rest_route($this->route_namespace(), 'backup/files/list',
-            $this->resolve_action([$this, 'get_backup_files_list_action']));
-        register_rest_route($this->route_namespace(), 'backup/files/list/detailed',
-            $this->resolve_action([$this, 'get_backup_files_list_detailed_action']));
-        register_rest_route($this->route_namespace(), 'backup/files/get',
-            $this->resolve_action([$this, 'get_backup_files_content_action']));
-        register_rest_route($this->route_namespace(), 'backup/file/run',
-            $this->resolve_action([$this, 'run_backup_file_action']));
-        register_rest_route($this->route_namespace(), 'backup/file/run_queue',
-            $this->resolve_action([$this, 'run_backup_file_queue_action']));
-        register_rest_route($this->route_namespace(), 'backup/mysql/run',
-            $this->resolve_action([$this, 'run_backup_db_action']));
-        register_rest_route($this->route_namespace(), 'backup/mysql/delete',
-            $this->resolve_action([$this, 'delete_backup_db_action']));
-        register_rest_route($this->route_namespace(), 'backup/cancel',
-            $this->resolve_action([$this, 'cancel_backup_action']));
+        register_rest_route(
+            $this->route_namespace(),
+            'backup/files/list',
+            $this->resolve_action([$this, 'get_backup_files_list_action'])
+        );
+        register_rest_route(
+            $this->route_namespace(),
+            'backup/files/list/detailed',
+            $this->resolve_action([$this, 'get_backup_files_list_detailed_action'])
+        );
+        register_rest_route(
+            $this->route_namespace(),
+            'backup/directories/list/detailed',
+            $this->resolve_action([$this, 'get_directories_list_detailed_action'])
+        );
+        register_rest_route(
+            $this->route_namespace(),
+            'backup/files/get',
+            $this->resolve_action([$this, 'get_backup_files_content_action'])
+        );
+        register_rest_route(
+            $this->route_namespace(),
+            'backup/file/run',
+            $this->resolve_action([$this, 'run_backup_file_action'])
+        );
+        register_rest_route(
+            $this->route_namespace(),
+            'backup/file/run_queue',
+            $this->resolve_action([$this, 'run_backup_file_queue_action'])
+        );
+        register_rest_route(
+            $this->route_namespace(),
+            'backup/mysql/run',
+            $this->resolve_action([$this, 'run_backup_db_action'])
+        );
+        register_rest_route(
+            $this->route_namespace(),
+            'backup/mysql/delete',
+            $this->resolve_action([$this, 'delete_backup_db_action'])
+        );
+        register_rest_route(
+            $this->route_namespace(),
+            'backup/cancel',
+            $this->resolve_action([$this, 'cancel_backup_action'])
+        );
 
         /**
          * Utilities
          */
-        register_rest_route($this->route_namespace(), 'utility/cleanup',
-            $this->resolve_action([$this, 'run_cleanup_action']));
+        register_rest_route(
+            $this->route_namespace(),
+            'utility/cleanup',
+            $this->resolve_action([$this, 'run_cleanup_action'])
+        );
 
-        register_rest_route($this->route_namespace(), 'utility/upgrade_plugin',
-            $this->resolve_action([$this, 'run_upgrade_plugin_action']));
+        register_rest_route(
+            $this->route_namespace(),
+            'utility/upgrade_plugin',
+            $this->resolve_action([$this, 'run_upgrade_plugin_action'])
+        );
 
-        register_rest_route($this->route_namespace(), 'utility/upgrade_theme',
-            $this->resolve_action([$this, 'run_upgrade_theme_action']));
+        register_rest_route(
+            $this->route_namespace(),
+            'utility/upgrade_theme',
+            $this->resolve_action([$this, 'run_upgrade_theme_action'])
+        );
 
-        register_rest_route($this->route_namespace(), 'utility/upgrade_core',
-            $this->resolve_action([$this, 'run_upgrade_core_action']));
+        register_rest_route(
+            $this->route_namespace(),
+            'utility/upgrade_core',
+            $this->resolve_action([$this, 'run_upgrade_core_action'])
+        );
 
         /**
          * Branding
          */
-        register_rest_route($this->route_namespace(), 'branding/set',
-            $this->resolve_action([$this, 'run_set_branding_action']));
+        register_rest_route(
+            $this->route_namespace(),
+            'branding/set',
+            $this->resolve_action([$this, 'run_set_branding_action'])
+        );
 
-        register_rest_route($this->route_namespace(), 'branding/remove',
-            $this->resolve_action([$this, 'run_remove_branding_action']));
+        register_rest_route(
+            $this->route_namespace(),
+            'branding/remove',
+            $this->resolve_action([$this, 'run_remove_branding_action'])
+        );
     }
 
     public function run_set_branding_action(WP_REST_Request $request): WP_REST_Response
@@ -240,11 +293,27 @@ class Api
     }
 
 
+    public function get_directories_list_detailed_action(WP_REST_Request $request): WP_REST_Response
+    {
+        set_time_limit(300);
+        $object_directories = [];
+
+        foreach (Utils::tryTransparentlyDecryptPayload($request['wht_backup_origins']) as $object_origin) {
+            if (file_exists($object_origin) && is_dir($object_origin)) {
+                $object_directories[] = ['origin' => $object_origin, 'type' => 'dir', 'timestamp' => filemtime($object_origin)];
+            } else {
+                $object_directories[] = ['origin' => $object_origin, 'removed' => true];
+            }
+        }
+        return $this->make_response(['directories' => Utils::doesContainTransparentEncryptionPayload($request['wht_backup_origins']) ? Utils::buildEncryptedPayload($object_directories) : $object_directories]);
+    }
+
+
     public function get_backup_files_list_action(WP_REST_Request $request): WP_REST_Response
     {
         set_time_limit(300);
         $files = Utils::getFileSystemStructure(ABSPATH, Utils::createLocalBackupExclusions(Utils::tryTransparentlyDecryptPayload($request->get_param('clientBackupExclusions')) ?? []));
-        return $this->make_response(['memory_limit' => ini_get('memory_limit'), 'max_input_vars' => ini_get('max_input_vars'),'files' => Utils::doesContainTransparentEncryptionPayload($request->get_param('clientBackupExclusions')) ? Utils::buildEncryptedPayload($files) : $files]);
+        return $this->make_response(['memory_limit' => ini_get('memory_limit'), 'max_input_vars' => ini_get('max_input_vars'), 'files' => Utils::doesContainTransparentEncryptionPayload($request->get_param('clientBackupExclusions')) ? Utils::buildEncryptedPayload($files) : $files]);
     }
 
 
@@ -279,7 +348,8 @@ class Api
         ]);
     }
 
-    function validate_and_sanitize_callback_domain($domain) {
+    function validate_and_sanitize_callback_domain($domain)
+    {
         // Sanitize the input
         $sanitized_domain = sanitize_text_field($domain);
 
@@ -293,11 +363,10 @@ class Api
 
     private function update_headquarter_callback(WP_REST_Request $request): void
     {
-        if($request->get_param('callback_fqdn')) {
+        if ($request->get_param('callback_fqdn')) {
             $callback_url = $this->validate_and_sanitize_callback_domain($request->get_param('callback_fqdn'));
 
-            if($callback_url)
-            {
+            if ($callback_url) {
                 $headquarters = get_option('whthq_headquarters', []);
                 $headquarters[$callback_url] = time();
                 update_option('whthq_headquarters', $headquarters);
@@ -370,5 +439,50 @@ class Api
     private function route_namespace(): string
     {
         return join('/', [self::API_NAMESPACE, self::API_VERSION]);
+    }
+
+    /**
+     * Clear any BOM or premature output before sending REST API responses.
+     * 
+     * When plugins/themes with BOM are loaded, the BOM bytes get output to WordPress's
+     * buffer before the REST response. This causes JSON decode errors on the client side
+     * because the response starts with BOM bytes instead of valid JSON.
+     * 
+     * This filter clears all output buffers before our REST endpoints send their response.
+     * 
+     * @param bool $served Whether the request has already been served
+     * @param mixed $result Result to send to the client
+     * @param WP_REST_Request $request Request object
+     * @param mixed $server REST server instance
+     * @return bool
+     */
+    public function clear_bom_before_response($served, $result, $request, $server)
+    {
+        // Only clear buffers for our WatchTower endpoints
+        if (strpos($request->get_route(), '/wht/') === 0) {
+            $premature_output = '';
+
+            // Discard ALL output buffers (including any BOM or premature output from other plugins)
+            while (ob_get_level() > 0) {
+                $content = ob_get_clean();
+                if ($content !== false) {
+                    $premature_output = $content . $premature_output;
+                }
+            }
+
+            // Start a fresh buffer for the clean JSON response
+            ob_start();
+
+            // If we captured any premature output, add it to the response for debugging
+            if (!empty($premature_output) && $result instanceof WP_REST_Response) {
+                $data = $result->get_data();
+                if (is_array($data)) {
+                    $data['premature_output'] = base64_encode($premature_output);
+                    $result->set_data($data);
+                }
+            }
+        }
+
+        return $served;
     }
 }
