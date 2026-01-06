@@ -102,22 +102,26 @@ class Download
     {
         global $wp;
         $file_path = wp_unslash($wp->query_vars['wht_download_big_object_origin']);
-        
-        // Validate file path to prevent path traversal attacks
+
+        // Validate file path to prevent path traversal attacks and restrict to WP root
         $real_file_path = realpath($file_path);
-        
-        // Ensure the file is within the backup directory
-        if ($real_file_path === false) {
+        $wp_root = realpath(ABSPATH);
+
+        // Ensure the file exists and remains inside the WordPress root
+        if ($real_file_path === false || $wp_root === false || strncmp($real_file_path, $wp_root, strlen($wp_root)) !== 0) {
             $this->access_denied_response();
             exit;
         }
-        
+
         $wp->query_vars['wht_download_big_object_origin'] = $real_file_path;
         $hasAccess = $this->has_access($wp->query_vars['access_token']);
         if ($hasAccess == true) {
             if (file_exists($wp->query_vars['wht_download_big_object_origin'])) {
                 if (isset($wp->query_vars['wht_download_big_object_length']) && isset($wp->query_vars['wht_download_big_object_offset'])) {
-                    $this->serveObjectFile($wp->query_vars['wht_download_big_object_origin'], $wp->query_vars['wht_download_big_object_offset'], $wp->query_vars['wht_download_big_object_length']);
+                    // Cast to integers and guard against negative values
+                    $offset = max(0, (int) $wp->query_vars['wht_download_big_object_offset']);
+                    $length = max(0, (int) $wp->query_vars['wht_download_big_object_length']);
+                    $this->serveObjectFile($wp->query_vars['wht_download_big_object_origin'], $offset, $length);
                 } else {
                     $this->serveFile($wp->query_vars['wht_download_big_object_origin']);
                 }
