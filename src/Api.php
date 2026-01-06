@@ -455,17 +455,28 @@ class Api
      */
     private function is_path_within_abspath(string $path): bool
     {
-        $real_path = realpath($path);
-        $wp_root = realpath(ABSPATH);
+        // Cache the WordPress root path to avoid repeated realpath() calls in loops
+        static $wp_root = null;
+        static $wp_root_len = null;
 
-        // If path doesn't exist yet or ABSPATH can't be resolved, deny access
-        if ($real_path === false || $wp_root === false) {
+        if ($wp_root === null) {
+            $wp_root = realpath(ABSPATH);
+            if ($wp_root === false) {
+                return false;
+            }
+            $wp_root_len = strlen($wp_root);
+        }
+
+        $real_path = realpath($path);
+
+        // If path doesn't exist or can't be resolved, deny access
+        if ($real_path === false) {
             return false;
         }
 
         // Ensure the path starts with WordPress root directory
         // Add trailing separator to prevent partial matches (e.g., /var/www/html vs /var/www/html2)
-        return strncmp($real_path, $wp_root . DIRECTORY_SEPARATOR, strlen($wp_root) + 1) === 0 
+        return strncmp($real_path, $wp_root . DIRECTORY_SEPARATOR, $wp_root_len + 1) === 0 
             || $real_path === $wp_root;
     }
 
