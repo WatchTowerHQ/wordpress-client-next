@@ -419,12 +419,25 @@ class Api
 
     public function check_permission(WP_REST_Request $request): bool
     {
-        return $request->get_param('access_token') === $this->access_token;
+        $provided_token = $request->get_param('access_token');
+
+        if (!\is_string($provided_token) || !\is_string($this->access_token)) {
+            return false;
+        }
+
+        return \hash_equals($this->access_token, $provided_token);
     }
 
     public function check_ota(WP_REST_Request $request): bool
     {
-        return $request->get_param('access_token') === get_option('watchtower_ota_token');
+        $stored_token = get_option('watchtower_ota_token');
+        $provided_token = $request->get_param('access_token');
+
+        if (!\is_string($stored_token) || !\is_string($provided_token)) {
+            return false;
+        }
+
+        return \hash_equals($stored_token, $provided_token);
     }
 
     private function resolve_action(callable $_action, string $method = 'POST'): array
