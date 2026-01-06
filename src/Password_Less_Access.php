@@ -150,7 +150,7 @@ class Password_Less_Access
      */
     public function generate_ota(): array
     {
-        $ota_token = 'ota_' . md5(uniqid());
+        $ota_token = 'ota_' . bin2hex(random_bytes(16));
         update_option('watchtower_ota_token', $ota_token);
         return [
             'ota_token' => $ota_token,
