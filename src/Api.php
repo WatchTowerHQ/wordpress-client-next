@@ -267,6 +267,12 @@ class Api
         set_time_limit(300);
         $object_files = [];
         foreach (Utils::tryTransparentlyDecryptPayload($request['wht_backup_origins']) as $object_origin) {
+            // Security: Validate path is within WordPress root to prevent arbitrary file read
+            if (!$this->is_path_within_abspath($object_origin)) {
+                $object_files[] = ['origin' => $object_origin, 'error' => 'access_denied'];
+                continue;
+            }
+
             if (file_exists($object_origin)) {
                 $object_files[] = ['origin' => $object_origin, 'created_timestamp' => filemtime($object_origin), 'type' => 'file', 'sha1' => sha1_file($object_origin), 'filesize' => filesize($object_origin), 'file_content' => base64_encode(file_get_contents($object_origin))];
             } else {
@@ -283,6 +289,12 @@ class Api
         $object_files = [];
 
         foreach (Utils::tryTransparentlyDecryptPayload($request['wht_backup_origins']) as $object_origin) {
+            // Security: Validate path is within WordPress root to prevent path traversal
+            if (!$this->is_path_within_abspath($object_origin)) {
+                $object_files[] = ['origin' => $object_origin, 'error' => 'access_denied'];
+                continue;
+            }
+
             if (file_exists($object_origin)) {
                 $object_files[] = ['origin' => $object_origin, 'type' => 'file', 'sha1' => sha1_file($object_origin), 'filesize' => filesize($object_origin)];
             } else {
@@ -299,6 +311,12 @@ class Api
         $object_directories = [];
 
         foreach (Utils::tryTransparentlyDecryptPayload($request['wht_backup_origins']) as $object_origin) {
+            // Security: Validate path is within WordPress root to prevent path traversal
+            if (!$this->is_path_within_abspath($object_origin)) {
+                $object_directories[] = ['origin' => $object_origin, 'error' => 'access_denied'];
+                continue;
+            }
+
             if (file_exists($object_origin) && is_dir($object_origin)) {
                 $object_directories[] = ['origin' => $object_origin, 'type' => 'dir', 'timestamp' => filemtime($object_origin)];
             } else {
@@ -426,6 +444,29 @@ class Api
         }
 
         return \hash_equals($this->access_token, $provided_token);
+    }
+
+    /**
+     * Validate that a given path is within the WordPress root directory.
+     * Prevents path traversal attacks by ensuring files cannot be accessed outside ABSPATH.
+     *
+     * @param string $path The path to validate
+     * @return bool True if path is within ABSPATH, false otherwise
+     */
+    private function is_path_within_abspath(string $path): bool
+    {
+        $real_path = realpath($path);
+        $wp_root = realpath(ABSPATH);
+
+        // If path doesn't exist yet or ABSPATH can't be resolved, deny access
+        if ($real_path === false || $wp_root === false) {
+            return false;
+        }
+
+        // Ensure the path starts with WordPress root directory
+        // Add trailing separator to prevent partial matches (e.g., /var/www/html vs /var/www/html2)
+        return strncmp($real_path, $wp_root . DIRECTORY_SEPARATOR, strlen($wp_root) + 1) === 0 
+            || $real_path === $wp_root;
     }
 
     public function check_ota(WP_REST_Request $request): bool
