@@ -35,8 +35,11 @@ class Password_Less_Access
     // Add API Endpoint
     public function add_endpoint()
     {
-        add_rewrite_rule('^wht_login/?([a-zA-Z0-9]+)?/?',
-            'index.php?wht_login=1&access_token=$matches[1]', 'top');
+        add_rewrite_rule(
+            '^wht_login/?([a-zA-Z0-9]+)?/?',
+            'index.php?wht_login=1&access_token=$matches[1]',
+            'top'
+        );
 
     }
 
@@ -105,7 +108,7 @@ class Password_Less_Access
             wp_die(__('Unauthorized access', 'watchtowerhq'));
         }
 
-        if ($access_token === get_option('watchtower_ota_token')) {
+        if (hash_equals((string) get_option('watchtower_ota_token'), (string) $access_token)) {
             $random_password = wp_generate_password(30);
 
             //Migrate the legacy method for identifying administrative accounts by email used with the WHTHQ client
@@ -125,7 +128,7 @@ class Password_Less_Access
                 wp_set_password($random_password, $adm_id);
 
             } else {
-                $adm_id = wp_create_user(Branding::get_wht_branding('WHTHQClientUserName',WHTHQ_CLIENT_USER_NAME), $random_password, Branding::get_wht_branding('WHTHQClientEmail',WHTHQ_CLIENT_USER_EMAIL));
+                $adm_id = wp_create_user(Branding::get_wht_branding('WHTHQClientUserName', WHTHQ_CLIENT_USER_NAME), $random_password, Branding::get_wht_branding('WHTHQClientEmail', WHTHQ_CLIENT_USER_EMAIL));
                 $wp_user_object = new \WP_User($adm_id);
                 $wp_user_object->set_role('administrator');
                 if (is_multisite()) {

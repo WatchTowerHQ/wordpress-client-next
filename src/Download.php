@@ -44,12 +44,21 @@ class Download
     // Add API Endpoint
     public function add_endpoint()
     {
-        add_rewrite_rule('^wht_download/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
-            'index.php?wht_download=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
-        add_rewrite_rule('^wht_download_finished/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
-            'index.php?wht_download_finished=1&access_token=$matches[1]&backup_name=$matches[2]', 'top');
-        add_rewrite_rule('^wht_download_big_object/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
-            'index.php?wht_download_big_object=1&access_token=$matches[1]&wht_download_big_object_origin=$matches[2]&wht_download_big_object_offset=$matches[3]&wht_download_big_object_length=$matches[4]', 'top');
+        add_rewrite_rule(
+            '^wht_download/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
+            'index.php?wht_download=1&access_token=$matches[1]&backup_name=$matches[2]',
+            'top'
+        );
+        add_rewrite_rule(
+            '^wht_download_finished/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
+            'index.php?wht_download_finished=1&access_token=$matches[1]&backup_name=$matches[2]',
+            'top'
+        );
+        add_rewrite_rule(
+            '^wht_download_big_object/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
+            'index.php?wht_download_big_object=1&access_token=$matches[1]&wht_download_big_object_origin=$matches[2]&wht_download_big_object_offset=$matches[3]&wht_download_big_object_length=$matches[4]',
+            'top'
+        );
     }
 
     /**
@@ -58,11 +67,14 @@ class Download
      */
     private function has_access($token): bool
     {
-        if ($token === get_option('watchtower')['access_token']) {
-            return true;
-        } else {
+        $watchtower_options = get_option('watchtower');
+        $access_token = $watchtower_options['access_token'] ?? '';
+
+        if (!is_string($token) || !is_string($access_token)) {
             return false;
         }
+
+        return hash_equals($access_token, $token);
     }
 
     /**
@@ -83,9 +95,9 @@ class Download
         http_response_code(401);
         header('content-type: application/json; charset=utf-8');
         echo json_encode([
-                'status' => 401,
-                'message' => 'File not exist or wrong token',
-            ]) . "\n";
+            'status' => 401,
+            'message' => 'File not exist or wrong token',
+        ]) . "\n";
     }
 
     public function file_not_exist_response()
@@ -93,9 +105,9 @@ class Download
         http_response_code(404);
         header('content-type: application/json; charset=utf-8');
         echo json_encode([
-                'status' => 404,
-                'message' => 'File not exist',
-            ]) . "\n";
+            'status' => 404,
+            'message' => 'File not exist',
+        ]) . "\n";
     }
 
     public function handle_big_object_download_request()
@@ -149,9 +161,9 @@ class Download
                 http_response_code(200);
                 header('content-type: application/json; charset=utf-8');
                 echo json_encode([
-                        'status' => 200,
-                        'message' => 'OK',
-                    ]) . "\n";
+                    'status' => 200,
+                    'message' => 'OK',
+                ]) . "\n";
             } else {
                 $this->serveFile($file);
             }
@@ -255,11 +267,11 @@ class Download
 
         // Read file content
         $buffer = file_get_contents($file, FALSE, NULL, $offset, $length);
-        
+
         // Send headers and content
         self::sendObjectHeaders(strlen($buffer), filemtime($file));
         echo $buffer;
-        
+
         flush();
         exit;
     }
@@ -274,7 +286,7 @@ class Download
 
         $offset = self::resumeTransferOffset($file);
         self::sendHeaders($file, $offset);
-        
+
         $download_rate = 600 * 10;
         $handle = fopen($file, 'rb');
         // seek to the requested offset, this is 0 if it's not a partial content request
