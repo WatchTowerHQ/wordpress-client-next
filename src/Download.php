@@ -70,11 +70,11 @@ class Download
         $watchtower_options = get_option('watchtower');
         $access_token = $watchtower_options['access_token'] ?? '';
 
-        if (!is_string($token) || !is_string($access_token)) {
+        if (!\is_string($token) || !\is_string($access_token)) {
             return false;
         }
 
-        return hash_equals($access_token, $token);
+        return \hash_equals($access_token, $token);
     }
 
     /**

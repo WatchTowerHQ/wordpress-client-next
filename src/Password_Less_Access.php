@@ -108,7 +108,7 @@ class Password_Less_Access
             wp_die(__('Unauthorized access', 'watchtowerhq'));
         }
 
-        if (hash_equals((string) get_option('watchtower_ota_token'), (string) $access_token)) {
+        if (\hash_equals((string) get_option('watchtower_ota_token'), (string) $access_token)) {
             $random_password = wp_generate_password(30);
 
             //Migrate the legacy method for identifying administrative accounts by email used with the WHTHQ client
