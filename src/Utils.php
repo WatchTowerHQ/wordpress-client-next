@@ -394,43 +394,40 @@ class Utils
 
 public static function selftest():bool
 {
-    // Initialize cURL
-    $ch = curl_init(get_site_url(null,'?rest_route=/wht/v1/test'));
-    $postData = ['access_token'=>get_option('watchtower')['access_token']];
-    // Set cURL options for POST request
-    curl_setopt($ch, CURLOPT_POST, true);
-    curl_setopt($ch, CURLOPT_POSTFIELDS, http_build_query($postData));
+    $url = get_site_url(null, '?rest_route=/wht/v1/test');
+    $postData = ['access_token' => get_option('watchtower')['access_token']];
+    
+    // Use WordPress HTTP API instead of cURL
+    // Use http_build_query to match original cURL behavior exactly
+    $args = [
+        'method' => 'POST',
+        'body' => http_build_query($postData),
+        'timeout' => 15,
+        'redirection' => 5,
+        'httpversion' => '1.0',
+        'user-agent' => 'WatchTowerHQ-plugin/self (https://www.watchtowerhq.co/about-crawlers/)',
+        'sslverify' => false, // Note: Disabling SSL verification is not recommended for production
+        'headers' => [
+            'Content-Type' => 'application/x-www-form-urlencoded',
+        ],
+    ];
 
-    // Ignore HTTPS errors
-    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+    $response = wp_remote_post($url, $args);
 
-    // Follow redirects
-    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
-
-    // Return the response instead of outputting it
-    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
-
-    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
-
-    //Set Useragent To Prevent WordFence Trigger
-    curl_setopt($ch, CURLOPT_USERAGENT, "WatchTowerHQ-plugin/self (https://www.watchtowerhq.co/about-crawlers/)");
-
-    // Suppress errors and warnings
-    $response = @curl_exec($ch);
-
-    // Check for any errors
-    if (curl_errno($ch)) {
-        // If an error occurs, return false
-        curl_close($ch);
+    // Check for errors
+    if (is_wp_error($response)) {
         return false;
     }
 
-    // Close cURL
-    curl_close($ch);
+    // Get response body
+    $response_body = wp_remote_retrieve_body($response);
+    
+    if (empty($response_body)) {
+        return false;
+    }
 
     // Check if response is valid JSON
-    $decodedResponse = json_decode($response, true);
+    $decodedResponse = json_decode($response_body, true);
 
     if (json_last_error() !== JSON_ERROR_NONE) {
         // JSON is invalid

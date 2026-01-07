@@ -54,28 +54,56 @@ class Headquarter
     public function call(string $endpoint = '/', array $data = []): bool
     {
         try {
-            $curl = new \Curl();
-            $curl->options['CURLOPT_SSL_VERIFYPEER'] = false;
-            $curl->options['CURLOPT_SSL_VERIFYHOST'] = false;
-            $curl->options['CURLOPT_TIMEOUT_MS'] = $this->curlTimeoutMs;
-            $curl->options['CURLOPT_NOSIGNAL'] = 1;
-
-            $curl->headers['Accept']= 'application/json';
-
+            // Add access_token to data
             $data['access_token'] = get_option('watchtower')['access_token'];
 
-            $response = $curl->get($this->headquarterUrl.$endpoint, $data);
+            // Build URL with query parameters (matching original cURL GET behavior)
+            $url = $this->headquarterUrl . $endpoint;
+            if (!empty($data)) {
+                $url = add_query_arg($data, $url);
+            }
 
-            if (isset($response->headers['Status-Code']) && $response->headers['Status-Code'] === '200') {
+            // Convert timeout from milliseconds to seconds
+            $timeout_seconds = max(1, ceil($this->curlTimeoutMs / 1000));
+
+            // Use WordPress HTTP API instead of cURL
+            $args = [
+                'method' => 'GET',
+                'timeout' => $timeout_seconds,
+                'redirection' => 5,
+                'httpversion' => '1.0',
+                'sslverify' => false, // Note: Disabling SSL verification is not recommended for production
+                'headers' => [
+                    'Accept' => 'application/json',
+                ],
+            ];
+
+            $response = wp_remote_get($url, $args);
+
+            // Check for errors
+            if (is_wp_error($response)) {
+                if (defined('WP_DEBUG') && WP_DEBUG) {
+                    error_log('Headquarter call error: ' . $response->get_error_message());
+                }
+                return false;
+            }
+
+            // Get response code
+            $response_code = wp_remote_retrieve_response_code($response);
+
+            if ($response_code === 200) {
                 return true;
             }
 
-            if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
-                error_log($response->body);
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                $response_body = wp_remote_retrieve_body($response);
+                error_log($response_body);
             }
 
         } catch (\Exception $e) {
-
+            if (defined('WP_DEBUG') && WP_DEBUG) {
+                error_log('Headquarter call exception: ' . $e->getMessage());
+            }
         }
 
         return false;

@@ -24,7 +24,6 @@
   },
   "require": {
     "php": ">= 7.4",
-    "shuber/curl": "dev-master",
     "ext-zip": "*",
     "ext-mysqli": "*",
     "ext-json": "*",

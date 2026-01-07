@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "379d4da2df273b4a130bb860dd2e697e",
+    "content-hash": "ab21b0fe0063a07b5935892a32680d4f",
     "packages": [
         {
             "name": "druidfi/mysqldump-php",
@@ -195,43 +195,6 @@
                 "source": "https://github.com/php-fig/http-message/tree/2.0"
             },
             "time": "2023-04-04T09:54:51+00:00"
-        },
-        {
-            "name": "shuber/curl",
-            "version": "dev-master",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/hamstar/curl.git",
-                "reference": "6624992df201f9fd7262080117385dd09b0ecd2b"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/hamstar/curl/zipball/6624992df201f9fd7262080117385dd09b0ecd2b",
-                "reference": "6624992df201f9fd7262080117385dd09b0ecd2b",
-                "shasum": ""
-            },
-            "default-branch": true,
-            "type": "library",
-            "autoload": {
-                "files": [
-                    "curl.php"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "MIT"
-            ],
-            "description": "PHP Wrapper for Curl",
-            "keywords": [
-                "bot",
-                "curl",
-                "scraper",
-                "spider"
-            ],
-            "support": {
-                "source": "https://github.com/hamstar/curl/tree/master"
-            },
-            "time": "2013-11-23T01:44:31+00:00"
         },
         {
             "name": "symfony/deprecation-contracts",
@@ -742,9 +705,7 @@
     "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "shuber/curl": 20
-    },
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
