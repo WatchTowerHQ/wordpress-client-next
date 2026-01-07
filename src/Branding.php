@@ -58,6 +58,7 @@ class Branding
         header('Content-Type: image/png');
         header('Content-Length: ' . strlen($imageData));
 
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Binary image data, not HTML
         echo $imageData;
         exit;
 

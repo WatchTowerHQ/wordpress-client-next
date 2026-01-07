@@ -180,13 +180,13 @@ class Watchtower
             <div class="updated notice is-dismissible"
                  style="padding-top:15px;padding-bottom:15px;display:flex;flex-direction:row">
                 <div>
-                    <img src="<?php echo  Branding::get_wht_branding('Logo1x',(WHTHQ_MAIN_URI . 'assets/images/logo1x.png'));?>"
+                    <img src="<?php echo esc_url(Branding::get_wht_branding('Logo1x',(WHTHQ_MAIN_URI . 'assets/images/logo1x.png')));?>"
                          style="height:100px;padding-right:15px;" alt="">
                 </div>
                 <div>
-                    <h2>Thank you for installing the <?php echo  Branding::get_wht_branding('Name','WatchTower HQ'); ?>  Monitoring Agent!</h2>
+                    <h2>Thank you for installing the <?php echo esc_html(Branding::get_wht_branding('Name','WatchTower HQ')); ?>  Monitoring Agent!</h2>
                     <h4 style="margin-bottom:0;"><a
-                                href="<?php echo admin_url('options-general.php?page=watchtower-setting-admin'); ?>">Click
+                                href="<?php echo esc_url(admin_url('options-general.php?page=watchtower-setting-admin')); ?>">Click
                             here</a> to view your Access Token.</h4>
                 </div>
             </div>
@@ -263,7 +263,7 @@ class Watchtower
         ?>
         <div class="wht-wrapper">
             <div class="wht-wrap">
-                <img src="<?php echo Branding::get_wht_branding('Logo',(plugin_dir_url(__FILE__) . '../assets/images/logo.png'))?>" alt="">
+                <img src="<?php echo esc_url(Branding::get_wht_branding('Logo',(plugin_dir_url(__FILE__) . '../assets/images/logo.png')));?>" alt="">
                 <form method="post" action="options.php" id="wht-form">
                     <?php
                     settings_fields('watchtower');
@@ -284,7 +284,7 @@ class Watchtower
 
                                 $nonce = wp_create_nonce("wht_refresh_token_nonce");
                                 ?>
-                                <button type="button" data-nonce="<?php echo $nonce ?>" data-style="wht-refresh-token"
+                                <button type="button" data-nonce="<?php echo esc_attr($nonce); ?>" data-style="wht-refresh-token"
                                         id="wht-refresh-token"
                                         class="button button-primary">
                                     Refresh Token
@@ -355,11 +355,12 @@ class Watchtower
      */
     public function access_token_info()
     {
+        $access_token = get_option('watchtower')['access_token'];
         print '
 <span class="watchtower_token_area">
-<span class="watchtower_token_field clip" data-clipboard-text="' . get_option('watchtower')['access_token'] . '">
+<span class="watchtower_token_field clip" data-clipboard-text="' . esc_attr($access_token) . '">
 <small>ACCESS TOKEN <sup>(hover to reveal, click to copy)</sup></small>
-<span class="tok">'.get_option('watchtower')['access_token'].'</span>
+<span class="tok">'.esc_html($access_token).'</span>
 <span id="wht-copied">Copied!</span>
 <span id="wht-copy-info"><span class="dashicons dashicons-admin-page"></span></span>
 </span>

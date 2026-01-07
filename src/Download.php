@@ -274,6 +274,7 @@ class Download
 
         // Send headers and content
         self::sendObjectHeaders(strlen($buffer), filemtime($file));
+        // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Binary file content, not HTML
         echo $buffer;
 
         flush();
@@ -299,6 +300,7 @@ class Download
         }
         while (!feof($handle)) {
             $buffer = fread($handle, round($download_rate * 1024));
+            // phpcs:ignore WordPress.Security.EscapeOutput.OutputNotEscaped -- Binary file content, not HTML
             echo $buffer;
             if (strpos($file, 'sql.gz') === false) {
                 wp_ob_end_flush_all();
