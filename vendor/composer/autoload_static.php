@@ -16,13 +16,13 @@ class ComposerStaticInit38658c24433224ba35a28b7f458965b7
     );
 
     public static $prefixLengthsPsr4 = array (
-        'W' => 
+        'W' =>
         array (
             'WhatArmy\\Watchtower\\Mysql\\' => 26,
             'WhatArmy\\Watchtower\\Files\\' => 26,
             'WhatArmy\\Watchtower\\' => 20,
         ),
-        'S' => 
+        'S' =>
         array (
             'Symfony\\Polyfill\\Php80\\' => 23,
             'Symfony\\Polyfill\\Mbstring\\' => 26,
@@ -30,59 +30,59 @@ class ComposerStaticInit38658c24433224ba35a28b7f458965b7
             'Symfony\\Polyfill\\Ctype\\' => 23,
             'Symfony\\Component\\Finder\\' => 25,
         ),
-        'P' => 
+        'P' =>
         array (
             'Psr\\Http\\Message\\' => 17,
             'PhpZip\\' => 7,
         ),
-        'D' => 
+        'D' =>
         array (
             'Druidfi\\Mysqldump\\' => 18,
         ),
     );
 
     public static $prefixDirsPsr4 = array (
-        'WhatArmy\\Watchtower\\Mysql\\' => 
+        'WhatArmy\\Watchtower\\Mysql\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src/Mysql',
         ),
-        'WhatArmy\\Watchtower\\Files\\' => 
+        'WhatArmy\\Watchtower\\Files\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src/Files',
         ),
-        'WhatArmy\\Watchtower\\' => 
+        'WhatArmy\\Watchtower\\' =>
         array (
             0 => __DIR__ . '/../..' . '/src',
         ),
-        'Symfony\\Polyfill\\Php80\\' => 
+        'Symfony\\Polyfill\\Php80\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-php80',
         ),
-        'Symfony\\Polyfill\\Mbstring\\' => 
+        'Symfony\\Polyfill\\Mbstring\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-mbstring',
         ),
-        'Symfony\\Polyfill\\Iconv\\' => 
+        'Symfony\\Polyfill\\Iconv\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-iconv',
         ),
-        'Symfony\\Polyfill\\Ctype\\' => 
+        'Symfony\\Polyfill\\Ctype\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/polyfill-ctype',
         ),
-        'Symfony\\Component\\Finder\\' => 
+        'Symfony\\Component\\Finder\\' =>
         array (
             0 => __DIR__ . '/..' . '/symfony/finder',
         ),
-        'Psr\\Http\\Message\\' => 
+        'Psr\\Http\\Message\\' =>
         array (
             0 => __DIR__ . '/..' . '/psr/http-message/src',
         ),
-        'PhpZip\\' => 
+        'PhpZip\\' =>
         array (
             0 => __DIR__ . '/..' . '/nelexa/zip/src',
         ),
-        'Druidfi\\Mysqldump\\' => 
+        'Druidfi\\Mysqldump\\' =>
         array (
             0 => __DIR__ . '/..' . '/druidfi/mysqldump-php/src',
         ),
