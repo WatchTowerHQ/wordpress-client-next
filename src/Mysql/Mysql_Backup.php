@@ -119,7 +119,7 @@ class Mysql_Backup
         foreach ($tables_stats as $table) {
             if (!in_array($table[0], $exclusion)) {
                 $to_ret->{$table[0]} = [
-                    'count' => $this->db->get_var("SELECT COUNT(*) FROM $table[0]"),
+                    'count' => $this->db->get_var("SELECT COUNT(*) FROM `" . esc_sql($table[0]) . "`"),
                     'size' => $table[1],
                 ];
             }
@@ -165,7 +165,7 @@ class Mysql_Backup
         ];
         $dump = new Mysqldump("mysql:host=" . DB_HOST . ";dbname=" . DB_NAME, DB_USER, DB_PASSWORD, $dumpSettings);
         if (is_array($range)) {
-            $range = $range['start'] === 1 ? [0, (int)WHTHQ_DB_RECORDS_MAX] : [($range['start'] - 1), (int)WHTHQ_DB_RECORDS_MAX];
+            $range = $range['start'] === 1 ? [0, (int) WHTHQ_DB_RECORDS_MAX] : [($range['start'] - 1), (int) WHTHQ_DB_RECORDS_MAX];
 
             $dump->setTableLimits([
                 $table => $range,
@@ -243,7 +243,7 @@ class Mysql_Backup
         if (!$job['last']) {
             $this->dump_data($job['table'], $job['dir'], $job['range']);
             //Throttle This Request Since Looks Like It's Being Called Couple Times In Row
-            Schedule::call_headquarter_mysql_status($job['callbackHeadquarter'],2, $percent, $backupFilename, true);
+            Schedule::call_headquarter_mysql_status($job['callbackHeadquarter'], 2, $percent, $backupFilename, true);
         } else {
             $this->backupName = $job['dir'] . '_dump.sql';
             $this->dispatch_cleanup_job([
@@ -253,7 +253,7 @@ class Mysql_Backup
             ]);
 
 
-            Schedule::call_headquarter_mysql_status($job['callbackHeadquarter'],5, $percent, $backupFilename);
+            Schedule::call_headquarter_mysql_status($job['callbackHeadquarter'], 5, $percent, $backupFilename);
 
             Utils::gzCompressFile($this->backupName);
             unlink($this->backupName);
