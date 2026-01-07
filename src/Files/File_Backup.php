@@ -7,6 +7,10 @@
 
 namespace WhatArmy\Watchtower\Files;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 use SplFileObject;
 use Symfony\Component\Finder\Finder;

@@ -7,6 +7,10 @@
 
 namespace WhatArmy\Watchtower;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Class Download
  * @package WhatArmy\Watchtower

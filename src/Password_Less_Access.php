@@ -7,6 +7,10 @@
 
 namespace WhatArmy\Watchtower;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Class Password_Less_Access
  * @package WhatArmy\Watchtower

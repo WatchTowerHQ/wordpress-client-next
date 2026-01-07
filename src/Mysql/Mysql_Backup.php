@@ -2,6 +2,10 @@
 
 namespace WhatArmy\Watchtower\Mysql;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Druidfi\Mysqldump\Mysqldump;
 use WhatArmy\Watchtower\Schedule;
 use WhatArmy\Watchtower\Utils;

@@ -7,6 +7,10 @@
 
 namespace WhatArmy\Watchtower;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 use Exception;
 use WhatArmy\Watchtower\Files\File_Backup;
 use WhatArmy\Watchtower\Mysql\Mysql_Backup;
