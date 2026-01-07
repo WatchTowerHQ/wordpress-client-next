@@ -44,6 +44,10 @@ class Headquarter
      */
     public function __construct($headquarterUrl)
     {
+        // Ensure URL has a protocol (database stores only FQDN)
+        if (!preg_match('/^https?:\/\//', $headquarterUrl)) {
+            $headquarterUrl = 'https://' . $headquarterUrl;
+        }
         $this->headquarterUrl = $headquarterUrl;
     }
     /**
@@ -118,14 +122,12 @@ class Headquarter
 
         // If the call failed, schedule a retry
         if (!$success) {
-            if($this->retryTimes > 0) {
+            if ($this->retryTimes > 0) {
                 if (!wp_next_scheduled('retry_headquarter_call', [$this->headquarterUrl, $endpoint, $data, $this->retryTimes, $this->retryDelaySeconds, $this->curlTimeoutMs])) {
                     wp_schedule_single_event(time() + $this->retryDelaySeconds, 'retry_headquarter_call', [$this->headquarterUrl, $endpoint, $data, $this->retryTimes, $this->retryDelaySeconds, $this->curlTimeoutMs]);
                 }
-            }
-            else
-            {
-                if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
+            } else {
+                if (defined('WP_DEBUG') && WP_DEBUG) {
                     error_log('Contacting WHTHQ failed using endpoint: ' . $endpoint);
                 }
             }
@@ -134,6 +136,6 @@ class Headquarter
 
     public function setCurlTimeoutInSeconds(int $seconds): void
     {
-        $this->curlTimeoutMs = $seconds*1000;
+        $this->curlTimeoutMs = $seconds * 1000;
     }
 }
