@@ -7,6 +7,10 @@
 
 namespace WhatArmy\Watchtower;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 /**
  * Class Password_Less_Access
  * @package WhatArmy\Watchtower
@@ -93,19 +97,19 @@ class Password_Less_Access
     public function login($access_token, $after_login_redirect_to = '')
     {
         if (!is_string(get_option('watchtower_ota_token'))) {
-            wp_die(__('Unauthorized access', 'watchtowerhq'));
+            wp_die(esc_html__('Unauthorized access', 'watchtowerhq'));
         }
 
         if (!is_string($access_token)) {
-            wp_die(__('Unauthorized access', 'watchtowerhq'));
+            wp_die(esc_html__('Unauthorized access', 'watchtowerhq'));
         }
 
         if (strlen($access_token) !== 36) {
-            wp_die(__('Unauthorized access', 'watchtowerhq'));
+            wp_die(esc_html__('Unauthorized access', 'watchtowerhq'));
         }
 
         if (strlen(get_option('watchtower_ota_token')) !== 36) {
-            wp_die(__('Unauthorized access', 'watchtowerhq'));
+            wp_die(esc_html__('Unauthorized access', 'watchtowerhq'));
         }
 
         if (\hash_equals((string) get_option('watchtower_ota_token'), (string) $access_token)) {

@@ -7,6 +7,10 @@
 
 namespace WhatArmy\Watchtower;
 
+if ( ! defined( 'ABSPATH' ) ) {
+	exit;
+}
+
 
 class Updates_Monitor
 {
@@ -24,6 +28,7 @@ class Updates_Monitor
         add_action('upgrader_process_complete', [&$this, 'hooks_plugin_install_or_update'], 10, 2);
 
         // Add hooks to listen for when the update checks are completed
+        // phpcs:ignore WordPress.WP.PluginUpdater -- This is not a plugin updater, it's a monitoring system that reports available updates to external service
         add_action('set_site_transient_update_plugins', [&$this, 'handle_set_site_transient_update_plugins']);
         add_action('set_site_transient_update_themes', [&$this, 'handle_set_site_transient_update_themes']);
         add_action('set_site_transient_update_core', [&$this, 'handle_set_site_transient_update_core']);

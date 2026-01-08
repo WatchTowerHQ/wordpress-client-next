@@ -11,7 +11,7 @@ defined('ABSPATH') or die('No script kiddies please!');
  * Plugin URI: https://wordpress.org/plugins/watchtowerhq/
  * Description: The WatchTowerHQ plugin allows us to monitor, backup, upgrade, and manage your site!
  * Author: WhatArmy
- * Version: 3.16.0
+ * Version: 3.16.1
  * Requires PHP: 7.4
  * Author URI: https://watchtowerhq.co/
  * License: GPLv2 or later
@@ -56,8 +56,11 @@ if (version_compare(PHP_VERSION, WHTHQ_MIN_PHP) >= 0) {
     function whthq_admin_notice__error()
     {
         $class = 'notice notice-error';
-        $message = __('Woops! Your current PHP version (' . PHP_VERSION . ') is not supported by WatchTower. Please upgrade your PHP version to at least v' . WHTHQ_MIN_PHP . '. Older than ' . WHTHQ_MIN_PHP . ' versions of PHP can cause security and performance problems.',
-            'wht-notice');
+        $message = sprintf(
+            __('Woops! Your current PHP version (%1$s) is not supported by WatchTower. Please upgrade your PHP version to at least v%2$s. Older than %2$s versions of PHP can cause security and performance problems.', 'watchtowerhq'),
+            PHP_VERSION,
+            WHTHQ_MIN_PHP
+        );
 
         printf('<div class="%1$s"><p>%2$s</p></div>', esc_attr($class), esc_html($message));
     }

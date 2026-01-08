@@ -3,7 +3,7 @@
         'name' => 'whatarmy/watchtowerhq',
         'pretty_version' => 'dev-develop',
         'version' => 'dev-develop',
-        'reference' => '14ed76cdd6be27d5fb354c07f9fc6f0aea083a00',
+        'reference' => '483d3c80ed9af3eea01a3356af38930d0155aef6',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -35,17 +35,6 @@
             'type' => 'library',
             'install_path' => __DIR__ . '/../psr/http-message',
             'aliases' => array(),
-            'dev_requirement' => false,
-        ),
-        'shuber/curl' => array(
-            'pretty_version' => 'dev-master',
-            'version' => 'dev-master',
-            'reference' => '6624992df201f9fd7262080117385dd09b0ecd2b',
-            'type' => 'library',
-            'install_path' => __DIR__ . '/../shuber/curl',
-            'aliases' => array(
-                0 => '9999999-dev',
-            ),
             'dev_requirement' => false,
         ),
         'symfony/deprecation-contracts' => array(
@@ -105,7 +94,7 @@
         'whatarmy/watchtowerhq' => array(
             'pretty_version' => 'dev-develop',
             'version' => 'dev-develop',
-            'reference' => '14ed76cdd6be27d5fb354c07f9fc6f0aea083a00',
+            'reference' => '483d3c80ed9af3eea01a3356af38930d0155aef6',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),
