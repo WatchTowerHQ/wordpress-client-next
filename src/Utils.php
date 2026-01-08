@@ -38,7 +38,7 @@ class Utils
         $characters = '0123456789abcdefghijklmnopqrstuvwxyz';
         $charactersLength = strlen($characters);
         $randomString = '';
-        
+
         // Use cryptographically secure random number generation
         if (function_exists('random_int')) {
             for ($i = 0; $i < $length; $i++) {
@@ -50,7 +50,7 @@ class Utils
                 $randomString .= $characters[mt_rand(0, $charactersLength - 1)];
             }
         }
-        
+
         return $randomString;
     }
 
@@ -179,16 +179,22 @@ class Utils
             mkdir(WHTHQ_BACKUP_DIR, 0777, true);
         }
         if (!file_exists(WHTHQ_BACKUP_DIR . '/index.html')) {
-            @file_put_contents(WHTHQ_BACKUP_DIR . '/index.html',
-                file_get_contents(plugin_dir_path(WHTHQ_MAIN) . '/stubs/index.html.stub'));
+            @file_put_contents(
+                WHTHQ_BACKUP_DIR . '/index.html',
+                file_get_contents(plugin_dir_path(WHTHQ_MAIN) . '/stubs/index.html.stub')
+            );
         }
         if (!file_exists(WHTHQ_BACKUP_DIR . '/.htaccess')) {
-            @file_put_contents(WHTHQ_BACKUP_DIR . '/.htaccess',
-                file_get_contents(plugin_dir_path(WHTHQ_MAIN) . '/stubs/htaccess.stub'));
+            @file_put_contents(
+                WHTHQ_BACKUP_DIR . '/.htaccess',
+                file_get_contents(plugin_dir_path(WHTHQ_MAIN) . '/stubs/htaccess.stub')
+            );
         }
         if (!file_exists(WHTHQ_BACKUP_DIR . '/web.config')) {
-            @file_put_contents(WHTHQ_BACKUP_DIR . '/web.config',
-                file_get_contents(plugin_dir_path(WHTHQ_MAIN) . '/stubs/web.config.stub'));
+            @file_put_contents(
+                WHTHQ_BACKUP_DIR . '/web.config',
+                file_get_contents(plugin_dir_path(WHTHQ_MAIN) . '/stubs/web.config.stub')
+            );
         }
     }
 
@@ -243,7 +249,8 @@ class Utils
                 'type' => 'dir',
                 'isContentDir' => 0,
                 'path' => str_replace(ABSPATH, '', WHTHQ_BACKUP_DIR),
-            ]];
+            ]
+        ];
 
         $clientBackupExclusions = array_merge($localBackupExclusions, $clientBackupExclusions);
 
@@ -255,7 +262,7 @@ class Utils
             }
 
             if ($d['isContentDir']) {
-                $ret[ WP_CONTENT_DIR . '/' . $d['path']] = $d['type'];
+                $ret[WP_CONTENT_DIR . '/' . $d['path']] = $d['type'];
             } else {
                 $ret[ABSPATH . $d['path']] = $d['type'];
             }
@@ -265,14 +272,18 @@ class Utils
 
     public static function getBackupExclusions($callbackHeadquarterUrl): array
     {
+        $sslVerify = !(defined('WHTHQ_DEV_MODE') && WHTHQ_DEV_MODE);
         $arrContextOptions = [
             "ssl" => [
-                "verify_peer" => false,
-                "verify_peer_name" => false,
+                "verify_peer" => $sslVerify,
+                "verify_peer_name" => $sslVerify,
             ],
         ];
-        $data = file_get_contents($callbackHeadquarterUrl . WHTHQ_BACKUP_EXCLUSIONS_ENDPOINT, false,
-            stream_context_create($arrContextOptions));
+        $data = file_get_contents(
+            $callbackHeadquarterUrl . WHTHQ_BACKUP_EXCLUSIONS_ENDPOINT,
+            false,
+            stream_context_create($arrContextOptions)
+        );
         $ret = [];
 
         if (Utils::is_json($data)) {
@@ -291,7 +302,7 @@ class Utils
 
     static function checkIfIteratorElementIsSameType($iteratorElement, $type)
     {
-        return  ($iteratorElement->isDir() ? 'dir' : 'file') === $type;
+        return ($iteratorElement->isDir() ? 'dir' : 'file') === $type;
     }
 
     static function getFileSystemStructure($baseDir, $excludedPaths): array
@@ -392,55 +403,55 @@ class Utils
         return $query->MB;
     }
 
-public static function selftest():bool
-{
-    $url = get_site_url(null, '?rest_route=/wht/v1/test');
-    $postData = ['access_token' => get_option('watchtower')['access_token']];
-    
-    // Use WordPress HTTP API instead of cURL
-    // Use http_build_query to match original cURL behavior exactly
-    $args = [
-        'method' => 'POST',
-        'body' => http_build_query($postData),
-        'timeout' => 15,
-        'redirection' => 5,
-        'httpversion' => '1.0',
-        'user-agent' => 'WatchTowerHQ-plugin/self (https://www.watchtowerhq.co/about-crawlers/)',
-        'sslverify' => false, // Note: Disabling SSL verification is not recommended for production
-        'headers' => [
-            'Content-Type' => 'application/x-www-form-urlencoded',
-        ],
-    ];
+    public static function selftest(): bool
+    {
+        $url = get_site_url(null, '?rest_route=/wht/v1/test');
+        $postData = ['access_token' => get_option('watchtower')['access_token']];
 
-    $response = wp_remote_post($url, $args);
+        // Use WordPress HTTP API instead of cURL
+        // Use http_build_query to match original cURL behavior exactly
+        $args = [
+            'method' => 'POST',
+            'body' => http_build_query($postData),
+            'timeout' => 15,
+            'redirection' => 5,
+            'httpversion' => '1.0',
+            'user-agent' => 'WatchTowerHQ-plugin/self (https://www.watchtowerhq.co/about-crawlers/)',
+            'sslverify' => !(defined('WHTHQ_DEV_MODE') && WHTHQ_DEV_MODE),
+            'headers' => [
+                'Content-Type' => 'application/x-www-form-urlencoded',
+            ],
+        ];
 
-    // Check for errors
-    if (is_wp_error($response)) {
-        return false;
+        $response = wp_remote_post($url, $args);
+
+        // Check for errors
+        if (is_wp_error($response)) {
+            return false;
+        }
+
+        // Get response body
+        $response_body = wp_remote_retrieve_body($response);
+
+        if (empty($response_body)) {
+            return false;
+        }
+
+        // Check if response is valid JSON
+        $decodedResponse = json_decode($response_body, true);
+
+        if (json_last_error() !== JSON_ERROR_NONE) {
+            // JSON is invalid
+            return false;
+        }
+
+        // Check if "version" field exists in the response
+        if (isset($decodedResponse['version'])) {
+            return true;  // Response is valid and contains "version"
+        } else {
+            return false;  // "version" field is missing
+        }
     }
-
-    // Get response body
-    $response_body = wp_remote_retrieve_body($response);
-    
-    if (empty($response_body)) {
-        return false;
-    }
-
-    // Check if response is valid JSON
-    $decodedResponse = json_decode($response_body, true);
-
-    if (json_last_error() !== JSON_ERROR_NONE) {
-        // JSON is invalid
-        return false;
-    }
-
-    // Check if "version" field exists in the response
-    if (isset($decodedResponse['version'])) {
-        return true;  // Response is valid and contains "version"
-    } else {
-        return false;  // "version" field is missing
-    }
-}
 
     public static function wht_supports_encryption(): bool
     {
@@ -458,8 +469,10 @@ public static function selftest():bool
 
             // Safely get the watchtower option
             $watchtower = get_option('watchtower');
-            if (!is_array($watchtower) || !isset($watchtower['access_token']) ||
-                strlen($watchtower['access_token']) !== 32) {
+            if (
+                !is_array($watchtower) || !isset($watchtower['access_token']) ||
+                strlen($watchtower['access_token']) !== 32
+            ) {
                 return false;
             }
 
@@ -509,7 +522,7 @@ public static function selftest():bool
 
     public static function doesContainTransparentEncryptionPayload($incomingPayload): bool
     {
-        if(!is_array($incomingPayload)) {
+        if (!is_array($incomingPayload)) {
             return false;
         }
 
@@ -517,14 +530,13 @@ public static function selftest():bool
             return false;
         }
 
-         return true;
+        return true;
     }
     public static function tryTransparentlyDecryptPayload($incomingData)
     {
-       if(!Utils::doesContainTransparentEncryptionPayload($incomingData))
-       {
-           return $incomingData;
-       }
+        if (!Utils::doesContainTransparentEncryptionPayload($incomingData)) {
+            return $incomingData;
+        }
 
         $iv = base64_decode($incomingData['iv']);
         $tag = base64_decode($incomingData['tag']);

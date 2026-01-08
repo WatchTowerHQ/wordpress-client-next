@@ -11,7 +11,7 @@ defined('ABSPATH') or die('No script kiddies please!');
  * Plugin URI: https://wordpress.org/plugins/watchtowerhq/
  * Description: The WatchTowerHQ plugin allows us to monitor, backup, upgrade, and manage your site!
  * Author: WhatArmy
- * Version: 3.16.1
+ * Version: 3.16.2
  * Requires PHP: 7.4
  * Author URI: https://watchtowerhq.co/
  * License: GPLv2 or later
@@ -42,6 +42,10 @@ define('WHTHQ_DB_RECORDS_MAX', 6500);
 define('WHTHQ_BRANDING_FILE', wp_upload_dir()['basedir'] . '/' . 'WatchTowerClientCustomBranding.json');
 define('WHTHQ_MAX_HEADQUARTER_IDLE_TIME_SECONDS', 172800);
 
+// Developer Mode - performance and security may be impacted
+if (!defined('WHTHQ_DEV_MODE')) {
+    define('WHTHQ_DEV_MODE', false);
+}
 
 if (version_compare(PHP_VERSION, WHTHQ_MIN_PHP) >= 0) {
     /**
@@ -50,8 +54,18 @@ if (version_compare(PHP_VERSION, WHTHQ_MIN_PHP) >= 0) {
     require_once(plugin_dir_path(WHTHQ_MAIN) . '/vendor/woocommerce/action-scheduler/action-scheduler.php');
     require __DIR__ . '/vendor/autoload.php';
 
-
     new Watchtower();
+
+    // Show admin warning when developer mode is enabled
+    if (WHTHQ_DEV_MODE) {
+        add_action('admin_notices', function () {
+            printf(
+                '<div class="notice notice-warning"><p><strong>%s:</strong> %s</p></div>',
+                esc_html(\WhatArmy\Watchtower\Branding::get_wht_branding('Name', 'WatchtowerHQ')),
+                esc_html__('Developer mode is enabled. Performance and security may be impacted.', 'watchtowerhq')
+            );
+        });
+    }
 } else {
     function whthq_admin_notice__error()
     {

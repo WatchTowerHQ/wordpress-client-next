@@ -76,7 +76,7 @@ class Headquarter
                 'timeout' => $timeout_seconds,
                 'redirection' => 5,
                 'httpversion' => '1.0',
-                'sslverify' => false, // Note: Disabling SSL verification is not recommended for production
+                'sslverify' => !(defined('WHTHQ_DEV_MODE') && WHTHQ_DEV_MODE),
                 'headers' => [
                     'Accept' => 'application/json',
                 ],
