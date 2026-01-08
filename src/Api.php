@@ -7,8 +7,8 @@
 
 namespace WhatArmy\Watchtower;
 
-if ( ! defined( 'ABSPATH' ) ) {
-	exit;
+if (!defined('ABSPATH')) {
+    exit;
 }
 
 use Exception;
@@ -56,6 +56,7 @@ class Api
         register_rest_route($this->route_namespace(), 'get/themes', $this->resolve_action([$this, 'get_themes_action']));
         register_rest_route($this->route_namespace(), 'get/all', $this->resolve_action([$this, 'get_all_action']));
         register_rest_route($this->route_namespace(), 'user_logs', $this->resolve_action([$this, 'get_user_logs_action']));
+        register_rest_route($this->route_namespace(), 'debug_log', $this->resolve_action([$this, 'get_debug_log_action']));
 
         /**
          * Password Less Access
@@ -355,6 +356,15 @@ class Api
     }
 
 
+    public function get_debug_log_action(WP_REST_Request $request): WP_REST_Response
+    {
+        $debug_log = new Debug_Log;
+        $limit = $request->get_param('limit') ?: 100;
+        $offset = $request->get_param('offset') ?: 0;
+        return $this->make_response($debug_log->get($limit, $offset));
+    }
+
+
     public function get_all_action(WP_REST_Request $request): WP_REST_Response
     {
         $core = new Core;
@@ -480,7 +490,7 @@ class Api
 
         // Ensure the path starts with WordPress root directory
         // Add trailing separator to prevent partial matches (e.g., /var/www/html vs /var/www/html2)
-        return strncmp($real_path, $wp_root . DIRECTORY_SEPARATOR, $wp_root_len + 1) === 0 
+        return strncmp($real_path, $wp_root . DIRECTORY_SEPARATOR, $wp_root_len + 1) === 0
             || $real_path === $wp_root;
     }
 
