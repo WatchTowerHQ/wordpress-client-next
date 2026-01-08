@@ -7,6 +7,8 @@
 
 namespace WhatArmy\Watchtower;
 
+use SplFileObject;
+
 /**
  * Class Debug_Log
  * @package WhatArmy\Watchtower
@@ -88,7 +90,7 @@ class Debug_Log
         }
 
         // For large files, read from the end
-        $file = new \SplFileObject($file_path, 'r');
+        $file = new SplFileObject($file_path, 'r');
         $file->seek(PHP_INT_MAX);
         $total_lines = $file->key() + 1;
 
