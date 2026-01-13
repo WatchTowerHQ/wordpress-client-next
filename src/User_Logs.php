@@ -1,15 +1,10 @@
 <?php
 
+namespace WhatArmy\Watchtower;
+
 if (!defined('ABSPATH')) {
     exit;
 }
-/**
- * Author: Code2Prog
- * Date: 2019-06-10
- * Time: 18:43
- */
-
-namespace WhatArmy\Watchtower;
 
 /**
  * Class User_Logs
