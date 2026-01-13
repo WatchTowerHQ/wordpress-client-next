@@ -1,4 +1,8 @@
 <?php
+
+if (!defined('ABSPATH')) {
+    exit;
+}
 /**
  * Author: Code2Prog
  * Date: 2026-01-07
