@@ -1,4 +1,9 @@
 <?php
+/**
+ * Author: Code2Prog
+ * Date: 2026-01-07
+ * Time: 13:27
+ */
 
 namespace WhatArmy\Watchtower;
 
