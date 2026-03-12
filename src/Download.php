@@ -49,12 +49,12 @@ class Download
     public function add_endpoint()
     {
         add_rewrite_rule(
-            '^wht_download/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
+            '^wht_download/?([a-zA-Z0-9]+)?/?([a-zA-Z0-9_.]+)?/?',
             'index.php?wht_download=1&access_token=$matches[1]&backup_name=$matches[2]',
             'top'
         );
         add_rewrite_rule(
-            '^wht_download_finished/?([a-zA-Z0-9]+)?/?([a-zA-Z]+)?/?',
+            '^wht_download_finished/?([a-zA-Z0-9]+)?/?([a-zA-Z0-9_.]+)?/?',
             'index.php?wht_download_finished=1&access_token=$matches[1]&backup_name=$matches[2]',
             'top'
         );
@@ -118,6 +118,11 @@ class Download
     {
         global $wp;
         $file_path = wp_unslash($wp->query_vars['wht_download_big_object_origin']);
+
+        // Resolve relative paths against ABSPATH so realpath() works regardless of PHP's CWD
+        if (!path_is_absolute($file_path)) {
+            $file_path = rtrim(ABSPATH, '/') . '/' . $file_path;
+        }
 
         // Validate file path to prevent path traversal attacks and restrict to WP root
         $real_file_path = realpath($file_path);
