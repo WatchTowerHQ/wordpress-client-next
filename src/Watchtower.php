@@ -35,6 +35,7 @@ class Watchtower
         new Api();
         new File_Backup();
         new Mysql_Backup();
+        new Mail_Monitor();
         new Updates_Monitor();
         new Branding();
 

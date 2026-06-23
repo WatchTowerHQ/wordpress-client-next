@@ -104,29 +104,40 @@ class Schedule
      */
     public static function cancel_queue_and_cleanup($filename)
     {
-        global $wpdb;
-
         $group = Utils::extract_group_from_filename($filename);
+        $group_slug = Utils::slugify($group);
+
         if (strpos($filename, '.sql.gz') !== false) {
-            self::clean_queue($group, 'add_to_dump');
-            if (file_exists(WHTHQ_BACKUP_DIR . '/' . $filename)) {
-                unlink(WHTHQ_BACKUP_DIR . '/' . $filename);
-            }
-            if (file_exists(WHTHQ_BACKUP_DIR . '/' . $group . '_dump_tmp.sql')) {
-                unlink(WHTHQ_BACKUP_DIR . '/' . $group . '_dump_tmp.sql');
-            }
-            if (file_exists(WHTHQ_BACKUP_DIR . '/' . $group . '_dump.sql')) {
-                unlink(WHTHQ_BACKUP_DIR . '/' . $group . '_dump.sql');
+            as_unschedule_all_actions('add_to_dump', [], $group_slug);
+            delete_option('whthq_dump_queue_' . $group);
+            foreach ([
+                WHTHQ_BACKUP_DIR . '/' . $filename,
+                WHTHQ_BACKUP_DIR . '/' . $group . '_dump_tmp.sql',
+                WHTHQ_BACKUP_DIR . '/' . $group . '_dump.sql',
+            ] as $file) {
+                if (file_exists($file)) {
+                    unlink($file);
+                }
             }
         }
 
         if (strpos($filename, '.zip') !== false) {
-            $gr = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'actionscheduler_groups WHERE slug =  "' . Utils::slugify($group) . '"');
-            $actions = $wpdb->get_results('SELECT action_id,group_id,args  FROM ' . $wpdb->prefix . 'actionscheduler_actions WHERE hook = "add_to_zip" AND group_id = "' . $gr->group_id . '"');
+            $actions = as_get_scheduled_actions([
+                'hook' => 'add_to_zip',
+                'group' => $group_slug,
+                'status' => \ActionScheduler_Store::STATUS_PENDING,
+                'per_page' => -1,
+            ]);
             foreach ($actions as $action) {
-                unlink(WHTHQ_BACKUP_DIR . '/' . json_decode($action->args)->files->data_file);
+                $args = $action->get_args();
+                if (isset($args['files']['data_file'])) {
+                    $file = WHTHQ_BACKUP_DIR . '/' . $args['files']['data_file'];
+                    if (file_exists($file)) {
+                        unlink($file);
+                    }
+                }
             }
-            self::clean_queue($group);
+            as_unschedule_all_actions('add_to_zip', [], $group_slug);
         }
     }
 
@@ -136,36 +147,32 @@ class Schedule
      */
     public static function clean_queue($group = null, string $hook = 'add_to_zip')
     {
-        global $wpdb;
-
-        if ($group != null) {
-            $gr = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'actionscheduler_groups WHERE slug =  "' . Utils::slugify($group) . '"');
-            $actions = $wpdb->get_results('SELECT action_id,group_id  FROM ' . $wpdb->prefix . 'actionscheduler_actions WHERE hook = "' . $hook . '" AND group_id = "' . $gr->group_id . '"');
-            $wpdb->delete($wpdb->prefix . 'actionscheduler_groups', ['group_id' => $gr->group_id]);
-
+        if ($group !== null) {
+            as_unschedule_all_actions($hook, [], Utils::slugify($group));
         } else {
-            $actions = $wpdb->get_results('SELECT action_id,group_id  FROM ' . $wpdb->prefix . 'actionscheduler_actions WHERE hook = "' . $hook . '"');
-        }
-        foreach ($actions as $action) {
-            $wpdb->delete($wpdb->prefix . 'actionscheduler_logs', ['action_id' => $action->action_id]);
-            $wpdb->delete($wpdb->prefix . 'actionscheduler_actions', ['action_id' => $action->action_id]);
-            $wpdb->delete($wpdb->prefix . 'actionscheduler_groups', ['group_id' => $action->group_id]);
+            as_unschedule_all_actions($hook);
         }
     }
 
     public static function clean_older_than_days($days = 3)
     {
-        global $wpdb;
+        $store = \ActionScheduler_Store::instance();
+        $cutoff = as_get_datetime_object(gmdate('U') - ($days * DAY_IN_SECONDS));
 
-        $actions = $wpdb->get_results(
-            'SELECT action_id,group_id  FROM ' . $wpdb->prefix . 'actionscheduler_actions 
-            WHERE (hook = "add_to_zip" OR hook = "add_to_dump") AND scheduled_date_gmt < NOW() - INTERVAL ' . $days . ' DAY'
-        );
-
-        foreach ($actions as $action) {
-            $wpdb->delete($wpdb->prefix . 'actionscheduler_logs', ['action_id' => $action->action_id]);
-            $wpdb->delete($wpdb->prefix . 'actionscheduler_actions', ['action_id' => $action->action_id]);
-            $wpdb->delete($wpdb->prefix . 'actionscheduler_groups', ['group_id' => $action->group_id]);
+        foreach (['add_to_zip', 'add_to_dump'] as $hook) {
+            $action_ids = $store->query_actions([
+                'hook' => $hook,
+                'date' => $cutoff->format('Y-m-d H:i:s'),
+                'date_compare' => '<=',
+                'per_page' => -1,
+            ]);
+            foreach ($action_ids as $action_id) {
+                try {
+                    $store->delete_action($action_id);
+                } catch (\Exception $e) {
+                    // Action may already be deleted
+                }
+            }
         }
     }
 
@@ -176,15 +183,15 @@ class Schedule
      */
     public static function status($status, $group = null): int
     {
-        global $wpdb;
-        if ($group != null) {
-            $gr = $wpdb->get_row('SELECT * FROM ' . $wpdb->prefix . 'actionscheduler_groups WHERE slug =  "' . Utils::slugify($group) . '"');
-            $results = $wpdb->get_results('SELECT action_id  FROM ' . $wpdb->prefix . 'actionscheduler_actions WHERE hook = "add_to_zip" AND status = "' . $status . '" AND group_id = "' . $gr->group_id . '"');
-
-        } else {
-            $results = $wpdb->get_results('SELECT action_id  FROM ' . $wpdb->prefix . 'actionscheduler_actions WHERE hook = "add_to_zip" AND status = "' . $status . '"');
+        $store = \ActionScheduler_Store::instance();
+        $args = [
+            'hook' => 'add_to_zip',
+            'status' => $status,
+            'per_page' => -1,
+        ];
+        if ($group !== null) {
+            $args['group'] = Utils::slugify($group);
         }
-
-        return count($results);
+        return (int) $store->query_actions($args, 'count');
     }
 }

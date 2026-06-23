@@ -87,6 +87,7 @@ class Core
                 'mysql_dump_location' => Utils::detectMysqldumpLocation() ? Utils::detectMysqldumpLocation() : 'n/a',
                 'php_version' => Utils::php_version(),
             ],
+            'mail' => (new Mail_Monitor(false))->get_status(),
             'branding' => Branding::wht_branding_is_configured() ? $this->get_branding_information() : null,
             'debug' => [
                 'WP_DEBUG' => defined('WP_DEBUG') ? WP_DEBUG : false,
